@@ -1,0 +1,2996 @@
+{
+  "program" : "bng.p4",
+  "__meta__" : {
+    "version" : [2, 7],
+    "compiler" : "https://github.com/p4lang/p4c"
+  },
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "fields" : [
+        ["tmp_0", 64, false],
+        ["tmp", 64, false],
+        ["tmp_1", 8, false],
+        ["tmp_2", 48, false],
+        ["my_metadata_t.dst_ipv4", 32, false],
+        ["my_metadata_t.src_ipv4", 32, false],
+        ["my_metadata_t.mac_da", 48, false],
+        ["my_metadata_t.mac_sa", 48, false],
+        ["my_metadata_t.egress_port", 9, false],
+        ["my_metadata_t.my_mac", 48, false],
+        ["my_metadata_t.nhop_ipv4", 32, false],
+        ["my_metadata_t.do_forward", 1, false],
+        ["my_metadata_t.tcp_sp", 16, false],
+        ["my_metadata_t.tcp_dp", 16, false],
+        ["my_metadata_t.if_index", 8, false],
+        ["my_metadata_t.if_ipv4_addr", 32, false],
+        ["my_metadata_t.if_mac_addr", 48, false],
+        ["my_metadata_t.is_ext_if", 1, false],
+        ["my_metadata_t.tunnel_vni", 24, false],
+        ["my_metadata_t.ingress_tunnel_type", 5, false],
+        ["my_metadata_t.tcp_inner_en", 1, false],
+        ["my_metadata_t.lkp_inner_l4_sport", 16, false],
+        ["my_metadata_t.lkp_inner_l4_dport", 16, false],
+        ["my_metadata_t.dst_inner_ipv4", 32, false],
+        ["my_metadata_t.src_inner_ipv4", 32, false],
+        ["_padding_0", 7, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 1,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "arp_t",
+      "id" : 2,
+      "fields" : [
+        ["htype", 16, false],
+        ["ptype", 16, false],
+        ["hlen", 8, false],
+        ["plen", 8, false],
+        ["oper", 16, false]
+      ]
+    },
+    {
+      "name" : "arp_ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["sha", 48, false],
+        ["spa", 32, false],
+        ["tha", 48, false],
+        ["tpa", 32, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 4,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "gre_t",
+      "id" : 5,
+      "fields" : [
+        ["C", 1, false],
+        ["R", 1, false],
+        ["K", 1, false],
+        ["S", 1, false],
+        ["s", 1, false],
+        ["recurse", 3, false],
+        ["flags", 5, false],
+        ["ver", 3, false],
+        ["proto", 16, false]
+      ]
+    },
+    {
+      "name" : "nvgre_t",
+      "id" : 6,
+      "fields" : [
+        ["tni", 24, false],
+        ["flow_id", 8, false]
+      ]
+    },
+    {
+      "name" : "tcp_t",
+      "id" : 7,
+      "fields" : [
+        ["srcPort", 16, false],
+        ["dstPort", 16, false],
+        ["seqNo", 32, false],
+        ["ackNo", 32, false],
+        ["dataOffset", 4, false],
+        ["res", 4, false],
+        ["flags", 8, false],
+        ["window", 16, false],
+        ["checksum", 16, false],
+        ["urgentPtr", 16, false]
+      ]
+    },
+    {
+      "name" : "icmp_t",
+      "id" : 8,
+      "fields" : [
+        ["type", 8, false],
+        ["code", 8, false],
+        ["checksum", 16, false]
+      ]
+    },
+    {
+      "name" : "cpu_header_t",
+      "id" : 9,
+      "fields" : [
+        ["preamble", 64, false],
+        ["device", 8, false],
+        ["reason", 8, false],
+        ["if_index", 8, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 10,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["egress_spec", 9, false],
+        ["egress_port", 9, false],
+        ["clone_spec", 32, false],
+        ["instance_type", 32, false],
+        ["drop", 1, false],
+        ["recirculate_port", 16, false],
+        ["packet_length", 32, false],
+        ["enq_timestamp", 32, false],
+        ["enq_qdepth", 19, false],
+        ["deq_timedelta", 32, false],
+        ["deq_qdepth", 19, false],
+        ["ingress_global_timestamp", 48, false],
+        ["lf_field_list", 32, false],
+        ["mcast_grp", 16, false],
+        ["resubmit_flag", 1, false],
+        ["egress_rid", 16, false],
+        ["_padding", 5, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "header_type" : "standard_metadata",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "arp",
+      "id" : 3,
+      "header_type" : "arp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "arp_ipv4",
+      "id" : 4,
+      "header_type" : "arp_ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ipv4",
+      "id" : 5,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "gre",
+      "id" : 6,
+      "header_type" : "gre_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "nvgre",
+      "id" : 7,
+      "header_type" : "nvgre_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "tcp",
+      "id" : 8,
+      "header_type" : "tcp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "icmp",
+      "id" : 9,
+      "header_type" : "icmp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "inner_ipv4",
+      "id" : 10,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "inner_ethernet",
+      "id" : 11,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "inner_tcp",
+      "id" : 12,
+      "header_type" : "tcp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "inner_icmp",
+      "id" : 13,
+      "header_type" : "icmp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "cpu_header",
+      "id" : 14,
+      "header_type" : "cpu_header_t",
+      "metadata" : false,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [
+    {
+      "id" : 0,
+      "name" : "fl",
+      "elements" : [
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "ingress_port"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "egress_spec"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "egress_port"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "clone_spec"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "instance_type"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "drop"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "recirculate_port"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "packet_length"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "enq_timestamp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "enq_qdepth"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "deq_timedelta"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "deq_qdepth"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "ingress_global_timestamp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "lf_field_list"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "mcast_grp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "resubmit_flag"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "egress_rid"]
+        }
+      ]
+    },
+    {
+      "id" : 1,
+      "name" : "fl_0",
+      "elements" : [
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "ingress_port"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "egress_spec"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "egress_port"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "clone_spec"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "instance_type"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "drop"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "recirculate_port"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "packet_length"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "enq_timestamp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "enq_qdepth"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "deq_timedelta"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "deq_qdepth"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "ingress_global_timestamp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "lf_field_list"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "mcast_grp"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "resubmit_flag"]
+        },
+        {
+          "type" : "field",
+          "value" : ["standard_metadata", "egress_rid"]
+        }
+      ]
+    }
+  ],
+  "errors" : [
+    ["NoError", 1],
+    ["PacketTooShort", 2],
+    ["NoMatch", 3],
+    ["StackOutOfBounds", 4],
+    ["HeaderTooShort", 5],
+    ["ParserTimeout", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "start",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.if_index"]
+                },
+                {
+                  "type" : "expression",
+                  "value" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["standard_metadata", "ingress_port"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  }
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "tmp_0"]
+                },
+                {
+                  "type" : "lookahead",
+                  "value" : [0, 64]
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "tmp"]
+                },
+                {
+                  "type" : "expression",
+                  "value" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "tmp_0"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xffffffffffffffff"
+                      }
+                    }
+                  }
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x0000000000000000",
+              "mask" : null,
+              "next_state" : "parse_cpu_header"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ethernet"
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_cpu_header",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "cpu_header"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.if_index"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["cpu_header", "if_index"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_ethernet"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_ethernet",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
+              "value" : "0x0806",
+              "mask" : null,
+              "next_state" : "parse_arp"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_arp",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "arp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x000108000604",
+              "mask" : null,
+              "next_state" : "parse_arp_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["arp", "htype"]
+            },
+            {
+              "type" : "field",
+              "value" : ["arp", "ptype"]
+            },
+            {
+              "type" : "field",
+              "value" : ["arp", "hlen"]
+            },
+            {
+              "type" : "field",
+              "value" : ["arp", "plen"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_arp_ipv4",
+          "id" : 4,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "arp_ipv4"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.dst_ipv4"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["arp_ipv4", "tpa"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_ipv4",
+          "id" : 5,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.dst_ipv4"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["ipv4", "dstAddr"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x01",
+              "mask" : null,
+              "next_state" : "parse_icmp"
+            },
+            {
+              "value" : "0x06",
+              "mask" : null,
+              "next_state" : "parse_tcp"
+            },
+            {
+              "value" : "0x2f",
+              "mask" : null,
+              "next_state" : "parse_gre"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_icmp",
+          "id" : 6,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "icmp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_tcp",
+          "id" : 7,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "tcp"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.tcp_sp"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["tcp", "srcPort"]
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.tcp_dp"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["tcp", "dstPort"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_gre",
+          "id" : 8,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "gre"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x00000100000000006558",
+              "mask" : null,
+              "next_state" : "parse_nvgre"
+            },
+            {
+              "value" : "0x00000000000000000800",
+              "mask" : null,
+              "next_state" : "parse_gre_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["gre", "C"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "R"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "K"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "S"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "s"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "recurse"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "flags"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "ver"]
+            },
+            {
+              "type" : "field",
+              "value" : ["gre", "proto"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_gre_ipv4",
+          "id" : 9,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.ingress_tunnel_type"]
+                },
+                {
+                  "type" : "hexstr",
+                  "value" : "0x01"
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_inner_ipv4"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_inner_ipv4",
+          "id" : 10,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "inner_ipv4"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.dst_inner_ipv4"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["inner_ipv4", "dstAddr"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x00000501",
+              "mask" : null,
+              "next_state" : "parse_inner_icmp"
+            },
+            {
+              "value" : "0x00000506",
+              "mask" : null,
+              "next_state" : "parse_inner_tcp"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["inner_ipv4", "fragOffset"]
+            },
+            {
+              "type" : "field",
+              "value" : ["inner_ipv4", "ihl"]
+            },
+            {
+              "type" : "field",
+              "value" : ["inner_ipv4", "protocol"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_inner_icmp",
+          "id" : 11,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "inner_icmp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_inner_tcp",
+          "id" : 12,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "inner_tcp"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.tcp_inner_en"]
+                },
+                {
+                  "type" : "hexstr",
+                  "value" : "0x01"
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.lkp_inner_l4_sport"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["inner_tcp", "srcPort"]
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.lkp_inner_l4_dport"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["inner_tcp", "dstPort"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_nvgre",
+          "id" : 13,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "nvgre"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.ingress_tunnel_type"]
+                },
+                {
+                  "type" : "hexstr",
+                  "value" : "0x05"
+                }
+              ],
+              "op" : "set"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "field",
+                  "value" : ["scalars", "my_metadata_t.tunnel_vni"]
+                },
+                {
+                  "type" : "field",
+                  "value" : ["nvgre", "tni"]
+                }
+              ],
+              "op" : "set"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : "parse_inner_ethernet"
+            }
+          ],
+          "transition_key" : []
+        },
+        {
+          "name" : "parse_inner_ethernet",
+          "id" : 14,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "inner_ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_inner_ipv4"
+            },
+            {
+              "value" : "default",
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["inner_ethernet", "etherType"]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "bng.p4",
+        "line" : 576,
+        "column" : 8,
+        "source_fragment" : "MyDeparser"
+      },
+      "order" : ["cpu_header", "ethernet", "arp", "arp_ipv4", "ipv4", "inner_ipv4", "icmp", "gre", "tcp"]
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [],
+  "register_arrays" : [],
+  "calculations" : [],
+  "learn_lists" : [
+    {
+      "id" : 1,
+      "name" : "mac_learn_digest",
+      "elements" : [
+        {
+          "type" : "field",
+          "value" : ["scalars", "tmp_1"]
+        },
+        {
+          "type" : "field",
+          "value" : ["scalars", "tmp_2"]
+        }
+      ]
+    }
+  ],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "set_if_info",
+      "id" : 2,
+      "runtime_data" : [
+        {
+          "name" : "ipv4_addr",
+          "bitwidth" : 32
+        },
+        {
+          "name" : "mac_addr",
+          "bitwidth" : 48
+        },
+        {
+          "name" : "is_ext",
+          "bitwidth" : 1
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.if_ipv4_addr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 399,
+            "column" : 8,
+            "source_fragment" : "meta.if_ipv4_addr = ipv4_addr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.if_mac_addr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 400,
+            "column" : 8,
+            "source_fragment" : "meta.if_mac_addr = mac_addr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.is_ext_if"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 2
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 401,
+            "column" : 8,
+            "source_fragment" : "meta.is_ext_if = is_ext"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "drop",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 405,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        },
+        {
+          "op" : "exit",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 406,
+            "column" : 8,
+            "source_fragment" : "exit"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "drop",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 405,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        },
+        {
+          "op" : "exit",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 406,
+            "column" : 8,
+            "source_fragment" : "exit"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "drop",
+      "id" : 5,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 405,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        },
+        {
+          "op" : "exit",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 406,
+            "column" : 8,
+            "source_fragment" : "exit"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "set_dmac",
+      "id" : 6,
+      "runtime_data" : [
+        {
+          "name" : "dmac",
+          "bitwidth" : 48
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 409,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = dmac"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "set_nhop",
+      "id" : 7,
+      "runtime_data" : [
+        {
+          "name" : "nhop_ipv4",
+          "bitwidth" : 32
+        },
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.nhop_ipv4"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 412,
+            "column" : 8,
+            "source_fragment" : "meta.nhop_ipv4 = nhop_ipv4"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 413,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 414,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl + 8w255"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "nop",
+      "id" : 8,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "generate_learn_notify",
+      "id" : 9,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.if_index"]
+            }
+          ]
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            }
+          ]
+        },
+        {
+          "op" : "generate_digest",
+          "parameters" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x00000400"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name" : "_drop",
+      "id" : 10,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 337,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "nat_miss_int_to_ext",
+      "id" : 11,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "clone_ingress_pkt_to_egress",
+          "parameters" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x000000fa"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name" : "nat_miss_ext_to_int",
+      "id" : 12,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.do_forward"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 343,
+            "column" : 8,
+            "source_fragment" : "meta.do_forward = 1w0"
+          }
+        },
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 344,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "nat_hit_int_to_ext",
+      "id" : 13,
+      "runtime_data" : [
+        {
+          "name" : "srcAddr",
+          "bitwidth" : 32
+        },
+        {
+          "name" : "srcPort",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.do_forward"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 347,
+            "column" : 8,
+            "source_fragment" : "meta.do_forward = 1w1"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "srcAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 349,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.srcAddr= srcAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["tcp", "srcPort"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 351,
+            "column" : 8,
+            "source_fragment" : "hdr.tcp.srcPort = srcPort"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "nat_hit_ext_to_int",
+      "id" : 14,
+      "runtime_data" : [
+        {
+          "name" : "dstAddr",
+          "bitwidth" : 32
+        },
+        {
+          "name" : "dstPort",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.do_forward"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 354,
+            "column" : 8,
+            "source_fragment" : "meta.do_forward = 1w1"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 356,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.dstAddr = dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["tcp", "dstPort"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 358,
+            "column" : 8,
+            "source_fragment" : "hdr.tcp.dstPort = dstPort"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "nat_no_nat",
+      "id" : 15,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.do_forward"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 363,
+            "column" : 8,
+            "source_fragment" : "meta.do_forward = 1w1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "process_tunnel_decap.decap_gre_inner_ipv4",
+      "id" : 16,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "ipv4"
+            },
+            {
+              "type" : "header",
+              "value" : "inner_ipv4"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 242,
+            "column" : 11,
+            "source_fragment" : "hdr.ipv4 = hdr.inner_ipv4"
+          }
+        },
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "inner_ipv4"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 243,
+            "column" : 11,
+            "source_fragment" : "hdr.inner_ipv4.setInvalid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0800"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 244,
+            "column" : 11,
+            "source_fragment" : "hdr.ethernet.etherType = 16w0x800"
+          }
+        },
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "gre"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 245,
+            "column" : 11,
+            "source_fragment" : "hdr.gre.setInvalid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 246,
+            "column" : 15,
+            "source_fragment" : "hdr.ipv4.protocol = 8w0x6"
+          }
+        },
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "tcp"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 247,
+            "column" : 15,
+            "source_fragment" : "hdr.tcp.setValid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["tcp", "srcPort"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.lkp_inner_l4_sport"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 248,
+            "column" : 15,
+            "source_fragment" : "hdr.tcp.srcPort = meta.lkp_inner_l4_sport"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["tcp", "dstPort"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.lkp_inner_l4_dport"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 249,
+            "column" : 15,
+            "source_fragment" : "hdr.tcp.dstPort = meta.lkp_inner_l4_dport"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "process_tunnel_decap.decap_tcp_inner",
+      "id" : 17,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x06"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 252,
+            "column" : 15,
+            "source_fragment" : "hdr.ipv4.protocol = 8w0x6"
+          }
+        },
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "tcp"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 253,
+            "column" : 15,
+            "source_fragment" : "hdr.tcp.setValid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["tcp", "srcPort"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.lkp_inner_l4_sport"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 254,
+            "column" : 15,
+            "source_fragment" : "hdr.tcp.srcPort = meta.lkp_inner_l4_sport"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["tcp", "dstPort"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.lkp_inner_l4_dport"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 255,
+            "column" : 15,
+            "source_fragment" : "hdr.tcp.dstPort = meta.lkp_inner_l4_dport"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "nop",
+      "id" : 18,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "ipv4_gre_rewrite",
+      "id" : 19,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "gre"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 302,
+            "column" : 6,
+            "source_fragment" : "hdr.gre.setValid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["gre", "proto"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 303,
+            "column" : 6,
+            "source_fragment" : "hdr.gre.proto = hdr.ethernet.etherType"
+          }
+        },
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "ipv4"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 293,
+            "column" : 6,
+            "source_fragment" : "hdr.ipv4.setValid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x2f"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 294,
+            "column" : 6,
+            "source_fragment" : "hdr.ipv4.protocol = proto; ..."
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x40"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 295,
+            "column" : 6,
+            "source_fragment" : "hdr.ipv4.ttl = 8w64"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "version"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x04"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 296,
+            "column" : 6,
+            "source_fragment" : "hdr.ipv4.version = 4w0x4"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ihl"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x05"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 297,
+            "column" : 6,
+            "source_fragment" : "hdr.ipv4.ihl = 4w0x5"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "identification"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 298,
+            "column" : 6,
+            "source_fragment" : "hdr.ipv4.identification = 16w0"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0800"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 306,
+            "column" : 6,
+            "source_fragment" : "hdr.ethernet.etherType = 16w0x800"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "ipv4_ip_rewrite",
+      "id" : 20,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "act",
+      "id" : 21,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.my_mac"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x000102030405"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 508,
+            "column" : 11,
+            "source_fragment" : "meta.my_mac = 0x000102030405"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "NoAction",
+      "id" : 22,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 23,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "do_rewrites",
+      "id" : 24,
+      "runtime_data" : [
+        {
+          "name" : "smac",
+          "bitwidth" : 48
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "remove_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "cpu_header"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 523,
+            "column" : 8,
+            "source_fragment" : "hdr.cpu_header.setInvalid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 524,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.srcAddr = smac"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "_drop",
+      "id" : 25,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "drop",
+          "parameters" : [],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 531,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop()"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "do_cpu_encap",
+      "id" : 26,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "clone_ingress_pkt_to_egress",
+          "parameters" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x000000fa"
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x1"
+            }
+          ]
+        },
+        {
+          "op" : "add_header",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "cpu_header"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 535,
+            "column" : 8,
+            "source_fragment" : "hdr.cpu_header.setValid()"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["cpu_header", "preamble"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x0000000000000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 536,
+            "column" : 8,
+            "source_fragment" : "hdr.cpu_header.preamble = 64w0"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["cpu_header", "device"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 537,
+            "column" : 8,
+            "source_fragment" : "hdr.cpu_header.device = 8w0"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["cpu_header", "reason"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0xab"
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 538,
+            "column" : 8,
+            "source_fragment" : "hdr.cpu_header.reason = 8w0xab"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["cpu_header", "if_index"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "my_metadata_t.if_index"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 539,
+            "column" : 8,
+            "source_fragment" : "hdr.cpu_header.if_index = meta.if_index"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "bng.p4",
+        "line" : 392,
+        "column" : 8,
+        "source_fragment" : "MyIngress"
+      },
+      "init_table" : "if_info",
+      "tables" : [
+        {
+          "name" : "if_info",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 455,
+            "column" : 28,
+            "source_fragment" : "if_info"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["scalars", "my_metadata_t.if_index"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [4, 2, 0],
+          "actions" : ["drop", "set_if_info", "NoAction"],
+          "base_default_next" : "smac",
+          "next_tables" : {
+            "drop" : "smac",
+            "set_if_info" : "smac",
+            "NoAction" : "smac"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "smac",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 217,
+            "column" : 25,
+            "source_fragment" : "smac"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["ethernet", "srcAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 512,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [8, 9, 1],
+          "actions" : ["nop", "generate_learn_notify", "NoAction"],
+          "base_default_next" : "node_4",
+          "next_tables" : {
+            "nop" : "node_4",
+            "generate_learn_notify" : "node_4",
+            "NoAction" : "node_4"
+          },
+          "default_entry" : {
+            "action_id" : 1,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "process_tunnel_decap.tunnel_decap_process_outer",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 257,
+            "column" : 45,
+            "source_fragment" : "tunnel_decap_process_outer"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["scalars", "my_metadata_t.ingress_tunnel_type"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "target" : ["ipv4", "$valid$"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [16, 17],
+          "actions" : ["process_tunnel_decap.decap_gre_inner_ipv4", "process_tunnel_decap.decap_tcp_inner"],
+          "base_default_next" : "nat",
+          "next_tables" : {
+            "process_tunnel_decap.decap_gre_inner_ipv4" : "nat",
+            "process_tunnel_decap.decap_tcp_inner" : "nat"
+          },
+          "default_entry" : {
+            "action_id" : 16,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          },
+          "entries" : [
+            {
+              "match_key" : [
+                {
+                  "match_type" : "exact",
+                  "key" : "0x01"
+                },
+                {
+                  "match_type" : "exact",
+                  "key" : "0x01"
+                }
+              ],
+              "action_entry" : {
+                "action_id" : 16,
+                "action_data" : []
+              },
+              "priority" : 1
+            }
+          ]
+        },
+        {
+          "name" : "nat",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 365,
+            "column" : 24,
+            "source_fragment" : "nat"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["scalars", "my_metadata_t.is_ext_if"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "target" : ["ipv4", "$valid$"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "target" : ["tcp", "$valid$"],
+              "mask" : null
+            },
+            {
+              "match_type" : "ternary",
+              "target" : ["ipv4", "srcAddr"],
+              "mask" : null
+            },
+            {
+              "match_type" : "ternary",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            },
+            {
+              "match_type" : "ternary",
+              "target" : ["tcp", "srcPort"],
+              "mask" : null
+            },
+            {
+              "match_type" : "ternary",
+              "target" : ["tcp", "dstPort"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "ternary",
+          "type" : "simple",
+          "max_size" : 128,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10, 11, 12, 13, 14, 15],
+          "actions" : ["_drop", "nat_miss_int_to_ext", "nat_miss_ext_to_int", "nat_hit_int_to_ext", "nat_hit_ext_to_int", "nat_no_nat"],
+          "base_default_next" : "node_7",
+          "next_tables" : {
+            "_drop" : "node_7",
+            "nat_miss_int_to_ext" : "node_7",
+            "nat_miss_ext_to_int" : "node_7",
+            "nat_hit_int_to_ext" : "node_7",
+            "nat_hit_ext_to_int" : "node_7",
+            "nat_no_nat" : "node_7"
+          },
+          "default_entry" : {
+            "action_id" : 15,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tunnel_encap_process_outer",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 311,
+            "column" : 45,
+            "source_fragment" : "tunnel_encap_process_outer"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["ipv4", "$valid$"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [18, 19, 20],
+          "actions" : ["nop", "ipv4_gre_rewrite", "ipv4_ip_rewrite"],
+          "base_default_next" : "node_9",
+          "next_tables" : {
+            "nop" : "node_9",
+            "ipv4_gre_rewrite" : "node_9",
+            "ipv4_ip_rewrite" : "node_9"
+          },
+          "default_entry" : {
+            "action_id" : 19,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_act",
+          "id" : 5,
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [21],
+          "actions" : ["act"],
+          "base_default_next" : "ipv4_lpm",
+          "next_tables" : {
+            "act" : "ipv4_lpm"
+          },
+          "default_entry" : {
+            "action_id" : 21,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "ipv4_lpm",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 450,
+            "column" : 29,
+            "source_fragment" : "ipv4_lpm"
+          },
+          "key" : [
+            {
+              "match_type" : "lpm",
+              "target" : ["scalars", "my_metadata_t.dst_ipv4"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "lpm",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7, 3],
+          "actions" : ["set_nhop", "drop"],
+          "base_default_next" : "ipv4_forward",
+          "next_tables" : {
+            "set_nhop" : "ipv4_forward",
+            "drop" : "ipv4_forward"
+          },
+          "default_entry" : {
+            "action_id" : 3,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "ipv4_forward",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 464,
+            "column" : 33,
+            "source_fragment" : "ipv4_forward"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["scalars", "my_metadata_t.nhop_ipv4"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [6, 5],
+          "actions" : ["set_dmac", "drop"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "set_dmac" : null,
+            "drop" : null
+          },
+          "default_entry" : {
+            "action_id" : 5,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_4",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 499,
+            "column" : 11,
+            "source_fragment" : "hdr.ipv4.protocol== 8w47"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["ipv4", "protocol"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x2f"
+              }
+            }
+          },
+          "true_next" : "process_tunnel_decap.tunnel_decap_process_outer",
+          "false_next" : "nat"
+        },
+        {
+          "name" : "node_7",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 504,
+            "column" : 11,
+            "source_fragment" : "meta.is_ext_if == 1"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "my_metadata_t.is_ext_if"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x01"
+              }
+            }
+          },
+          "true_next" : "tunnel_encap_process_outer",
+          "false_next" : "node_9"
+        },
+        {
+          "name" : "node_9",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 507,
+            "column" : 12,
+            "source_fragment" : "meta.do_forward == 1w1 && hdr.ipv4.ttl > 8w0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "and",
+              "left" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "==",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "my_metadata_t.do_forward"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x01"
+                  }
+                }
+              },
+              "right" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : ">",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["ipv4", "ttl"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x00"
+                  }
+                }
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "tbl_act"
+        }
+      ]
+    },
+    {
+      "name" : "egress",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "bng.p4",
+        "line" : 518,
+        "column" : 8,
+        "source_fragment" : "MyEgress"
+      },
+      "init_table" : "node_15",
+      "tables" : [
+        {
+          "name" : "send_frame",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 541,
+            "column" : 31,
+            "source_fragment" : "send_frame"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "target" : ["standard_metadata", "egress_port"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 256,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [24, 25, 22],
+          "actions" : ["do_rewrites", "_drop", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "do_rewrites" : null,
+            "_drop" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 22,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "send_to_cpu",
+          "id" : 9,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 551,
+            "column" : 32,
+            "source_fragment" : "send_to_cpu"
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [26, 23],
+          "actions" : ["do_cpu_encap", "NoAction"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "do_cpu_encap" : null,
+            "NoAction" : null
+          },
+          "default_entry" : {
+            "action_id" : 23,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_15",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "bng.p4",
+            "line" : 557,
+            "column" : 11,
+            "source_fragment" : "standard_metadata.instance_type == 32w0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["standard_metadata", "instance_type"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000000"
+              }
+            }
+          },
+          "true_next" : "send_frame",
+          "false_next" : "send_to_cpu"
+        }
+      ]
+    }
+  ],
+  "checksums" : [],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : [
+    [
+      "queueing_metadata.enq_timestamp",
+      ["standard_metadata", "enq_timestamp"]
+    ],
+    [
+      "queueing_metadata.enq_qdepth",
+      ["standard_metadata", "enq_qdepth"]
+    ],
+    [
+      "queueing_metadata.deq_timedelta",
+      ["standard_metadata", "deq_timedelta"]
+    ],
+    [
+      "queueing_metadata.deq_qdepth",
+      ["standard_metadata", "deq_qdepth"]
+    ],
+    [
+      "intrinsic_metadata.ingress_global_timestamp",
+      ["standard_metadata", "ingress_global_timestamp"]
+    ],
+    [
+      "intrinsic_metadata.lf_field_list",
+      ["standard_metadata", "lf_field_list"]
+    ],
+    [
+      "intrinsic_metadata.mcast_grp",
+      ["standard_metadata", "mcast_grp"]
+    ],
+    [
+      "intrinsic_metadata.resubmit_flag",
+      ["standard_metadata", "resubmit_flag"]
+    ],
+    [
+      "intrinsic_metadata.egress_rid",
+      ["standard_metadata", "egress_rid"]
+    ]
+  ]
+}
