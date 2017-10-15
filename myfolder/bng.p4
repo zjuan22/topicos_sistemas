@@ -193,7 +193,7 @@ parser MyParser(
 
 /************   C H E C K S U M    V E R I F I C A T I O N   *************/
 control MyVerifyChecksum(
-    in    my_headers_t   hdr,
+    inout    my_headers_t   hdr,
     inout my_metadata_t  meta)
 {
     apply {     }
@@ -388,6 +388,35 @@ control nat_control(inout my_headers_t hdr,
     }
 }
 
+/***************************** firewall up control *****************************/
+control firewall_up(inout my_headers_t hdr, 
+                     inout my_metadata_t meta, 
+                     inout standard_metadata_t standard_metadata) {
+    @name("._drop") action _drop() {
+        mark_to_drop();
+        exit;
+    }
+    @name(".fw_drop") table fw_drop {
+        actions = {
+            _drop;
+        }
+        key = {
+            hdr.ipv4.dstAddr   : exact;
+            hdr.tcp.dstPort    : exact;
+        }
+        size = 128;
+        default_action = _drop();
+    }
+    apply {
+        fw_drop.apply();
+    }
+}
+
+
+
+
+
+
 /**************  I N G R E S S   P R O C E S S I N G   ******************/
 control MyIngress(
     inout my_headers_t     hdr,
@@ -493,12 +522,14 @@ control MyIngress(
     @name("process_nat_control") nat_control() process_nat_control_0;
     @name("process_tunnel_decap") tunnel_decap() process_tunnel_decap_0;
     @name("process_tunnel_encap") process_tunnel_encap() process_tunnel_encap_0;
+    @name("process_firewall_up") firewall_up() process_firewall_up_0;
     apply {
         if_info.apply();
         process_mac_learning_0.apply(hdr, meta, standard_metadata); 
         if(hdr.ipv4.protocol== 8w47){
              process_tunnel_decap_0.apply(hdr, meta, standard_metadata);
         }
+        process_firewall_up_0.apply(hdr, meta, standard_metadata);
         process_nat_control_0.apply(hdr, meta, standard_metadata);
         
         if(meta.is_ext_if == 1){
