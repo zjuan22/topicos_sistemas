@@ -122,8 +122,9 @@ if args.h2h1:
     port2send = port_map[2]
 
 elif args.greh1:
+    pkt = Ether(dst='aa:1b:eb:df:44:3d',src='00:44:00:00:00:00')/IP(dst='4.0.0.11',src='4.0.0.10')/GRE()/IP(dst='192.168.0.10',src='10.0.0.    10')/TCP(sport=20, dport=80)/"GRE packet"
+
     #pkt = Ether(dst='aa:1b:eb:df:44:3d',src='00:44:00:00:00:00')/IP(dst='4.0.0.11',src='4.0.0.10')/GRE()/IP(dst='10.0.0.1',src='10.0.0.10')/TCP(sport=81, dport=1025)/"GRE packet"
-    pkt = Ether(dst='aa:1b:eb:df:44:3d',src='00:44:00:00:00:00')/IP(dst='10.0.0.10',src='10.0.0.10')/GRE()/IP(dst='4.0.0.1',src='4.0.0.10')/TCP(sport=81, dport=1025)/"GRE packet"
     port2send = port_map[1]
 else:
 #    pkt = Ether(dst='a0:36:9f:3e:94:e8',src='a0:36:9f:3e:94:ea')/IP(dst='192.168.0.1',src='192.168.1.1')

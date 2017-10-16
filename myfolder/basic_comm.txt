@@ -16,4 +16,8 @@ table_add send_frame do_rewrites 1 => 00:aa:bb:00:00:04
 table_add send_frame do_rewrites 2 => 00:aa:bb:00:00:05
 
 table_add smac generate_learn_notify 00:44:00:00:00:00 1
+table_add fw_drop_up _drop 192.168.0.10 81  => 
+table_add fw_drop_dw _drop 10.0.0.10 21  =>
 
+ 
+table_add tunnel_encap_process_outer ipv4_gre_rewrite 10.0.0.10 => 4.0.0.1 4.0.0.10

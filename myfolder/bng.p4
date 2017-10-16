@@ -247,6 +247,7 @@ control tunnel_decap(inout my_headers_t hdr,
                hdr.tcp.setValid();
                hdr.tcp.srcPort = meta.lkp_inner_l4_sport;
                hdr.tcp.dstPort = meta.lkp_inner_l4_dport;
+           meta.dst_ipv4 = hdr.ipv4.dstAddr;
    }
    @name("decap_tcp_inner") action decap_tcp_inner() {
                hdr.ipv4.protocol = 8w0x6;
@@ -289,37 +290,64 @@ control process_tunnel_encap(inout my_headers_t hdr,
   @name(".nop") action nop() {
   }
 
-  @name(".f_insert_ipv4_header") action f_insert_ipv4_header(bit<8> proto) {
+  @name(".f_insert_inner_ipv4_header") action f_insert_inner_ipv4_header(bit<8> proto) {
+      hdr.inner_ipv4.setValid();
+      hdr.inner_ipv4.protocol = proto;
+      hdr.inner_ipv4.ttl = 8w64;
+      hdr.inner_ipv4.version = 4w0x4;
+      hdr.inner_ipv4.ihl = 4w0x5;
+      hdr.inner_ipv4.identification = 16w0;
+      hdr.inner_tcp.setValid(); 
+      hdr.inner_tcp.srcPort = hdr.tcp.srcPort; 
+      hdr.inner_tcp.dstPort = hdr.tcp.dstPort; 
+  }
+
+  @name(".ipv4_gre_rewrite") action ipv4_gre_rewrite(bit<32> gre_srcAddr, bit<32> gre_dstAddr) {
+           
+
+      hdr.ethernet.etherType = 16w0x800;
+      /*hdr.gre.proto = hdr.ethernet.etherType; */
+      /*f_insert_inner_ipv4_header(8w02);*/
+            
+
+      hdr.inner_tcp.setValid(); 
+      hdr.inner_tcp = hdr.tcp;
+      hdr.tcp.setInvalid(); 
+
+      meta.dst_ipv4 = hdr.ipv4.dstAddr; 
+      meta.src_ipv4 = hdr.ipv4.srcAddr;
+
+      hdr.inner_ipv4.setValid();
+      hdr.inner_ipv4 = hdr.ipv4;
+      hdr.ipv4.setInvalid();
+      
+ 
       hdr.ipv4.setValid();
-      hdr.ipv4.protocol = proto;
+      hdr.ipv4.protocol = 8w47;
       hdr.ipv4.ttl = 8w64;
       hdr.ipv4.version = 4w0x4;
       hdr.ipv4.ihl = 4w0x5;
       hdr.ipv4.identification = 16w0;
+      hdr.ipv4.srcAddr = gre_srcAddr;
+      hdr.ipv4.dstAddr = gre_dstAddr;
+
+      hdr.gre.setValid();
+      hdr.gre.proto = 16w0x800;
+      
+      /*hdr.ipv4.totalLen = meta.egress_metadata.payload_length + 16w24;*/
+ 
   }
 
-  @name(".ipv4_gre_rewrite") action ipv4_gre_rewrite() {
-      hdr.gre.setValid(); 
-      hdr.gre.proto = hdr.ethernet.etherType;
-      f_insert_ipv4_header(8w47);
-      /*hdr.ipv4.totalLen = meta.egress_metadata.payload_length + 16w24;*/
-      hdr.ethernet.etherType = 16w0x800;
-  }
-  @name(".ipv4_ip_rewrite") action ipv4_ip_rewrite() {
-	      /* set ip outer*/
-  }
   @name(".tunnel_encap_process_outer") table tunnel_encap_process_outer {
       actions = {
           nop;
           ipv4_gre_rewrite;
-          ipv4_ip_rewrite;
       }
-      key = {
-          /*meta.tunnel_metadata.egress_header_count: exact; */
-            hdr.ipv4.isValid()                : exact;
-      }
-      size = 1024; 
-      default_action = ipv4_gre_rewrite();
+      key = {  hdr.ipv4.dstAddr       : exact; }
+      size = 1024;
+      /*const entries = {
+             ( true) : send_arp_reply();
+      default_action = ipv4_gre_rewrite(0 0); */
   }
   apply {
      tunnel_encap_process_outer.apply();
@@ -348,11 +376,13 @@ control nat_control(inout my_headers_t hdr,
         /*meta.src_ipv4 = srcAddr; */
         hdr.ipv4.srcAddr= srcAddr;
         /*meta.tcp_sp = srcPort;*/
+        meta.dst_ipv4 = hdr.inner_ipv4.dstAddr; /* see this par*/
+
         hdr.tcp.srcPort = srcPort;
     }
     @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {
         meta.do_forward = 1w1;
-        /*meta.dst_ipv4 = dstAddr; */
+        meta.dst_ipv4 = dstAddr; /* to lpm */
         hdr.ipv4.dstAddr = dstAddr;
         /*meta.src_ipv4 = hdr.ipv4.srcAddr;*/
         hdr.tcp.dstPort = dstPort;
@@ -388,7 +418,7 @@ control nat_control(inout my_headers_t hdr,
     }
 }
 
-/***************************** firewall up control *****************************/
+/***************************** firewall UL control *****************************/
 control firewall_up(inout my_headers_t hdr, 
                      inout my_metadata_t meta, 
                      inout standard_metadata_t standard_metadata) {
@@ -396,7 +426,7 @@ control firewall_up(inout my_headers_t hdr,
         mark_to_drop();
         exit;
     }
-    @name(".fw_drop") table fw_drop {
+    @name(".fw_drop_up") table fw_drop {
         actions = {
             _drop;
         }
@@ -405,17 +435,34 @@ control firewall_up(inout my_headers_t hdr,
             hdr.tcp.dstPort    : exact;
         }
         size = 128;
-        default_action = _drop();
     }
     apply {
         fw_drop.apply();
     }
 }
 
-
-
-
-
+/***************************** firewall DW control *****************************/
+control firewall_dw(inout my_headers_t hdr, 
+                     inout my_metadata_t meta, 
+                     inout standard_metadata_t standard_metadata) {
+    @name("._drop") action _drop() {
+        mark_to_drop();
+        exit;
+    }
+    @name(".fw_drop_dw") table fw_drop_dw {
+        actions = {
+            _drop;
+        }
+        key = {
+            hdr.inner_ipv4.dstAddr   : exact;
+            hdr.inner_tcp.dstPort    : exact;
+        }
+        size = 128;
+    }
+    apply {
+        fw_drop_dw.apply();
+    }
+}
 
 /**************  I N G R E S S   P R O C E S S I N G   ******************/
 control MyIngress(
@@ -523,18 +570,20 @@ control MyIngress(
     @name("process_tunnel_decap") tunnel_decap() process_tunnel_decap_0;
     @name("process_tunnel_encap") process_tunnel_encap() process_tunnel_encap_0;
     @name("process_firewall_up") firewall_up() process_firewall_up_0;
+    @name("proc_firewall_dw") firewall_dw() proc_firewall_dw_0;
     apply {
         if_info.apply();
         process_mac_learning_0.apply(hdr, meta, standard_metadata); 
         if(hdr.ipv4.protocol== 8w47){
              process_tunnel_decap_0.apply(hdr, meta, standard_metadata);
+             process_firewall_up_0.apply(hdr, meta, standard_metadata);
         }
-        process_firewall_up_0.apply(hdr, meta, standard_metadata);
         process_nat_control_0.apply(hdr, meta, standard_metadata);
-        
         if(meta.is_ext_if == 1){
-             process_tunnel_encap_0.apply(hdr, meta, standard_metadata);
+           process_tunnel_encap_0.apply(hdr, meta, standard_metadata);
+           proc_firewall_dw_0.apply(hdr, meta, standard_metadata); 
         }
+         
         if (meta.do_forward == 1w1 && hdr.ipv4.ttl > 8w0) {
            meta.my_mac = 0x000102030405;
            ipv4_lpm.apply();
@@ -617,10 +666,11 @@ control MyDeparser(
         packet.emit(hdr.arp_ipv4);
         /* IPv4 case */
         packet.emit(hdr.ipv4);
-        packet.emit(hdr.inner_ipv4);
-        packet.emit(hdr.icmp);
         packet.emit(hdr.gre);
         packet.emit(hdr.tcp);
+        packet.emit(hdr.icmp);
+        packet.emit(hdr.inner_ipv4);
+        packet.emit(hdr.inner_tcp);
     }
 }
 
