@@ -75,6 +75,9 @@ struct my_metadata_t {
 
     ipv4_addr_t  dst_inner_ipv4;
     ipv4_addr_t  src_inner_ipv4;
+
+    bit<32> meter_tag;
+    
 }
 
 /***********************  P A R S E R  ***********************************/
@@ -193,11 +196,43 @@ parser MyParser(
 
 /************   C H E C K S U M    V E R I F I C A T I O N   *************/
 control MyVerifyChecksum(
-    inout    my_headers_t   hdr,
+    in    my_headers_t   hdr,
+    /*inout    my_headers_t   hdr,*/
     inout my_metadata_t  meta)
 {
     apply {     }
 }
+
+/***************************** process meter  *****************************/
+control process_meter(inout my_headers_t hdr,
+                      inout my_metadata_t meta, 
+                      inout standard_metadata_t standard_metadata) {
+    @name(".my_meter") meter(32w16384, MeterType.packets) my_meter;
+    @name("._drop") action _drop() {
+        mark_to_drop();
+    }
+    @name("._nop") action _nop() {
+    }
+    @name(".m_action") action m_action(bit<32> meter_idx) {
+        my_meter.execute_meter((bit<32>)meter_idx, meta.meter_tag);
+        standard_metadata.egress_spec = 9w2;
+    }
+    @name(".m_filter") table m_filter {
+        actions = {_drop; _nop; }
+        key = { meta.meter_tag: exact;}
+        size = 16;
+    }
+    @name(".m_table") table m_table {
+        actions = {m_action; _nop; }
+        key = { hdr.ethernet.srcAddr: exact;}
+        size = 16384;
+    }
+    apply {
+        m_table.apply();
+        m_filter.apply();
+    }
+}
+
 
 @name("mac_learn_digest") struct mac_learn_digest {
     bit<8> in_port;    /* 9 bits?, it doesnt compile with other value like 16, why? */
@@ -231,6 +266,7 @@ control process_mac_learning(inout my_headers_t hdr,
         
     }
 }
+
 
 
 /***************************** tunnel control decap *****************************/
@@ -490,81 +526,25 @@ control MyIngress(
         hdr.ipv4.ttl = hdr.ipv4.ttl + 8w255;
     }
     
-    action send_arp_reply() {
-        hdr.ethernet.dstAddr = hdr.arp_ipv4.sha;
-        hdr.ethernet.srcAddr = meta.mac_da;
-        
-        hdr.arp.oper         = ARP_OPER_REPLY;
-        
-        hdr.arp_ipv4.tha     = hdr.arp_ipv4.sha;
-        hdr.arp_ipv4.tpa     = hdr.arp_ipv4.spa;
-        hdr.arp_ipv4.sha     = meta.mac_da;
-        hdr.arp_ipv4.spa     = meta.dst_ipv4;
-
-        standard_metadata.egress_spec = standard_metadata.ingress_port;
-    }
-
-    action send_icmp_reply() {
-        mac_addr_t   tmp_mac;
-        ipv4_addr_t  tmp_ip;
-
-        tmp_mac              = hdr.ethernet.dstAddr;
-        hdr.ethernet.dstAddr = hdr.ethernet.srcAddr;
-        hdr.ethernet.srcAddr = tmp_mac;
-
-        tmp_ip               = hdr.ipv4.dstAddr;
-        hdr.ipv4.dstAddr     = hdr.ipv4.srcAddr;
-        hdr.ipv4.srcAddr     = tmp_ip;
-
-        hdr.icmp.type        = ICMP_ECHO_REPLY;
-        hdr.icmp.checksum    = 0; // For now
-
-        standard_metadata.egress_spec = standard_metadata.ingress_port;
-    }
-
-
     @name(".ipv4_lpm") table ipv4_lpm {
         key     = { meta.dst_ipv4 : lpm; }
         actions = { set_nhop; drop;  }
-        default_action = drop();
+        /*default_action = drop(); */
     }
     @name(".if_info") table if_info {
+        key = { meta.if_index: exact;}
         actions = {
             drop;
             set_if_info;
         }
-        key = {
-            meta.if_index: exact;
-        }
     }
     @name(".ipv4_forward") table ipv4_forward {
-        key = {
-            meta.nhop_ipv4         : exact;
-            /*hdr.arp.isValid()      : exact;*/
-            /*hdr.arp.oper           : ternary;*/
-            /*hdr.arp_ipv4.isValid() : exact;*/
-            /*hdr.ipv4.isValid()     : exact;*/
-            /*hdr.icmp.isValid()     : exact;*/
-            /*hdr.icmp.type          : ternary;*/
-        }
-        actions = {
-            /*forward_ipv4;*/
-            set_dmac;
-            /*send_arp_reply;*/
-            /*send_icmp_reply;*/
-            drop;
-        }
-        const default_action = drop();
-        /*const entries = {
-            ( true, ARP_OPER_REQUEST, true, false, false, _  ) :
-                send_arp_reply();
-            ( false, _,false, true, false, _  ) :
-                forward_ipv4();
-            ( false, _,false, true, true, ICMP_ECHO_REQUEST ) :
-                send_icmp_reply();
-        }*/
+        key = { meta.nhop_ipv4         : exact; }
+        actions = {set_dmac; drop; }
+        /*const default_action = drop();*/
     }
   
+    @name("process_meter") process_meter() process_meter_0;
     @name("process_mac_learning") process_mac_learning() process_mac_learning_0;
     @name("process_nat_control") nat_control() process_nat_control_0;
     @name("process_tunnel_decap") tunnel_decap() process_tunnel_decap_0;
@@ -573,6 +553,7 @@ control MyIngress(
     @name("proc_firewall_dw") firewall_dw() proc_firewall_dw_0;
     apply {
         if_info.apply();
+        process_meter_0.apply(hdr, meta, standard_metadata); 
         process_mac_learning_0.apply(hdr, meta, standard_metadata); 
         if(hdr.ipv4.protocol== 8w47){
              process_tunnel_decap_0.apply(hdr, meta, standard_metadata);
