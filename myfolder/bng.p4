@@ -196,8 +196,8 @@ parser MyParser(
 
 /************   C H E C K S U M    V E R I F I C A T I O N   *************/
 control MyVerifyChecksum(
-    in    my_headers_t   hdr,
-    /*inout    my_headers_t   hdr,*/
+    /*in    my_headers_t   hdr,*/
+    inout    my_headers_t   hdr,
     inout my_metadata_t  meta)
 {
     apply {     }
@@ -232,6 +232,40 @@ control process_meter(inout my_headers_t hdr,
         m_filter.apply();
     }
 }
+
+
+/***************************** process meter dl  *****************************/
+control proc_meter_dl(inout my_headers_t hdr,
+                      inout my_metadata_t meta, 
+                      inout standard_metadata_t standard_metadata) {
+    @name(".my_meter") meter(32w16384, MeterType.packets) my_meter_dl;
+    @name("._drop") action _drop() {
+        mark_to_drop();
+    }
+    @name("._nop") action _nop() {
+    }
+    @name(".m_action_dl") action m_action(bit<32> meter_idx) {
+        my_meter_dl.execute_meter((bit<32>)meter_idx, meta.meter_tag);
+        standard_metadata.egress_spec = 9w2;
+    }
+    @name(".m_filter_dl") table m_filter_dl {
+        actions = {_drop; _nop; }
+        key = { meta.meter_tag: exact;}
+        size = 16;
+    }
+    @name(".m_table_dl") table m_table_dl {
+        actions = {m_action; _nop; }
+        key = { hdr.ethernet.srcAddr: exact;}
+        size = 16384;
+    }
+    apply {
+        m_table_dl.apply();
+        m_filter_dl.apply();
+    }
+}
+
+
+
 
 
 @name("mac_learn_digest") struct mac_learn_digest {
@@ -543,8 +577,9 @@ control MyIngress(
         actions = {set_dmac; drop; }
         /*const default_action = drop();*/
     }
-  
-    @name("process_meter") process_meter() process_meter_0;
+    
+    @name("process_meter") process_meter() process_meter_ul;
+    @name("proc_meter_dl") proc_meter_dl() process_meter_dl;
     @name("process_mac_learning") process_mac_learning() process_mac_learning_0;
     @name("process_nat_control") nat_control() process_nat_control_0;
     @name("process_tunnel_decap") tunnel_decap() process_tunnel_decap_0;
@@ -553,14 +588,15 @@ control MyIngress(
     @name("proc_firewall_dw") firewall_dw() proc_firewall_dw_0;
     apply {
         if_info.apply();
-        process_meter_0.apply(hdr, meta, standard_metadata); 
         process_mac_learning_0.apply(hdr, meta, standard_metadata); 
         if(hdr.ipv4.protocol== 8w47){
              process_tunnel_decap_0.apply(hdr, meta, standard_metadata);
+             process_meter_ul.apply(hdr, meta, standard_metadata); 
              process_firewall_up_0.apply(hdr, meta, standard_metadata);
         }
         process_nat_control_0.apply(hdr, meta, standard_metadata);
         if(meta.is_ext_if == 1){
+           process_meter_dl.apply(hdr, meta, standard_metadata);
            process_tunnel_encap_0.apply(hdr, meta, standard_metadata);
            proc_firewall_dw_0.apply(hdr, meta, standard_metadata); 
         }
