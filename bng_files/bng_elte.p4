@@ -20,7 +20,28 @@ const bit<16> ARP_OPER_REPLY     = 2;
 const bit<8> ICMP_ECHO_REQUEST = 8;
 const bit<8> ICMP_ECHO_REPLY   = 0;
 
+struct headers {
+    ethernet_t   ethernet;
+    arp_t        arp;
+    arp_ipv4_t   arp_ipv4;
+    ipv4_t       ipv4;
+    gre_t        gre;
+    nvgre_t      nvgre;
+    tcp_t        tcp;
+    icmp_t       icmp;
+    @name("inner_ipv4") 
+    ipv4_t       inner_ipv4;
+    @name("inner_ethernet") 
+    ethernet_t   inner_ethernet;
+    @name("inner_tcp") 
+    tcp_t        inner_tcp;
+    @name("inner_icmp") 
+    icmp_t       inner_icmp;
+    @name("cpu_header") 
+    cpu_header_t cpu_header;
+}
 
+/***********************  M E T A D A T A  *******************************/
 struct routing_metadata_t {
     bit<32> nhgroup;
 
@@ -54,33 +75,12 @@ struct routing_metadata_t {
 
 }
 
-
-
 struct metadata {
     @name(".routing_metadata") 
     routing_metadata_t routing_metadata;
 }
 
-struct headers {
-    ethernet_t   ethernet;
-    arp_t        arp;
-    arp_ipv4_t   arp_ipv4;
-    ipv4_t       ipv4;
-    gre_t        gre;
-    nvgre_t      nvgre;
-    tcp_t        tcp;
-    icmp_t       icmp;
-    @name("inner_ipv4") 
-    ipv4_t       inner_ipv4;
-    @name("inner_ethernet") 
-    ethernet_t   inner_ethernet;
-    @name("inner_tcp") 
-    tcp_t        inner_tcp;
-    @name("inner_icmp") 
-    icmp_t       inner_icmp;
-    @name("cpu_header") 
-    cpu_header_t cpu_header;
-}
+
 
 /***********************  P A R S E R  ***********************************/
 parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
@@ -178,14 +178,33 @@ parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout 
 
 /**************  I N G R E S S   P R O C E S S I N G   ******************/
 control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
-
+    
+    /***************************** set metadata  **************************/
+    action set_meta_info() {
+        
+        meta.routing_metadata.if_index = (bit<8>)standard_metadata.ingress_port;
+        meta.routing_metadata.dst_ipv4 = hdr.arp_ipv4.tpa;
+        meta.routing_metadata.dst_ipv4 = hdr.ipv4.dstAddr;
+        meta.routing_metadata.tcp_sp = hdr.tcp.srcPort;
+        meta.routing_metadata.tcp_dp = hdr.tcp.dstPort;
+        meta.routing_metadata.dst_inner_ipv4 = hdr.inner_ipv4.dstAddr;
+        meta.routing_metadata.lkp_inner_l4_sport = hdr.inner_tcp.srcPort;
+        meta.routing_metadata.lkp_inner_l4_dport = hdr.inner_tcp.dstPort;
+        
+    }
+    @name(".meta_info") table meta_info {
+        key = { }
+        actions = {set_meta_info;
+        }
+    default_action = set_meta_info();     
+    }
+    /***************************** Drop  **************************/
      @name(".drop")action drop() {
         mark_to_drop();
 
     }
     /***************************** set IF and others  **************************/
     action set_if_info(bit<32> ipv4_addr, bit<48> mac_addr, bit<1> is_ext) {
-        
         
         
         meta.routing_metadata.if_ipv4_addr = ipv4_addr;
@@ -227,25 +246,24 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
                hdr.tcp.srcPort = hdr.inner_tcp.srcPort;
                hdr.tcp.dstPort = hdr.inner_tcp.dstPort;
                
-           /*meta.routing_metadata.dst_ipv4 = hdr.ipv4.dstAddr; it doesnt compile with macsad */
+           meta.routing_metadata.dst_ipv4 = hdr.ipv4.dstAddr; 
     }
     
     @name("tunnel_decap_process_outer") table decap_process_outer {
         actions = {
             decap_gre_inner_ipv4;
         }
-        key = {
-               meta.routing_metadata.ingress_tunnel_type    : exact; 
-               /*hdr.ipv4.isValid()          : exact;  it doesnt compile with macsad */
+        key = { /*meta.routing_metadata.ingress_tunnel_type    : exact; */
+                /*hdr.ipv4.setValid()          : exact;*/
         }
         size = 1024;
         default_action = decap_gre_inner_ipv4();
     } 
    /***************************** process meter UL  *****************************/
-    @name(".my_meter_ul") meter(32w16384, MeterType.packets) my_meter;
-    @name(".m_action") action m_action(bit<32> meter_idx) {
+    /*@name(".my_meter_ul") meter(32w16384, MeterType.packets) my_meter;
+    @name(".m_action") action m_action(bit<32> meter_idx) { */
         /*my_meter.execute_meter((bit<32>)meter_idx, meta.routing_metadata.meter_tag);*/
-        standard_metadata.egress_spec = 9w2;
+    /*    standard_metadata.egress_spec = 9w2;
     }
     @name(".m_filter") table m_filter {
         actions = {drop;  }
@@ -256,7 +274,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         actions = {m_action; }
         key = { hdr.ethernet.srcAddr: exact;}
         size = 16384;
-    }
+    }*/
     /***************************** firewall UL control *****************************/
     @name(".fw_drop_up") table fw_drop_up {
         actions = { drop; }
@@ -280,8 +298,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         /*meta.src_ipv4 = srcAddr; */
         hdr.ipv4.srcAddr= srcAddr;
         /*meta.tcp_sp = srcPort;*/
-        /* meta.dst_ipv4 = hdr.inner_ipv4.dstAddr;  it doesnt compile with macsad */
-
+        /*meta.routing_metadata.dst_ipv4 = hdr.inner_ipv4.dstAddr;  ver esta assig en control decap */
         hdr.tcp.srcPort = srcPort;
     }
     @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {
@@ -306,23 +323,25 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
             nat_no_nat;
         }
         key = {
-
-
+        
+            meta.routing_metadata.is_ext_if: exact;
+            /*hdr.ipv4.isValid() : exact;
+            hdr.tcp.isValid()  : exact;    this two doesnt compile*/
             hdr.ipv4.srcAddr   : ternary;
             hdr.ipv4.dstAddr   : ternary;
             hdr.tcp.srcPort    : ternary;
-            hdr.tcp.dstPort    : ternary;  /*This needs to be upgrades to compile with macsad*/
+            hdr.tcp.dstPort    : ternary;
         }
         size = 128;
         default_action = nat_no_nat();
     }
     /***************************** process meter dl  *****************************/
     
-    @name(".my_meter") meter(32w16384, MeterType.packets) my_meter_dl;
+    /*@name(".my_meter") meter(32w16384, MeterType.packets) my_meter_dl;
     
-    @name(".m_action_dl") action m_action_dl(bit<32> meter_idx) {
+    @name(".m_action_dl") action m_action_dl(bit<32> meter_idx) { /*
         /*my_meter_dl.execute_meter((bit<32>)meter_idx, meta.routing_metadata.meter_tag); */
-        standard_metadata.egress_spec = 9w2;
+    /*    standard_metadata.egress_spec = 9w2;
     }
     @name(".m_filter_dl") table m_filter_dl {
         actions = {drop;  }
@@ -333,7 +352,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         actions = {m_action_dl; }
         key = { hdr.ethernet.srcAddr: exact;}
         size = 16384;
-    }
+    }/*
+    
     /***************************** tunnel control encap *****************************/
     
     @name(".f_insert_inner_ipv4_header") action f_insert_inner_ipv4_header(bit<8> proto) {
@@ -395,7 +415,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         }
         key = {
             hdr.inner_ipv4.dstAddr   : exact;
-            /*hdr.inner_tcp.dstPort    : exact; it only lets compile in macsad one key per table ?*/
+            hdr.inner_tcp.dstPort    : exact;
         }
         size = 128;
     }
@@ -424,34 +444,33 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     
     /************** APPLY ******************/
     apply {
+        meta_info.apply();
         if_info.apply();
         smac.apply(); 
          
         if(hdr.ipv4.protocol== 8w47){
            decap_process_outer.apply();
-           m_table.apply();
-           m_filter.apply();
+           /*m_table.apply();
+           m_filter.apply(); */
            fw_drop_up.apply();
         }
         nat.apply();
         if(meta.routing_metadata.is_ext_if == 1){
-           m_table_dl.apply();
-           m_filter_dl.apply();
+           /*m_table_dl.apply();
+           m_filter_dl.apply(); */
            tunnel_encap_process_outer.apply();
            fw_drop_dw.apply();
 
         }
          
         if (meta.routing_metadata.do_forward == 1w1 && hdr.ipv4.ttl > 8w0) {
-           meta.routing_metadata.my_mac = 0x000102030405;
+           /*meta.routing_metadata.my_mac = 0x000102030405; */
            ipv4_lpm.apply();
            ipv4_forward.apply();
         } 
 
     }
     
-    
-
     
 }
 
