@@ -17,6 +17,7 @@ const bit<8>  ARP_PLEN_IPV4      = 4;
 
 struct headers {
     ethernet_t   ethernet;
+    ethernet_t   ethernet_decap;
     arp_t        arp;
     ipv4_t       ipv4;
     gre_t        gre;
@@ -53,7 +54,7 @@ struct routing_metadata_t {
     bit<48> if_mac_addr;
     bit<1>  is_ext_if;
     
-    bit<24> tunnel_vni;
+    bit<32> tunnel_id;
     bit<5>  ingress_tunnel_type;
     bit<1>  tcp_inner_en;
     bit<16> lkp_inner_l4_sport;
@@ -164,8 +165,9 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         meta.routing_metadata.dst_inner_ipv4= hdr.inner_ipv4.dstAddr; 
         meta.routing_metadata.src_inner_ipv4= hdr.inner_ipv4.srcAddr;
 
-        meta.routing_metadata.dst_ipv4 = hdr.ipv4.dstAddr;
-        meta.routing_metadata.src_ipv4 = hdr.ipv4.srcAddr;
+        meta.routing_metadata.mac_da = hdr.ethernet.dstAddr;
+        meta.routing_metadata.mac_sa = hdr.ethernet.srcAddr;
+
         meta.routing_metadata.lkp_inner_l4_sport = hdr.inner_tcp.srcPort;
         meta.routing_metadata.lkp_inner_l4_dport = hdr.inner_tcp.dstPort;
         
@@ -219,7 +221,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
     
     /***************************** tunnel control decap *****************************/
-    @name("decap_gre_inner_ipv4") action decap_gre_inner_ipv4() {
+    @name("decap_gre_inner_ipv4") action decap_gre_inner_ipv4(bit <32> tunnel_id) {
            /*hdr.ipv4= hdr.inner_ipv4;  */
            /*hdr.ipv4.dstAddr =  meta.routing_metadata.dst_inner_ipv4;
            hdr.ipv4.srcAddr =  meta.routing_metadata.src_inner_ipv4;
@@ -236,44 +238,26 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
                
            meta.routing_metadata.dst_ipv4 = hdr.ipv4.dstAddr; */
            /* new decap */  
-                     
+           meta.routing_metadata.tunnel_id = tunnel_id;         
+           meta.routing_metadata.dst_ipv4 = meta.routing_metadata.dst_inner_ipv4;
+
+           hdr.ethernet.setInvalid();
            hdr.ipv4.setInvalid();
            hdr.gre.setInvalid();
-
-
-
-
-
+           hdr.ethernet_decap.setValid();
+           hdr.ethernet_decap.dstAddr =  meta.routing_metadata.mac_da; 
+           hdr.ethernet_decap.srcAddr =  meta.routing_metadata.mac_sa;
+           hdr.ethernet_decap.etherType = 16w0x800;
+           
     }
     
     @name("tunnel_decap_process_outer") table decap_process_outer {
-        actions = {
-            decap_gre_inner_ipv4;
-        }
-        /*key = { meta.routing_metadata.ingress_tunnel_type    : exact;   */
-        key = { standard_metadata.egress_port: exact;} 
-        /*key = { meta.routing_metadata.if_index    : exact;  */ 
-                /*hdr.ipv4.setValid()          : exact;*/
+        actions = {decap_gre_inner_ipv4; drop; }
+        key ={ hdr.ethernet.srcAddr: exact;}
         
         size = 1024;
-        default_action = decap_gre_inner_ipv4();
+        default_action = drop();
     } 
-   /***************************** process meter UL  *****************************/
-    /*@name(".my_meter_ul") meter(32w16384, MeterType.packets) my_meter;
-    @name(".m_action") action m_action(bit<32> meter_idx) { */
-        /*my_meter.execute_meter((bit<32>)meter_idx, meta.routing_metadata.meter_tag);*/
-    /*    standard_metadata.egress_spec = 9w2;
-    }
-    @name(".m_filter") table m_filter {
-        actions = {drop;  }
-        key = { meta.routing_metadata.meter_tag: exact;}
-        size = 16;
-    }
-    @name(".m_table") table m_table {
-        actions = {m_action; }
-        key = { hdr.ethernet.srcAddr: exact;}
-        size = 16384;
-    }*/
     /***************************** firewall UL control *****************************/
     @name(".fw_drop_up") table fw_drop_up {
         actions = { drop; }
@@ -343,24 +327,6 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         size = 128;
         default_action = nat_no_nat();
     }*/
-    /***************************** process meter dl  *****************************/
-    
-    /*@name(".my_meter") meter(32w16384, MeterType.packets) my_meter_dl;
-    
-    @name(".m_action_dl") action m_action_dl(bit<32> meter_idx) { /*
-        /*my_meter_dl.execute_meter((bit<32>)meter_idx, meta.routing_metadata.meter_tag); */
-    /*    standard_metadata.egress_spec = 9w2;
-    }
-    @name(".m_filter_dl") table m_filter_dl {
-        actions = {drop;  }
-        key = { meta.routing_metadata.meter_tag: exact;}
-        size = 16;
-    }
-    @name(".m_table_dl") table m_table_dl {
-        actions = {m_action_dl; }
-        key = { hdr.ethernet.srcAddr: exact;}
-        size = 16384;
-    }/*
     
     /***************************** tunnel control encap *****************************/
     
@@ -407,9 +373,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
 
       @name(".tunnel_encap_process_outer") table tunnel_encap_process_outer {
-        actions = {
-            ipv4_gre_rewrite;
-        }
+        actions = {ipv4_gre_rewrite; }
         key = {  hdr.ipv4.dstAddr       : exact; }
         size = 1024;
     }
@@ -426,48 +390,57 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
     
     /************** forwarding ipv4 ******************/
-    @name(".set_dmac") action set_dmac(bit<48> dmac) {
-        hdr.ethernet.dstAddr = dmac;
-        hdr.ethernet.srcAddr = meta.routing_metadata.if_mac_addr;   /* this could be here? */
-    }
+      
+    @name(".rewrite_src_mac") action rewrite_src_mac(bit<48> smac) {
+        hdr.ethernet.srcAddr = smac;
+        hdr.ethernet_decap.srcAddr = smac;
+    } 
+          
     @name(".set_nhop") action set_nhop(bit<32> nhop_ipv4, bit<9> port) {
-        meta.routing_metadata.nhop_ipv4 = nhop_ipv4;
+        
         standard_metadata.egress_spec = port;
-        hdr.ipv4.ttl = hdr.ipv4.ttl + 8w255;
+        hdr.inner_ipv4.ttl = hdr.ipv4.ttl + 8w255;
     }
     
     @name(".ipv4_lpm") table ipv4_lpm {
-        key     = { meta.routing_metadata.dst_ipv4 : lpm; }
+        /*key     = {hdr.inner_ipv4.dstAddr  : lpm; } */
+        key = {hdr.inner_ipv4.dstAddr: lpm;} 
+        /*key     = { meta.routing_metadata.dst_ipv4 : lpm; }  */
         actions = { set_nhop; drop;  }
-        /*default_action = drop(); */
+        size = 512; 
+        default_action = drop();
     }
 
-    @name(".ipv4_forward") table ipv4_forward {
-        key = { meta.routing_metadata.nhop_ipv4         : exact; }
-        actions = {set_dmac; drop; }
-        /*const default_action = drop();*/
-    }
+    @name(".sendout") table sendout {
+        actions = {drop; rewrite_src_mac; }
+        key = {  standard_metadata.egress_port: exact; }
+        size = 512;
+    }    
     
+   
+
+
+
+
+ 
     /************** APPLY ******************/
     apply {
         meta_info.apply();
         if_info.apply();
         smac.apply();  
-        nat_up.apply();  
-        /* decap */ 
+        /* ------ decap-------  */ 
         if(hdr.ipv4.protocol== 8w47){
            decap_process_outer.apply();
-           /*m_table.apply();
-           m_filter.apply(); */
+           nat_up.apply();  
+
            /*fw_drop_up.apply();*/
         }
-                 /*nat.apply();*/
-        /*ipv4_lpm.apply();
-        ipv4_forward.apply();*/
+
+        ipv4_lpm.apply(); 
+        sendout.apply();
+        /*ipv4_forward.apply();*/
 
         /*if(meta.routing_metadata.is_ext_if == 1){
-           m_table_dl.apply();
-           m_filter_dl.apply(); 
            tunnel_encap_process_outer.apply();
            fw_drop_dw.apply();
 
