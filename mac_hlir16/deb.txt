@@ -1,0 +1,88 @@
+HW time counter freq: 2992518041 hz
+
+PKTIO: initialized loop interface.
+PKTIO: initialized pcap interface.
+PKTIO: initialized ipc interface.
+PKTIO: initialized socket mmap, use export ODP_PKTIO_DISABLE_SOCKET_MMAP=1 to disable.
+PKTIO: initialized socket mmsg,use export ODP_PKTIO_DISABLE_SOCKET_MMSG=1 to disable.
+
+ODP system info
+---------------
+ODP API version: 1.16.0
+ODP impl name:   "odp-linux"
+CPU model:       AMD Phenom(tm) II N660 Dual-Core Processor
+
+CPU freq (hz):   3000000000
+Cache line size: 64
+CPU count:       2
+
+Running ODP appl: "macsad"
+-----------------
+IF-count:        2
+Using IFs:       veth1 veth3
+Mode:            PKTIN_DIRECT, PKTOUT_DIRECT
+
+HW time counter freq: 2992518041 hz
+
+Received signal=2 (SIGINT) exiting.Worker: CPUs 1, 1st CPU 1, Mask 0x2 
+
+Pool info
+---------
+  pool            0
+  name            PktsPool
+  pool type       packet
+  pool shm        11
+  user area shm   0
+  num             8192
+  align           64
+  headroom        128
+  seg len         8064
+  max data len    65536
+  tailroom        0
+  block size      8768
+  uarea size      0
+  shm size        72143104
+  base addr       0x7f96fda13000
+  uarea shm size  0
+  uarea base addr (nil)
+
+rx_idx 0, num_rx_thr 1
+rx_idx 1, num_rx_thr 1
+Pktio open success for 1 (veth1)
+created 1 input and 1 output queues on (veth1)
+interface id 0, ifname veth1, drv: socket_mmap, pktio:1, num of rx q=1 
+Pktio open success for 2 (veth3)
+created 1 input and 1 output queues on (veth3)
+interface id 1, ifname veth3, drv: socket_mmap, pktio:2, num of rx q=1 
+
+Queue binding (indexes)
+-----------------------
+worker 0
+  rx: pktio 0, queue 0
+  rx: pktio 1, queue 0
+  tx: pktio 0, queue 0
+  tx: pktio 1, queue 0
+
+Worker mapping table (port[queue])
+--------------------
+Worker 0
+  0[0]
+  1[0]
+
+Port config
+--------------------
+Port 0 (veth1)
+  rx workers 1
+  rx queues 1
+  tx queues 1
+Port 1 (veth3)
+  rx workers 1
+  rx queues 1
+  tx queues 1
+
+  :::: Handle msg: 0
+  :::: Handle msg: 0
+  :::: Handle msg: 0
+[Unicast] recvd port id - 1, sent port id - 1
+
+Received signal=2 (SIGINT) exiting.
