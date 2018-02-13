@@ -235,17 +235,47 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
            /* new decap */ 
             
            /*inner metadata */
- 
+
+
+           meta.meta_ipv4.version        = hdr.inner_ipv4.version        ; 
+           meta.meta_ipv4.ihl            = hdr.inner_ipv4.ihl            ;
+           meta.meta_ipv4.diffserv       = hdr.inner_ipv4.diffserv       ;
+           meta.meta_ipv4.totalLen       = hdr.inner_ipv4.totalLen       ;
+           meta.meta_ipv4.identification = hdr.inner_ipv4.identification ;
+           meta.meta_ipv4.flags          = hdr.inner_ipv4.flags          ;
+           meta.meta_ipv4.fragOffset     = hdr.inner_ipv4.fragOffset     ;
+           meta.meta_ipv4.ttl            = hdr.inner_ipv4.ttl            ;
+           meta.meta_ipv4.protocol       = hdr.inner_ipv4.protocol       ;
+           meta.meta_ipv4.hdrChecksum    = hdr.inner_ipv4.hdrChecksum    ;
+           meta.meta_ipv4.srcAddr        = hdr.inner_ipv4.srcAddr        ;
+           meta.meta_ipv4.dstAddr        = hdr.inner_ipv4.dstAddr        ;
+           
+           /*hdr.ethernet.setInvalid();*/
+           hdr.ipv4.setInvalid();
+           hdr.gre.setInvalid();
+
+           /*hdr.outer_ipv4.setValid(); 
+
+           hdr.outer_ipv4.version         = meta.meta_ipv4.version          ; 
+           hdr.outer_ipv4.ihl             = meta.meta_ipv4.ihl              ;
+           hdr.outer_ipv4.diffserv        = meta.meta_ipv4.diffserv         ;
+           hdr.outer_ipv4.totalLen        = meta.meta_ipv4.totalLen         ;
+           hdr.outer_ipv4.identification  = meta.meta_ipv4.identification   ;
+           hdr.outer_ipv4.flags           = meta.meta_ipv4.flags            ;
+           hdr.outer_ipv4.fragOffset      = meta.meta_ipv4.fragOffset       ;
+           hdr.outer_ipv4.ttl             = meta.meta_ipv4.ttl              ;
+           hdr.outer_ipv4.protocol        = meta.meta_ipv4.protocol         ;
+           hdr.outer_ipv4.hdrChecksum     = meta.meta_ipv4.hdrChecksum      ;
+           hdr.outer_ipv4.srcAddr         = meta.meta_ipv4.srcAddr          ;
+           hdr.outer_ipv4.dstAddr         = meta.meta_ipv4.dstAddr          ;*/
+  
            meta.routing_metadata.tunnel_id = tunnel_id;         
            meta.routing_metadata.dst_ipv4 = hdr.inner_ipv4.dstAddr;
 
-           hdr.ethernet.setInvalid();
-           hdr.ipv4.setInvalid();
-           hdr.gre.setInvalid();
-           hdr.ethernet_decap.setValid();
+           /*hdr.ethernet_decap.setValid();
            hdr.ethernet_decap.dstAddr =  meta.routing_metadata.mac_da; 
            hdr.ethernet_decap.srcAddr =  meta.routing_metadata.mac_sa;
-           hdr.ethernet_decap.etherType = 16w0x800;
+           hdr.ethernet_decap.etherType = 16w0x800;*/
 
            
 	   standard_metadata.egress_port = 1; 
@@ -283,7 +313,6 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         meta.routing_metadata.dst_ipv4 = dstAddr; /* to lpm */
         hdr.ipv4.dstAddr = dstAddr;
         hdr.tcp.dstPort = dstPort;
-
     }
     @name(".nat_to_nat") action nat_to_nat() {
        /* meta.routing_metadata.do_forward = 1w1; */
@@ -318,7 +347,6 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
       hdr.ethernet.setInvalid();     
       hdr.gre.setValid();
       hdr.gre.proto = 16w0x800;
-      /*meta.meta_ipv4 = hdr.ipv4;     */
  
       meta.meta_ipv4.version        = hdr.ipv4.version        ; 
       meta.meta_ipv4.ihl            = hdr.ipv4.ihl            ;
@@ -354,9 +382,11 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
 
       @name(".tunnel_encap_process_outer") table tunnel_encap_process_outer {
-        actions = {ipv4_gre_rewrite; }
-        key = {  hdr.ipv4.dstAddr       : exact; }
-        size = 1024;
+        actions = {ipv4_gre_rewrite; drop; }
+        /*key = {  hdr.ipv4.dstAddr       : exact; } */
+        /*key = {  hdr.ethernet.srcAddr     : exact; } */
+        key = {  meta.routing_metadata.mac_da     : exact; }
+        size = 128;
     }
     /***************************** firewall DW control *****************************/
     @name(".fw_drop_dw") table fw_drop_dw {
@@ -372,9 +402,9 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     
     /************** forwarding ipv4 ******************/
       
-    @name(".rewrite_src_mac") action rewrite_src_mac(bit<48> smac) {
-        hdr.ethernet.srcAddr = smac;
-        hdr.ethernet_decap.srcAddr = smac;
+    @name(".rewrite_src_mac") action rewrite_src_mac(bit<48> src_mac) {
+        hdr.ethernet.srcAddr = src_mac;
+        hdr.ethernet_decap.srcAddr = src_mac;
     } 
           
     @name(".set_nhop") action set_nhop(bit<32> nhop_ipv4, bit<9> port) {
@@ -386,14 +416,14 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         /*standard_metadata.egress_port =  port;  */
         /*hdr.ipv4.ttl = hdr.ipv4.ttl + 8w255; */
     }
-    @name(".ipv4_lpm_up") table ipv4_lpm_up {
+    @name(".ipv4_up") table ipv4_up {
+        /*key = {meta.routing_metadata.dst_ipv4 : lpm;}  */
         key = {hdr.inner_ipv4.dstAddr: lpm;}  
+        /*key = {meta.routing_metadata.dst_ipv4 : lpm;}  */
         actions = { set_nhop; drop;  }
-        size = 512; 
-        default_action = drop();
     }
 
-    @name(".ipv4_lpm_dw") table ipv4_lpm_dw {
+    @name(".ipv4_dw") table ipv4_dw {
         /*key     = { hdr.ipv4.dstAddr: lpm; }     ???? go ahead, despues resolvemos esto! exact.. */
         key     = { meta.routing_metadata.dst_ipv4: exact; }  
         actions = { set_nhop_dw; drop;  }
@@ -415,8 +445,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         /* ------ decap-------  */ 
         if(hdr.ipv4.protocol== 8w47){
            decap_process_outer.apply();
-           nat_up.apply();  
-           ipv4_lpm_up.apply(); 
+           nat_up.apply();
+           ipv4_up.apply(); 
 
            /*fw_drop_up.apply();*/
         }
@@ -424,7 +454,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
 
         if(meta.routing_metadata.is_ext_if == 1){
            nat_dw.apply();  
-           ipv4_lpm_dw.apply();
+           /*ipv4_lpm_dw.apply(); */
  
            tunnel_encap_process_outer.apply(); 
            /*fw_drop_dw.apply();*/
@@ -451,7 +481,16 @@ control egress(inout headers hdr, inout metadata meta, inout standard_metadata_t
 
 control DeparserImpl(packet_out packet, in headers hdr) {
     apply {
-        /*packet.emit(hdr.ethernet);
+        /*packet.emit(hdr.ethernet); */
+        /*packet.emit(hdr.ipv4);*/
+        /*packet.emit(hdr.tcp);*/
+
+        /*packet.emit(hdr.outer_ethernet);
+        packet.emit(hdr.outer_ipv4);
+        packet.emit(hdr.inner_tcp);*/
+ 
+        /*packet.emit(hdr.inner_ipv4);
+        packet.emit(hdr.ethernet);
         packet.emit(hdr.outer_ethernet);
         packet.emit(hdr.outer_ipv4);
         packet.emit(hdr.gre);

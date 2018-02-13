@@ -269,7 +269,7 @@ void set_default_action_encap_process()
         strcpy(sda->table_name, "tunnel_encap_process_outer");
 
 	a = &(sda->action);
-	strcpy(a->description.name, "ipv4_gre_rewrite");
+	strcpy(a->description.name, "drop");
 
 	netconv_p4_header(h);
 	netconv_p4_set_default_action(sda);
@@ -597,7 +597,7 @@ void fill_ipv4_lpm_up(uint8_t dst_ip[4], uint8_t port, uint8_t nhop [4])
 
 	h = create_p4_header(buffer, 0, 2048);
 	te = create_p4_add_table_entry(buffer,0,2048);
-	strcpy(te->table_name, "ipv4_lpm_up");
+	strcpy(te->table_name, "ipv4_up");
 
 	exact = add_p4_field_match_exact(te, 2048);
 	//strcpy(exact->header.name, "meta.routing_metadata.dst_ipv4");
@@ -708,7 +708,7 @@ void fill_sendout_table(uint8_t port, uint8_t smac[6])
 	strcpy(a->description.name, "rewrite_src_mac");
 
 	ap = add_p4_action_parameter(h, a, 2048);
-	strcpy(ap->name, "smac");
+	strcpy(ap->name, "src_mac");
 	memcpy(ap->bitmap, smac, 6);
 	ap->length = 6*8+0;
 
@@ -767,21 +767,22 @@ void init() {
 
         fill_meta_info(smac);
         fill_decap(smac, tn_id0);
-        //fill_if_info(port0,is_int); //  set this to up use case 
+        fill_if_info(port0,is_int); //  set this to up use case 
+          fill_if_info(port0,is_ext); //  set this to up use case 
 
         //fill_if_info(port1, is_ext);   //  set this to dw use case 
-        fill_if_info(port0, is_ext);   //  set this to dw use case 
+        //fill_if_info(port0, is_ext);   //  set this to dw use case este aqu *i 
 
-        //fill_nat_up(port0,ip2,stcp); //  set this to up use case 
+        fill_nat_up(port0,ip2,stcp); //  set this to up use case 
         //fill_nat_up(port1,ip2,stcp); //  set this to up use case, solo hace match con is_ext = 1 
         
-        //fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);
-        fill_ipv4_lpm_dw(ip_dst_dw, port1, ip_dst_dw);
+        fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);
+        //fill_ipv4_lpm_dw(ip_dst_dw, port1, ip_dst_dw);
 
-        fill_sendout_table(port1, mac_if1);
-        fill_sendout_table(port0, mac_if0);
+        //fill_sendout_table(port1, mac_if1);
+        //fill_sendout_table(port0, mac_if0);
         
-        fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case 
+        //fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case 
         
          printf("\n");
  
