@@ -8,52 +8,6 @@
 
 controller c;
 
-//void fill_ipv4_fib_lpm_table(uint8_t ip[4], uint8_t port, uint8_t mac[6])
-//{
-//	char buffer[2048]; /* TODO: ugly */
-//	struct p4_header* h;
-//	struct p4_add_table_entry* te;
-//	struct p4_action* a;
-//	struct p4_action_parameter* ap,* ap2;
-//	struct p4_field_match_exact* exact; // TODO: replace to lpm
-//
-//  //  printf("LPM table update \n"); 
-//
-//	h = create_p4_header(buffer, 0, 2048);
-//	te = create_p4_add_table_entry(buffer,0,2048);
-//	strcpy(te->table_name, "ipv4_fib_lpm");
-//
-//	exact = add_p4_field_match_exact(te, 2048);
-//	strcpy(exact->header.name, "ipv4.dstAddr");
-//	memcpy(exact->bitmap, ip, 4);
-//	exact->length = 4*8+0;
-//
-//	a = add_p4_action(h, 2048);
-//	strcpy(a->description.name, "fib_hit_nexthop");
-//
-//	ap = add_p4_action_parameter(h, a, 2048);
-//	strcpy(ap->name, "dmac");
-//	memcpy(ap->bitmap, mac, 6);
-//	ap->length = 6*8+0;
-//
-//	ap2 = add_p4_action_parameter(h, a, 2048);
-//	strcpy(ap2->name, "port");
-//	ap2->bitmap[0] = port;
-//	ap2->bitmap[1] = 0;
-//	ap2->length = 2*8+0;
-//
-//	netconv_p4_header(h);
-//	netconv_p4_add_table_entry(te);
-//	netconv_p4_field_match_exact(exact);
-//	netconv_p4_action(a);
-//	netconv_p4_action_parameter(ap);
-//	netconv_p4_action_parameter(ap2);
-//
-//	send_p4_msg(c, buffer, 2048);
-//}
-//
-
-
 uint8_t macs[MAX_MACS][6];
 uint8_t portmap[MAX_MACS];
 uint8_t ips[MAX_MACS][4];
@@ -830,16 +784,16 @@ void init() {
         fill_smac(smac_2);  // esta smac del paquete 
 
         fill_decap(smac, tn_id0);
-        //fill_if_info(port0,is_int); //  set this to up use case 
+        fill_if_info(port0,is_int); //  set this to up use case 
         fill_if_info(port0,is_ext); //  set this to dw use case 
 
-        //fill_nat_up(ip_dst_dw,ip2,stcp); //  set this to up use case, src ip inner  
+        fill_nat_up(ip_dst_dw,ip2,stcp); //  set this to up use case, src ip inner  
         fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case 
         
-        //fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);   //this case for UP
+        fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);   //this case for UP
         fill_ipv4_lpm_up(end_gre, port1, ip_dst_up);     // this case for DW
 
-        //fill_sendout_table(port1, mac_if1);  // port 1 fijo para nat up, set 1 for up case
+        fill_sendout_table(port1, mac_if1);  // port 1 fijo para nat up, set 1 for up case
         fill_sendout_dw_table(port1, mac_if1);  // port 1 fijo para nat DW, 
         //fill_sendout_table(port0, mac_if0);
         fill_encap(ip_dst_dw,end_gre);        
