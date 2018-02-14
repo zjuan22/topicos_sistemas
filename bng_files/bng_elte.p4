@@ -63,6 +63,7 @@ struct routing_metadata_t {
 
     bit<32> nhop_ipv4;
     bit<1>  do_forward;
+    bit<1>  rewrite_outer;
     bit<16> tcp_sp;
     bit<16> tcp_dp;
 
@@ -176,20 +177,6 @@ parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout 
 /**************  I N G R E S S   P R O C E S S I N G   ******************/
 control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     
-    /***************************** set metadata  **************************/
-    action set_meta_info() {
-        meta.routing_metadata.if_index = (bit<8>)standard_metadata.ingress_port;
-        meta.routing_metadata.mac_da = hdr.ethernet.dstAddr;
-        meta.routing_metadata.mac_sa = hdr.ethernet.srcAddr;
-
-    }
-    @name(".meta_info") table meta_info {
-       /* key = { meta.routing_metadata.if_index: exact;} */
-        key = { hdr.ethernet.srcAddr: exact; }
-        actions = {set_meta_info; }
-    default_action = set_meta_info();     
-    }
-
     /***************************** Drop  **************************/
      @name(".drop")action drop() {
         /*mark_to_drop();*/
@@ -200,6 +187,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     action set_if_info(bit<1> is_ext) {
         
         
+        meta.routing_metadata.mac_da = hdr.ethernet.dstAddr;
+        meta.routing_metadata.mac_sa = hdr.ethernet.srcAddr;
         meta.routing_metadata.if_ipv4_addr = 0x7fef4800 ;
         meta.routing_metadata.if_mac_addr = 0x010101010100;
         meta.routing_metadata.is_ext_if = is_ext;
@@ -222,9 +211,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
             generate_learn_notify;
         }
         key = {
-            /*standard_metadata.ingress_port: exact;*/
             hdr.ethernet.srcAddr: exact;
-            /*hdr.ethernet.isValid()                : exact;*/
         }
         size = 512;
     }
@@ -279,6 +266,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
 
            
 	   standard_metadata.egress_port = 1; 
+
+           meta.routing_metadata.is_ext_if = 0;
            
     }
     
@@ -301,49 +290,37 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     
     /***************************** Nat control *****************************************/
     @name(".nat_hit_int_to_ext") action nat_hit_int_to_ext(bit<32> srcAddr, bit<16> srcPort) {
-        meta.routing_metadata.do_forward = 1w1;
+        meta.routing_metadata.rewrite_outer = 1w1;
         /*meta.src_ipv4 = srcAddr; */
         hdr.inner_ipv4.srcAddr= srcAddr;
         /*meta.tcp_sp = srcPort;*/
-        /*meta.routing_metadata.dst_ipv4 = hdr.inner_ipv4.dstAddr;  ver esta assig en control decap */
         hdr.inner_tcp.srcPort = srcPort;
     }
+
+    @name(".nat_up") table nat_up {
+        actions = { drop; nat_hit_int_to_ext; }
+        key = { hdr.inner_ipv4.srcAddr: exact;}
+        size = 1024;
+        default_action = drop();     
+    }
+
     @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {
-        meta.routing_metadata.do_forward = 1w1;
+        meta.routing_metadata.rewrite_outer = 1w0;
         meta.routing_metadata.dst_ipv4 = dstAddr; /* to lpm */
         hdr.ipv4.dstAddr = dstAddr;
         hdr.tcp.dstPort = dstPort;
     }
-    @name(".nat_to_nat") action nat_to_nat() {
-       /* meta.routing_metadata.do_forward = 1w1; */
-    }
-
-    @name(".nat_up") table nat_up {
-        actions = {
-            nat_to_nat;
-            nat_hit_int_to_ext;
-        }
-
-        key = { meta.routing_metadata.is_ext_if: exact;}
-        size = 1024;
-
-        default_action = nat_to_nat();     
-    }
-
     @name(".nat_dw") table nat_dw {
-        actions = {
-            nat_to_nat;
-            nat_hit_ext_to_int;
-        }
+        actions = { drop; nat_hit_ext_to_int;  }
         key = {meta.routing_metadata.is_ext_if: exact; }
-        size = 128;
-        default_action = nat_to_nat();
+        size = 1024;
+        default_action = drop();
     }
     
     /***************************** tunnel control encap *****************************/
     
     /*@name(".ipv4_gre_rewrite") action ipv4_gre_rewrite(bit<32> gre_srcAddr, bit<32> gre_dstAddr) { */
-    @name(".ipv4_gre_rewrite") action ipv4_gre_rewrite() {
+    @name(".ipv4_gre_rewrite") action ipv4_gre_rewrite(bit<32> gre_srcAddr) {
       hdr.ethernet.setInvalid();     
       hdr.gre.setValid();
       hdr.gre.proto = 16w0x800;
@@ -363,7 +340,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
 
       hdr.outer_ipv4.setValid();  
       hdr.outer_ipv4.srcAddr  = 0x04000001;  
-      hdr.outer_ipv4.dstAddr  = 0x04000010;  
+      hdr.outer_ipv4.dstAddr  = gre_srcAddr;  
       hdr.outer_ipv4.protocol = 47; 
       hdr.outer_ipv4.version        =  meta.meta_ipv4.version        ;          
       hdr.outer_ipv4.ihl            =  meta.meta_ipv4.ihl            ;
@@ -377,15 +354,15 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
       hdr.outer_ethernet.setValid(); 
       hdr.outer_ethernet.dstAddr = 0x000000000001; 
       hdr.outer_ethernet.srcAddr = 0x000000000002; 
-      hdr.outer_ethernet.etherType = 16w0x800; 
+      hdr.outer_ethernet.etherType = 16w0x800;
+      standard_metadata.egress_port = 1;
+      meta.routing_metadata.dst_ipv4= hdr.outer_ipv4.dstAddr;               
        
     }
 
       @name(".tunnel_encap_process_outer") table tunnel_encap_process_outer {
         actions = {ipv4_gre_rewrite; drop; }
-        /*key = {  hdr.ipv4.dstAddr       : exact; } */
-        /*key = {  hdr.ethernet.srcAddr     : exact; } */
-        key = {  meta.routing_metadata.mac_da     : exact; }
+        key = {  hdr.ipv4.dstAddr       : exact; } 
         size = 128;
     }
     /***************************** firewall DW control *****************************/
@@ -402,72 +379,68 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     
     /************** forwarding ipv4 ******************/
       
-    @name(".rewrite_src_mac") action rewrite_src_mac(bit<48> src_mac) {
-        hdr.ethernet.srcAddr = src_mac;
-        hdr.ethernet_decap.srcAddr = src_mac;
-    } 
           
     @name(".set_nhop") action set_nhop(bit<32> nhop_ipv4, bit<9> port) {
         /*standard_metadata.egress_port =  port;  */
-        /*hdr.inner_ipv4.ttl = hdr.ipv4.ttl + 8w255; */
+        /*hdr.inner_ipv4.ttl = hdr.ipv4.ttl + 8w255; idea... aqui sumar meta.ttl e despues assiganr en sendout el valor*/
     }
     
-    @name(".set_nhop_dw") action set_nhop_dw(bit<32> nhop_ipv4, bit<9> port) {
-        /*standard_metadata.egress_port =  port;  */
-        /*hdr.ipv4.ttl = hdr.ipv4.ttl + 8w255; */
-    }
     @name(".ipv4_up") table ipv4_up {
-        /*key = {meta.routing_metadata.dst_ipv4 : lpm;}  */
-        key = {hdr.inner_ipv4.dstAddr: lpm;}  
-        /*key = {meta.routing_metadata.dst_ipv4 : lpm;}  */
+        key = {meta.routing_metadata.dst_ipv4 : lpm;}  
         actions = { set_nhop; drop;  }
     }
+    @name(".rewrite_src_mac") action rewrite_src_mac(bit<48> src_mac) {
 
-    @name(".ipv4_dw") table ipv4_dw {
-        /*key     = { hdr.ipv4.dstAddr: lpm; }     ???? go ahead, despues resolvemos esto! exact.. */
-        key     = { meta.routing_metadata.dst_ipv4: exact; }  
-        actions = { set_nhop_dw; drop;  }
-        size = 512; 
-        default_action = drop();
-    }
+        hdr.ethernet.setInvalid();
+           hdr.ethernet_decap.setValid();
+           hdr.ethernet_decap.dstAddr =  meta.routing_metadata.mac_da; 
+           hdr.ethernet_decap.srcAddr =  src_mac;
+           hdr.ethernet_decap.etherType = 16w0x800;
+    } 
+
     @name(".sendout") table sendout {
         actions = {drop; rewrite_src_mac; }
         key = {  standard_metadata.egress_port: exact; }
         size = 512;
     }    
     
+    @name(".rewrite_src_mac_dw") action rewrite_src_mac_dw(bit<48> src_mac) {
+           hdr.outer_ethernet.dstAddr =  meta.routing_metadata.mac_da; 
+           hdr.outer_ethernet.srcAddr =  src_mac;
+           hdr.outer_ethernet.etherType = 16w0x800;
+    } 
+
+    @name(".sendout_dw") table sendout_dw {
+        actions = {drop; rewrite_src_mac_dw; }
+        key = {  standard_metadata.egress_port: exact; }
+        size = 512;
+    }    
  
     /************** APPLY ******************/
     apply {
-        meta_info.apply();
         if_info.apply();
         smac.apply();  
         /* ------ decap-------  */ 
         if(hdr.ipv4.protocol== 8w47){
            decap_process_outer.apply();
            nat_up.apply();
-           ipv4_up.apply(); 
-
            /*fw_drop_up.apply();*/
         }
 
 
         if(meta.routing_metadata.is_ext_if == 1){
            nat_dw.apply();  
-           /*ipv4_lpm_dw.apply(); */
- 
            tunnel_encap_process_outer.apply(); 
-           /*fw_drop_dw.apply();*/
+           /*ipv4_dw.apply(); */
 
+           /*fw_drop_dw.apply();*/
         }
-         
-        /*sendout.apply(); */
         
-        /* 
-        if (meta.routing_metadata.do_forward == 1w1 && hdr.ipv4.ttl > 8w0) {
-           ipv4_lpm.apply();
-           ipv4_forward.apply();
-        }*/ 
+           ipv4_up.apply(); 
+
+ 
+        if (meta.routing_metadata.rewrite_outer == 1w1) {sendout.apply(); }
+        if (meta.routing_metadata.rewrite_outer == 1w0) {sendout_dw.apply(); }
 
     }
     

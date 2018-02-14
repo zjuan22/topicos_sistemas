@@ -119,7 +119,7 @@ send_socket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
 
 if args.h2h1:
     pkt = Ether(dst='00:aa:bb:00:00:a5',src='00:55:00:00:00:00')/IP(dst='192.168.0.1',src='192.168.0.10')/TCP(sport=81, dport=1025)/"from scapy packet"
-    port2send = port_map[2]
+    port2send = port_map[1]
 
 elif args.greh1:
     pkt = Ether(dst='aa:1b:eb:df:44:3d',src='00:44:00:00:00:00')/IP(dst='4.0.0.11',src='4.0.0.10')/GRE()/IP(dst='192.168.0.10',src='10.0.0.10')/TCP(sport=20, dport=80)/"GRE packet"

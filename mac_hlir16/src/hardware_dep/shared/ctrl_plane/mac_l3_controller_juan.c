@@ -165,7 +165,7 @@ void set_default_action_nat_up()
         strcpy(sda->table_name, "nat_up");
 
 	a = &(sda->action);
-	strcpy(a->description.name, "nat_to_nat");
+	strcpy(a->description.name, "drop");
 
 	netconv_p4_header(h);
 	netconv_p4_set_default_action(sda);
@@ -190,7 +190,7 @@ void set_default_action_nat_dw()
         strcpy(sda->table_name, "nat_dw");
 
 	a = &(sda->action);
-	strcpy(a->description.name, "nat_to_nat");
+	strcpy(a->description.name, "drop");
 
 	netconv_p4_header(h);
 	netconv_p4_set_default_action(sda);
@@ -281,39 +281,6 @@ void set_default_action_encap_process()
 	printf("Table name: %s\n", sda->table_name);
 	printf("### Default action: %s\n", a->description.name);
 }
-void fill_meta_info(uint8_t smac[6])
-{
-    char buffer[2048]; /* TODO: ugly */
-    struct p4_header* h;
-    struct p4_add_table_entry* te;
-
-    struct p4_action* a;
-    //struct p4_action_parameter* ap;
-
-    struct p4_field_match_exact* exact;
-    printf("meta_info table updatee \n");
-
-    h = create_p4_header(buffer, 0, 2048);
-    te = create_p4_add_table_entry(buffer,0,2048);
-    strcpy(te->table_name, "meta_info");
-
-    exact = add_p4_field_match_exact(te, 2048);
-    strcpy(exact->header.name, "hdr.ethernet.srcAddr"); // key
-    exact->bitmap[0] = smac;
-	exact->bitmap[1] = 0;
-    exact->length = 6*8+0;
-
-   	a = add_p4_action(h, 2048);
-	strcpy(a->description.name, "set_meta_info");
-
-    netconv_p4_header(h);
-    netconv_p4_add_table_entry(te);
-    netconv_p4_field_match_exact(exact);
-    netconv_p4_action(a);
-    //netconv_p4_action_parameter(ap);
-
-    send_p4_msg(c, buffer, 2048);
-}
 
 
 void fill_if_info(uint8_t if_info, uint8_t is_ext  )
@@ -340,11 +307,12 @@ void fill_if_info(uint8_t if_info, uint8_t is_ext  )
     a = add_p4_action(h, 2048);
     strcpy(a->description.name, "set_if_info");
     
-    	ap = add_p4_action_parameter(h, a, 2048);
+   	ap = add_p4_action_parameter(h, a, 2048);
 	strcpy(ap->name, "is_ext");
 	ap->bitmap[0] = is_ext;
 	ap->bitmap[1] = 0;
 	ap->length = 2*8+0;
+   
 
     netconv_p4_header(h);
     netconv_p4_add_table_entry(te);
@@ -358,10 +326,13 @@ void fill_if_info(uint8_t if_info, uint8_t is_ext  )
     printf("\n");
     printf("Table name: %s\n", te->table_name);
     printf("Action: %s\n", a->description.name);
+        printf("%s ->", ap->name);
+	printf("%d",ap->bitmap[0]); 
+        printf("\n");
 }
 
 
-void fill_smac(uint8_t smac[6] )
+void fill_smac(uint8_t mac[6] )
 {
     char buffer[2048]; /* TODO: ugly */
     struct p4_header* h;
@@ -378,31 +349,27 @@ void fill_smac(uint8_t smac[6] )
     strcpy(te->table_name, "smac");
 
 
-
     exact = add_p4_field_match_exact(te, 2048);
     strcpy(exact->header.name, "hdr.ethernet.srcAddr"); // key
-    exact->bitmap[0] = smac;
-    exact->bitmap[1] = 0;
-    exact->length = 2*8+0;
-    
-    a = add_p4_action(h, 2048);
-    strcpy(a->description.name, "set_meta_info");
-    
-    ap = add_p4_action_parameter(h, a, 2048);
-    strcpy(ap->name, "smac");
-    memcpy(ap->bitmap, smac, 6);
-    ap->length = 6*8+0;
+    memcpy(exact->bitmap, mac, 6);
+    exact->length = 6*8+0;
 
+    a = add_p4_action(h, 2048);
+    strcpy(a->description.name, "generate_learn_notify");
+    
     netconv_p4_header(h);
     netconv_p4_add_table_entry(te);
     netconv_p4_field_match_exact(exact);
     netconv_p4_action(a);
-    netconv_p4_action_parameter(ap);
     send_p4_msg(c, buffer, 2048);
+    printf("########## fill smac table \n");
+    printf("\n");
+    printf("Table name: %s\n", te->table_name);
+    printf("Action: %s\n", a->description.name);
 
 }
 
-void fill_nat_up(uint8_t port, uint8_t ip[4], uint8_t srctcp[2])
+void fill_nat_up(uint8_t ip_inn[4], uint8_t ip[4], uint8_t srctcp[2])
 {
 	char buffer[2048];
 	struct p4_header* h;
@@ -416,14 +383,19 @@ void fill_nat_up(uint8_t port, uint8_t ip[4], uint8_t srctcp[2])
         te = create_p4_add_table_entry(buffer,0,2048);
         strcpy(te->table_name, "nat_up");
         
-        printf("Filllll Table name: %s", te->table_name);
+        printf("Fill Table name: %s", te->table_name);
 
-        exact = add_p4_field_match_exact(te, 2048);
-	strcpy(exact->header.name, "meta.routing_metadata.is_ext_if");
-        exact->bitmap[0] = port;
-	exact->bitmap[1] = 0;
-	exact->length = 1*8+0;
-        printf("Table match: %s -> ", exact->bitmap);
+  	exact = add_p4_field_match_exact(te, 2048);
+	strcpy(exact->header.name, "hdr.inner_ipv4.srcAddr"); 
+  	memcpy(exact->bitmap, ip_inn, 4);
+  	exact->length = 4*8+0;
+
+        printf("Table match: %s \n -> ", exact->bitmap);
+        printf("%s -> ", exact->header.name);
+	for(int i = 0; i < 4; i++){
+                printf("%d.",exact->bitmap[i]);
+        }	
+        printf("\n");
 
         a = add_p4_action(h, 2048);
 	strcpy(a->description.name, "nat_hit_int_to_ext");
@@ -436,9 +408,8 @@ void fill_nat_up(uint8_t port, uint8_t ip[4], uint8_t srctcp[2])
         ap->length = 4*8+0;
         
         printf("%s ->", ap->name);
-	for(int i = 0; i < 4; i++){
-                printf("%d.",ap->bitmap[i]);
-        }	
+	for(int i = 0; i < 4; i++){ printf("%d.",ap->bitmap[i]);  }	
+        printf("\n");
 
 
 	ap2 = add_p4_action_parameter(h, a, 2048);
@@ -447,9 +418,7 @@ void fill_nat_up(uint8_t port, uint8_t ip[4], uint8_t srctcp[2])
 	ap2->length = 2*8+0;
 
         printf("%s ->", ap2->name);
-	for(int i = 0; i < 4; i++){
-                printf("%d.",ap2->bitmap[i]);
-        }	
+	for(int i = 0; i < 2 ; i++){printf("%d.",ap2->bitmap[i]);  }	
 	printf("\n");
 
 
@@ -550,15 +519,15 @@ void fill_ipv4_lpm_dw(uint8_t dst_ip[4], uint8_t port, uint8_t nhop [4])
 
 	h = create_p4_header(buffer, 0, 2048);
 	te = create_p4_add_table_entry(buffer,0,2048);
-	strcpy(te->table_name, "ipv4_lpm_dw");
+	strcpy(te->table_name, "ipv4_dw");
 
 	exact = add_p4_field_match_exact(te, 2048);
-	strcpy(exact->header.name, "hdr.ipv4.dstAddr");
+	strcpy(exact->header.name, "hdr.outer_ipv4.dstAddr");
 	memcpy(exact->bitmap, dst_ip, 4);
 	exact->length = 4*8+0;
 
 	a = add_p4_action(h, 2048);
-	strcpy(a->description.name, "set_nhop_dw");
+	strcpy(a->description.name, "set_nhop");
 
 	ap = add_p4_action_parameter(h, a, 2048);
 	strcpy(ap->name, "port");
@@ -650,12 +619,11 @@ void fill_decap(uint8_t smac[6], uint8_t tn_id)
     te = create_p4_add_table_entry(buffer,0,2048);
     strcpy(te->table_name, "decap_process_outer");
 
+    
     exact = add_p4_field_match_exact(te, 2048);
     strcpy(exact->header.name, "hdr.ethernet.srcAddr"); // key
-    exact->bitmap[0] = smac;
-	exact->bitmap[1] = 0;
+    memcpy(exact->bitmap, smac, 6);
     exact->length = 6*8+0;
-    
     
     printf("Match: %s\n", exact->header.name);
     
@@ -685,6 +653,52 @@ void fill_decap(uint8_t smac[6], uint8_t tn_id)
     printf("Parameters: %s -> %d\n", ap->name, ap->bitmap[0]);
 }
 // -----------------------------------------------------------------------
+
+void fill_encap(uint8_t dst_ip[4], uint8_t src_gre[4])
+{
+    char buffer[2048]; /* TODO: ugly */
+    struct p4_header* h;
+    struct p4_add_table_entry* te;
+    struct p4_action* a;
+    struct p4_action_parameter* ap;
+    struct p4_field_match_exact* exact;
+
+    h = create_p4_header(buffer, 0, 2048);
+    te = create_p4_add_table_entry(buffer,0,2048);
+    strcpy(te->table_name, "tunnel_encap_process_outer");
+
+    exact = add_p4_field_match_exact(te, 2048);
+    strcpy(exact->header.name, "hdr.ipv4.dstAddr"); // key
+    memcpy(exact->bitmap, dst_ip, 4);
+    exact->length = 4*8+0;
+    
+
+    a = add_p4_action(h, 2048);
+    strcpy(a->description.name, "ipv4_gre_rewrite");
+
+    ap = add_p4_action_parameter(h, a, 2048);
+    strcpy(ap->name, "gre_srcAddr");
+    memcpy(ap->bitmap, src_gre, 4);
+    ap->length = 4*8+0;
+    
+    
+    netconv_p4_header(h);
+    netconv_p4_add_table_entry(te);
+    netconv_p4_field_match_exact(exact);
+    netconv_p4_action(a);
+    netconv_p4_action_parameter(ap);
+
+    send_p4_msg(c, buffer, 2048);
+    printf("##########\n");
+    printf("\n");
+    printf("Table name: %s\n", te->table_name);
+    printf("Match: %s\n", exact->header.name);
+    printf("Action: %s\n", a->description.name);
+    printf("Parameters: %s -> %d\n", ap->name, ap->bitmap[0]);
+       // printf("%s -> ", exact->header.name);
+//	for(int i = 0; i < 4; i++){  printf("%d.",exact->bitmap[i]); }	
+  //      printf("\n");
+}
 void fill_sendout_table(uint8_t port, uint8_t smac[6])
 {
     char buffer[2048]; /* TODO: ugly */
@@ -732,6 +746,50 @@ void fill_sendout_table(uint8_t port, uint8_t smac[6])
 
 		
 }
+
+void fill_sendout_dw_table(uint8_t port, uint8_t smac[6])
+{
+    char buffer[2048]; /* TODO: ugly */
+    struct p4_header* h;
+    struct p4_add_table_entry* te;
+    struct p4_action* a;
+    struct p4_action_parameter* ap;
+    struct p4_field_match_exact* exact;
+
+    h = create_p4_header(buffer, 0, 2048);
+    te = create_p4_add_table_entry(buffer,0,2048);
+    strcpy(te->table_name, "sendout_dw");
+
+    exact = add_p4_field_match_exact(te, 2048);
+    strcpy(exact->header.name, "standard_metadata.egress_port");
+    exact->bitmap[0] = port;
+    exact->length = 1*8+0;
+
+	a = add_p4_action(h, 2048);
+	strcpy(a->description.name, "rewrite_src_mac_dw");
+
+	ap = add_p4_action_parameter(h, a, 2048);
+	strcpy(ap->name, "src_mac");
+	memcpy(ap->bitmap, smac, 6);
+	ap->length = 6*8+0;
+
+    netconv_p4_header(h);
+    netconv_p4_add_table_entry(te);
+    netconv_p4_field_match_exact(exact);
+    netconv_p4_action(a);
+    netconv_p4_action_parameter(ap);
+    send_p4_msg(c, buffer, 2048);
+
+	printf("##########\n");
+        printf("\n");
+        printf("Table name: %s\n", te->table_name);
+	printf("Match: %s\n", exact->header.name);
+        printf("Action: %s\n", a->description.name);
+        printf("key egress_port: %d",exact->bitmap[0]);
+	
+}
+
+
 void dhf(void* b) {
 	printf("Unknown digest received\n");
 }
@@ -739,17 +797,20 @@ void dhf(void* b) {
 void init() {
          printf("Set default actions.\n");
  
-	uint8_t port1 = 0x01;
-	uint8_t port0 = 0x00;
+	uint8_t port1 = 1;
+	uint8_t port0 = 0;
    
 	uint8_t ip2[4] = {192,168,0,1};
+	uint8_t end_gre[4] = {4,0,0,10};
 	uint8_t ip_dst_up[4] = {192,168,0,10};
         uint8_t ip_dst_dw[4] = {10,0,0,10};
 	uint8_t stcp[2] = {10};
         uint8_t dtcp[2] = {20};
         uint8_t mac2[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xe8};
         //uint8_t smac[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xea};  //a0:36:9f:3e:94:ea
-        uint8_t smac[6] = {0x00, 0x44, 0x00, 0x00, 0x00, 0x00};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00
+        uint8_t smac[6] = {0x00, 0x44, 0x00, 0x00, 0x00, 0x00};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00 46:d5:f0:90:4c:58 
+        uint8_t smac_2[6] = {0x00, 0x55, 0x00, 0x00, 0x00, 0x00};  // 
+        uint8_t smac_veth1[6] = {0x46, 0xd5, 0xf0, 0x90, 0x4c, 0x58};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00 46:d5:f0:90:4c:58 
         uint8_t mac_if1[6] = {0xaa, 0xbb, 0xcc, 0xaa, 0xdd, 0xee};  
         uint8_t mac_if0[6] = {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0x55};
 	uint8_t tn_id0 = 100;
@@ -759,30 +820,29 @@ void init() {
         uint8_t is_ext = 1;
         uint8_t is_int = 0;
 
-        set_default_action_meta_info(); 
         set_default_action_decap_process(); 
         set_default_action_encap_process();
         set_default_action_nat_up();
         set_default_action_ipv4_forward();
 
-        fill_meta_info(smac);
+        fill_smac(smac_veth1);
+        fill_smac(smac);  // esta smac del paquete 
+        fill_smac(smac_2);  // esta smac del paquete 
+
         fill_decap(smac, tn_id0);
-        fill_if_info(port0,is_int); //  set this to up use case 
-          fill_if_info(port0,is_ext); //  set this to up use case 
+        //fill_if_info(port0,is_int); //  set this to up use case 
+        fill_if_info(port0,is_ext); //  set this to dw use case 
 
-        //fill_if_info(port1, is_ext);   //  set this to dw use case 
-        //fill_if_info(port0, is_ext);   //  set this to dw use case este aqu *i 
-
-        fill_nat_up(port0,ip2,stcp); //  set this to up use case 
-        //fill_nat_up(port1,ip2,stcp); //  set this to up use case, solo hace match con is_ext = 1 
+        //fill_nat_up(ip_dst_dw,ip2,stcp); //  set this to up use case, src ip inner  
+        fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case 
         
-        fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);
-        //fill_ipv4_lpm_dw(ip_dst_dw, port1, ip_dst_dw);
+        //fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);   //this case for UP
+        fill_ipv4_lpm_up(end_gre, port1, ip_dst_up);     // this case for DW
 
-        //fill_sendout_table(port1, mac_if1);
+        //fill_sendout_table(port1, mac_if1);  // port 1 fijo para nat up, set 1 for up case
+        fill_sendout_dw_table(port1, mac_if1);  // port 1 fijo para nat DW, 
         //fill_sendout_table(port0, mac_if0);
-        
-        //fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case 
+        fill_encap(ip_dst_dw,end_gre);        
         
          printf("\n");
  
