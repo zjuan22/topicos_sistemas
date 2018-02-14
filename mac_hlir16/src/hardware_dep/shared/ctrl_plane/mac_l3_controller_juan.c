@@ -768,6 +768,8 @@ void init() {
         uint8_t mac_if1[6] = {0xaa, 0xbb, 0xcc, 0xaa, 0xdd, 0xee};  
         uint8_t mac_if0[6] = {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0x55};
 	uint8_t tn_id0 = 100;
+        uint8_t nfpa_mac[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xe8};  //         
+        uint8_t nfpa_mac2[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xea};  //
         
         
         
@@ -782,6 +784,8 @@ void init() {
         fill_smac(smac_veth1);
         fill_smac(smac);  // esta smac del paquete 
         fill_smac(smac_2);  // esta smac del paquete 
+        fill_smac(nfpa_mac);  // esta smac del paquete 
+        fill_smac(nfpa_mac_2);  // esta smac del paquete 
 
         fill_decap(smac, tn_id0);
         fill_if_info(port0,is_int); //  set this to up use case 
