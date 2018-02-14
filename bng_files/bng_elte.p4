@@ -184,7 +184,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
     /***************************** set IF info and others  **************************/
     /*action set_if_info(bit<32> ipv4_addr, bit<48> mac_addr, bit<1> is_ext) { */
-    action set_if_info(bit<1> is_ext) {
+    @name(".set_if_info") action set_if_info(bit<1> is_ext) {
         
         
         meta.routing_metadata.mac_da = hdr.ethernet.dstAddr;
@@ -217,7 +217,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
     
     /***************************** tunnel control decap *****************************/
-    @name("decap_gre_inner_ipv4") action decap_gre_inner_ipv4(bit <32> tunnel_id) {
+    @name(".decap_gre_inner_ipv4") action decap_gre_inner_ipv4(bit <32> tunnel_id) {
                
            /* new decap */ 
             
@@ -271,7 +271,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
            
     }
     
-    @name("tunnel_decap_process_outer") table decap_process_outer {
+    @name("decap_process_outer") table decap_process_outer {
         actions = {decap_gre_inner_ipv4; drop; }
         key ={ hdr.ethernet.srcAddr: exact;}
         
