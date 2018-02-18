@@ -11,6 +11,7 @@ controller c;
 uint8_t macs[MAX_MACS][6];
 uint8_t portmap[MAX_MACS];
 uint8_t ips[MAX_MACS][4];
+uint8_t ipd[MAX_MACS][4];
 int mac_count = -1;
 
 int read_macs_and_ports_from_file(char *filename) {
@@ -18,7 +19,7 @@ int read_macs_and_ports_from_file(char *filename) {
 	char line[200];
 	int values[6];
 	int values_ip[4];
-	int port;
+	int values_ip2[4];
 	int i;
 
 	f = fopen(filename, "r");
@@ -27,10 +28,12 @@ int read_macs_and_ports_from_file(char *filename) {
 	while (fgets(line, sizeof(line), f)) {
 		line[strlen(line)-1] = '\0';
 		//TODO why %c?
-		if (11 == sscanf(line, "%d.%d.%d.%d %x:%x:%x:%x:%x:%x %d",
-					&values_ip[0], &values_ip[1], &values_ip[2], &values_ip[3],
+		if (14 == sscanf(line, "%x:%x:%x:%x:%x:%x %d.%d.%d.%d %d.%d.%d.%d", 
 					&values[0], &values[1], &values[2],
-					&values[3], &values[4], &values[5], &port) )
+					&values[3], &values[4], &values[5],
+					&values_ip[0], &values_ip[1], &values_ip[2], &values_ip[3],
+					&values_ip2[0], &values_ip2[1], &values_ip2[2], &values_ip2[3]
+                ) )
 		{
 			if (mac_count==MAX_MACS-1)
 			{
@@ -43,7 +46,8 @@ int read_macs_and_ports_from_file(char *filename) {
 				macs[mac_count][i] = (uint8_t) values[i];
 			for( i = 0; i < 4; ++i )
 				ips[mac_count][i] = (uint8_t) values_ip[i];
-			portmap[mac_count] = (uint8_t) port;
+			for( i = 0; i < 4; ++i )
+				ipd[mac_count][i] = (uint8_t) values_ip2[i];
 
 		} else {
 			printf("Wrong format error in line %d : %s\n", mac_count+2, line);
@@ -291,9 +295,6 @@ void fill_smac(uint8_t mac[6] )
     char buffer[2048]; /* TODO: ugly */
     struct p4_header* h;
     struct p4_add_table_entry* te;
-
-    struct p4_action* a;
-    struct p4_action_parameter* ap;
 
     struct p4_field_match_exact* exact;
     printf("fill_smac table update \n");
@@ -751,26 +752,27 @@ void dhf(void* b) {
 void init() {
          printf("Set default actions.\n");
 
+	int i;
 	uint8_t port1 = 1;
 	uint8_t port0 = 0;
+	uint8_t tn_id0 = 100;
 
 	uint8_t ip2[4] = {192,168,0,1};
-	uint8_t end_gre[4] = {4,0,0,10};
-	uint8_t ip_dst_up[4] = {192,168,0,10};
-        uint8_t ip_dst_dw[4] = {10,0,0,10};
+
+	//uint8_t end_gre[4] = {4,0,0,10};
+	//uint8_t ip_dst_up[4] = {192,168,0,10};
+        //uint8_t ip_dst_dw[4] = {10,0,0,10};
 	uint8_t stcp[2] = {10};
-        uint8_t dtcp[2] = {20};
-        uint8_t mac2[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xe8};
-        //uint8_t smac[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xea};  //a0:36:9f:3e:94:ea
-        uint8_t smac[6] = {0x00, 0x44, 0x00, 0x00, 0x00, 0x00};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00 46:d5:f0:90:4c:58
-        uint8_t smac_2[6] = {0x00, 0x55, 0x00, 0x00, 0x00, 0x00};  //
-        uint8_t smac_veth1[6] = {0x46, 0xd5, 0xf0, 0x90, 0x4c, 0x58};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00 46:d5:f0:90:4c:58
+        //uint8_t dtcp[2] = {20};
+        //uint8_t mac2[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xe8};
+        //uint8_t smac[6] = {0x00, 0x44, 0x00, 0x00, 0x00, 0x00};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00 46:d5:f0:90:4c:58
+        //uint8_t smac_2[6] = {0x00, 0x55, 0x00, 0x00, 0x00, 0x00};  //
+        //uint8_t smac_veth1[6] = {0x46, 0xd5, 0xf0, 0x90, 0x4c, 0x58};  //a0:36:9f:3e:94:ea  00:44:00:00:00:00 46:d5:f0:90:4c:58
         uint8_t mac_if1[6] = {0xaa, 0xbb, 0xcc, 0xaa, 0xdd, 0xee};
-        uint8_t mac_if0[6] = {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0x55};
-	uint8_t tn_id0 = 100;
-        uint8_t nfpa_mac[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xe8};  //
-        uint8_t nfpa_mac2[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xea};  //  7f1af3fec2c0
-        uint8_t nfpa_mac3[6] = {0x7f, 0x1a, 0xf3, 0xfe, 0xc2, 0xc0};  //  7f1af3fec2c0
+        //uint8_t mac_if0[6] = {0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0x55};
+        //uint8_t nfpa_mac[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xe8};  //
+        //uint8_t nfpa_mac2[6] = {0xa0, 0x36, 0x9f, 0x3e, 0x94, 0xea};  //  7f1af3fec2c0
+        //uint8_t nfpa_mac3[6] = {0x7f, 0x1a, 0xf3, 0xfe, 0xc2, 0xc0};  //  7f1af3fec2c0
 
 
 
@@ -782,32 +784,54 @@ void init() {
         set_default_action_nat_up();
         //set_default_action_ipv4_forward();
 
-        fill_smac(smac_veth1);
-        fill_smac(smac);  // esta smac del paquete
-        fill_smac(smac_2);  // esta smac del paquete
-        fill_smac(nfpa_mac);  // esta smac del paquete
-        fill_smac(nfpa_mac2);  // esta smac del paquete
-        fill_smac(nfpa_mac3);  // esta smac del paquete
+        //fill_smac(smac_veth1);
+        //fill_smac(smac);  // esta smac del paquete
+        //fill_smac(smac_2);  // esta smac del paquete
+        //fill_smac(nfpa_mac);  // esta smac del paquete
+        //fill_smac(nfpa_mac2);  // esta smac del paquete
+        //fill_smac(nfpa_mac3);  // esta smac del paquete
 
-        fill_decap(smac, tn_id0);
-        fill_decap(nfpa_mac, tn_id0);
-        fill_decap(nfpa_mac2, tn_id0);
-        fill_decap(nfpa_mac3, tn_id0);
+        //fill_decap(smac, tn_id0);
+        //fill_decap(nfpa_mac, tn_id0);
+        //fill_decap(nfpa_mac2, tn_id0);
+        //fill_decap(nfpa_mac3, tn_id0);
 
         fill_if_info(port0,is_int); //  set this to up use case
-        fill_if_info(port1,is_int); //  set this to up use case
+        //fill_if_info(port1,is_int); //  set this to up use case
         //fill_if_info(port0,is_ext); //  set this to dw use case
 
-        fill_nat_up(ip_dst_dw,ip2,stcp); //  set this to up use case, src ip inner
-        fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case
+        //fill_nat_up(ip_dst_dw,ip2,stcp); //  set this to up use case, src ip inner
+        //fill_nat_dw(is_ext,ip_dst_dw,dtcp );   //  set this to dw use case
 
-        fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);   //this case for UP
-        fill_ipv4_lpm_up(end_gre, port1, ip_dst_up);     // this case for DW
+        //fill_ipv4_lpm_up(ip_dst_up, port1, ip_dst_up);   //this case for UP
+        //fill_ipv4_lpm_up(end_gre, port1, ip_dst_up);     // this case for DW
 
         fill_sendout_table(port1, mac_if1);  // port 1 fijo para nat up, set 1 for up case
-        fill_sendout_dw_table(port1, mac_if1);  // port 1 fijo para nat DW,
+        //fill_sendout_dw_table(port1, mac_if1);  // port 1 fijo para nat DW,
         //fill_sendout_table(port0, mac_if0);
-        fill_encap(ip_dst_dw,end_gre);
+        //fill_encap(ip_dst_dw,end_gre);
+
+
+
+        for (i=0;i<=mac_count;++i)
+        {
+
+                printf("Filling tables smac/decap/nat_up/lpm_up MAC: %02x:%02x:%02x:%02x:%02x:%02x src_IP: %d.%d.%d.%d dst_IP: %d.%d.%d.%   d\n ", macs[i][0],macs[i][1],macs[i][2],macs[i][3],macs[i][4],macs[i][5], ips[i][0],ips[i][1],ips[i][2],ips[i][3] , ipd[i][0],ipd[i][1],ipd[i][2],ipd[i][3]);
+
+
+               fill_smac(macs[i]);  // esta smac del paquete
+               fill_decap(macs[i], tn_id0);
+               fill_nat_up(ips[i],ip2,stcp); // 
+               fill_ipv4_lpm_up(ipd[i],port1 , ipd[i]);
+
+                //if(0 == (mac_count%1000)){ printf("inside sleep \n");sleep(1);;}
+
+
+                usleep(1000);
+        }
+
+
+
 
          printf("\n");
 
