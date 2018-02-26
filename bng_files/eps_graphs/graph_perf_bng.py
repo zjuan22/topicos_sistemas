@@ -26,6 +26,7 @@ plt.rcParams['axes.spines.top'] = False
 plt.rcParams['axes.spines.right'] = False
 plt.rcParams['axes.spines.bottom'] = False
 plt.rcParams['axes.spines.left'] = False
+plt.rcParams['figure.figsize'] = 10,5
 
 bar_cycle = (cycler('hatch', ['++++++', 'xxxxxx', '------', 'xxx', '\\\\']) *cycler('zorder', [14]))
 
@@ -51,13 +52,13 @@ ax = fig.gca()
 #ax.bar(xtick-0.3,v1, 0.28, color="#73215C", edgecolor="black", linewidth=1 )
 #ax.bar(xtick,v3, 0.28,color="#29B7B4", edgecolor="black")
 #ax.bar(xtick+0.3,v2,0.28, color="#C8FE2E", edgecolor="black")
-ax.bar(xtick,dpdk, 0.28, color="#73215C")
-ax.bar(xtick,netmap, 0.28, color="#29B7B4" )
-ax.bar(xtick,snmap, 0.28, color="#C8FE2E")
+ax.bar(xtick,dpdk, 0.3, color="#73215C")
+ax.bar(xtick,netmap, 0.3, color="#29B7B4" )
+ax.bar(xtick,snmap, 0.3, color="#C8FE2E")
 
 plt.xticks(xtick,xlabel )
 #plt.title("Packet size (between CPE and BNG")
-ax.set_ylabel('Throughput (Gbps)')
+ax.set_ylabel('Gbps')
 ax.set_xlabel('Packet size (between CPE and BNG)')
 
 #plt.title("Performance comparison for diferents NIC drivers")
@@ -69,7 +70,6 @@ ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 ax.spines['bottom'].set_visible(True)
 ax.spines['left'].set_visible(True)
-
 
 
 plt.grid()
