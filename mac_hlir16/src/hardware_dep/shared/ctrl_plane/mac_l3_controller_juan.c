@@ -295,6 +295,7 @@ void fill_smac(uint8_t mac[6] )
     char buffer[2048]; /* TODO: ugly */
     struct p4_header* h;
     struct p4_add_table_entry* te;
+    struct p4_action* a;
 
     struct p4_field_match_exact* exact;
     printf("fill_smac table update \n");
@@ -338,33 +339,33 @@ void fill_nat_up(uint8_t ip_inn[4], uint8_t ip[4], uint8_t srctcp[2])
         te = create_p4_add_table_entry(buffer,0,2048);
         strcpy(te->table_name, "nat_up");
 
-        printf("Fill Table name: %s", te->table_name);
+       // printf("Fill Table name: %s", te->table_name);
 
   	exact = add_p4_field_match_exact(te, 2048);
 	strcpy(exact->header.name, "hdr.inner_ipv4.srcAddr");
   	memcpy(exact->bitmap, ip_inn, 4);
   	exact->length = 4*8+0;
 
-        printf("Table match: %s \n -> ", exact->bitmap);
-        printf("%s -> ", exact->header.name);
-	for(int i = 0; i < 4; i++){
-                printf("%d.",exact->bitmap[i]);
-        }	
-        printf("\n");
+       // printf("Table match: %s \n -> ", exact->bitmap);
+        //printf("%s -> ", exact->header.name);
+	//for(int i = 0; i < 4; i++){
+      //          printf("%d.",exact->bitmap[i]);
+       // }	
+        //printf("\n");
 
         a = add_p4_action(h, 2048);
 	strcpy(a->description.name, "nat_hit_int_to_ext");
 
-        printf("action: %s -> ", a->description.name );
+        //printf("action: %s -> ", a->description.name );
 
         ap = add_p4_action_parameter(h, a, 2048);
 	strcpy(ap->name, "srcAddr");
         memcpy(ap->bitmap, ip, 4);
         ap->length = 4*8+0;
 
-        printf("%s ->", ap->name);
-	for(int i = 0; i < 4; i++){ printf("%d.",ap->bitmap[i]);  }	
-        printf("\n");
+       // printf("%s ->", ap->name);
+	//for(int i = 0; i < 4; i++){ printf("%d.",ap->bitmap[i]);  }	
+    //    printf("\n");
 
 
 	ap2 = add_p4_action_parameter(h, a, 2048);
@@ -372,9 +373,9 @@ void fill_nat_up(uint8_t ip_inn[4], uint8_t ip[4], uint8_t srctcp[2])
 	memcpy(ap2->bitmap, srctcp, 2);
 	ap2->length = 2*8+0;
 
-        printf("%s ->", ap2->name);
-	for(int i = 0; i < 2 ; i++){printf("%d.",ap2->bitmap[i]);  }	
-	printf("\n");
+      //  printf("%s ->", ap2->name);
+	//for(int i = 0; i < 2 ; i++){printf("%d.",ap2->bitmap[i]);  }	
+	//printf("\n");
 
 
 
@@ -392,7 +393,7 @@ void fill_nat_up(uint8_t ip_inn[4], uint8_t ip[4], uint8_t srctcp[2])
 	printf("########## \n");
 	printf("\n");
 	printf("Table name: %s\n", te->table_name);
-	printf("Action: %s\n", a->description.name);
+	//printf("Action: %s\n", a->description.name);
 }
  void fill_nat_dw(uint8_t port, uint8_t ip[4], uint8_t dst_tcp[2])
 {
@@ -580,7 +581,7 @@ void fill_decap(uint8_t smac[6], uint8_t tn_id)
     memcpy(exact->bitmap, smac, 6);
     exact->length = 6*8+0;
 
-    printf("Match: %s\n", exact->header.name);
+    //printf("Match: %s\n", exact->header.name);
 
 
     a = add_p4_action(h, 2048);
@@ -603,9 +604,9 @@ void fill_decap(uint8_t smac[6], uint8_t tn_id)
     printf("##########\n");
     printf("\n");
     printf("Table name: %s\n", te->table_name);
-    printf("Match: %s\n", exact->header.name);
-    printf("Action: %s\n", a->description.name);
-    printf("Parameters: %s -> %d\n", ap->name, ap->bitmap[0]);
+    //printf("Match: %s\n", exact->header.name);
+    //printf("Action: %s\n", a->description.name);
+    //printf("Parameters: %s -> %d\n", ap->name, ap->bitmap[0]);
 }
 // -----------------------------------------------------------------------
 
@@ -821,13 +822,13 @@ void init() {
 
                fill_smac(macs[i]);  // esta smac del paquete
                fill_decap(macs[i], tn_id0);
-               fill_nat_up(ips[i],ip2,stcp); // 
+               fill_nat_up(ips[i],ip2,stcp); //
                fill_ipv4_lpm_up(ipd[i],port1 , ipd[i]);
 
-                //if(0 == (mac_count%1000)){ printf("inside sleep \n");sleep(1);;}
+               if(0 == (i%100)){ printf("inside sleep \n");sleep(1);;}
 
 
-                usleep(1000);
+                usleep(10000);
         }
 
 
@@ -856,7 +857,6 @@ void init() {
 
          printf("Create and configure controller...\n");
          c = create_controller_with_init(11111, 3, dhf, init);
-
          printf("MACSAD controller started...\n");
          execute_controller(c);
 
