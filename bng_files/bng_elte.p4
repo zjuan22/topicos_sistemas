@@ -191,7 +191,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         meta.routing_metadata.mac_sa = hdr.ethernet.srcAddr;
         meta.routing_metadata.if_ipv4_addr = 0x7fef4800 ;
         meta.routing_metadata.if_mac_addr = 0x010101010100;
-        meta.routing_metadata.is_ext_if = is_ext;
+        /*meta.routing_metadata.is_ext_if = is_ext;*/
+        meta.routing_metadata.is_ext_if = 1;
 
     }
     @name(".if_info") table if_info {
@@ -356,13 +357,14 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
       hdr.outer_ethernet.srcAddr = 0x000000000002; 
       hdr.outer_ethernet.etherType = 16w0x800;
       standard_metadata.egress_port = 1;
-      meta.routing_metadata.dst_ipv4= hdr.outer_ipv4.dstAddr;               
+      meta.routing_metadata.dst_ipv4= hdr.outer_ipv4.dstAddr;  
+      meta.routing_metadata.rewrite_outer = 0;             
        
     }
 
       @name(".tunnel_encap_process_outer") table tunnel_encap_process_outer {
         actions = {ipv4_gre_rewrite; drop; }
-        key = {  hdr.ipv4.dstAddr       : exact; } 
+        key = {  hdr.ipv4.dstAddr       : exact; }   /*  here must be ID */ 
         size = 128;
     }
     /***************************** firewall DW control *****************************/
