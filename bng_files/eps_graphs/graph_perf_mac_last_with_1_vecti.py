@@ -1,11 +1,5 @@
-## Functions
 
-import IPython
-import matplotlib 
-#get_ipython().magic('matplotlib inline')
 import sys,os
-import copy
-import random
 path = os.path.abspath('../dev/')
 if path not in sys.path:
     sys.path.append(path)
@@ -18,17 +12,16 @@ import matplotlib as mpl
 
 from cycler import cycler
 
-monochrome = (cycler('color', ['k']) * cycler('linestyle', ['-', '--', ':', '=.']) * cycler('marker', ['^',',', '.']))
 markers = ["*","^","."]
 linestyles = ['-', '--', '-.', ':']
 
 #plt.rcParams['axes.grid'] = True
-plt.rcParams['axes.prop_cycle'] = monochrome
+#plt.rcParams['axes.prop_cycle'] = monochrome
 plt.rcParams['axes.spines.top'] = False
 plt.rcParams['axes.spines.right'] = True 
 plt.rcParams['axes.spines.bottom'] = True
 plt.rcParams['axes.spines.left'] = True 
-plt.rcParams['figure.figsize'] = 19, 4
+#plt.rcParams['figure.figsize'] = 19, 4
 
 plt.rcParams['axes.axisbelow'] = True
 
@@ -90,29 +83,36 @@ v6_pps_netmap_64 =   [(v6_netmap_64[0]*1000)/((20+64)*8), (v6_netmap_64[1]*1000)
 v6_pps_netmap_128 =  [(v6_netmap_128[0]*1000)/((20+128)*8), (v6_netmap_128[1]*1000)/((20+128)*8), (v6_netmap_128[2]*1000)/((20+128)*8), (v6_netmap_128[3]*1000)/((20+128)*8), (v6_netmap_128[4]*1000)/((20+128)*8)  ]  
 v6_pps_netmap_256 =  [(v6_netmap_256[0]*1000)/((20+256)*8), (v6_netmap_256[1]*1000)/((20+256)*8), (v6_netmap_256[2]*1000)/((20+256)*8), (v6_netmap_256[3]*1000)/((20+256)*8), (v6_netmap_256[4]*1000)/((20+256)*8)  ]  
 
-total_smmap = [snmap_64[0], snmap_64[1], snmap_64[2],snmap_64[3], snmap_64[4],np.nan,snmap_128[0], snmap_128[1], snmap_128[2], snmap_128[3], snmap_128[4],np.nan,snmap_256[0], snmap_256[1], snmap_256[2], snmap_256[3], snmap_256[4],np.nan,v6_smmap_64[0], v6_smmap_64[1], v6_smmap_64[2], v6_smmap_64[3], v6_smmap_64[4],np.nan,v6_smmap_128[0], v6_smmap_128[1], v6_smmap_128[2], v6_smmap_128[3], v6_smmap_128[4],np.nan,v6_smmap_256[0], v6_smmap_256[1], v6_smmap_256[2], v6_smmap_256[3], v6_smmap_256[4]] 
+total_smmap = [snmap_64[0], snmap_64[1], snmap_64[2],snmap_64[3], snmap_64[4],np.nan,snmap_128[0], snmap_128[1], snmap_128[2], snmap_128[3], snmap_128[4],np.nan,snmap_256[0], snmap_256[1], snmap_256[2], snmap_256[3], snmap_256[4],np.nan,np.nan, v6_smmap_64[0], v6_smmap_64[1], v6_smmap_64[2], v6_smmap_64[3], v6_smmap_64[4],np.nan,v6_smmap_128[0], v6_smmap_128[1], v6_smmap_128[2], v6_smmap_128[3], v6_smmap_128[4],np.nan,v6_smmap_256[0], v6_smmap_256[1], v6_smmap_256[2], v6_smmap_256[3], v6_smmap_256[4]] 
 
 
-total_netmap = [netmap_64[0], netmap_64[1], netmap_64[2],netmap_64[3], netmap_64[4],np.nan,netmap_128[0], netmap_128[1], netmap_128[2], netmap_128[3], netmap_128[4],np.nan,netmap_256[0], netmap_256[1], netmap_256[2], netmap_256[3], netmap_256[4],np.nan,v6_netmap_64[0], v6_netmap_64[1], v6_netmap_64[2], v6_netmap_64[3], v6_netmap_64[4],np.nan,v6_netmap_128[0], v6_netmap_128[1], v6_netmap_128[2], v6_netmap_128[3], v6_netmap_128[4],np.nan,v6_netmap_256[0], v6_netmap_256[1], v6_netmap_256[2], v6_netmap_256[3], v6_netmap_256[4]] 
+total_netmap = [netmap_64[0], netmap_64[1], netmap_64[2],netmap_64[3], netmap_64[4],np.nan,netmap_128[0], netmap_128[1], netmap_128[2], netmap_128[3], netmap_128[4],np.nan,netmap_256[0], netmap_256[1], netmap_256[2], netmap_256[3], netmap_256[4],np.nan,np.nan,v6_netmap_64[0], v6_netmap_64[1], v6_netmap_64[2], v6_netmap_64[3], v6_netmap_64[4],np.nan,v6_netmap_128[0], v6_netmap_128[1], v6_netmap_128[2], v6_netmap_128[3], v6_netmap_128[4],np.nan,v6_netmap_256[0], v6_netmap_256[1], v6_netmap_256[2], v6_netmap_256[3], v6_netmap_256[4]] 
 
-total_dpdk = [dpdk_64[0], dpdk_64[1], dpdk_64[2],dpdk_64[3], dpdk_64[4],np.nan,dpdk_128[0], dpdk_128[1], dpdk_128[2], dpdk_128[3], dpdk_128[4],np.nan,dpdk_256[0], dpdk_256[1], dpdk_256[2], dpdk_256[3], dpdk_256[4],np.nan,v6_dpdk_64[0], v6_dpdk_64[1], v6_dpdk_64[2], v6_dpdk_64[3], v6_dpdk_64[4],np.nan,v6_dpdk_128[0], v6_dpdk_128[1], v6_dpdk_128[2], v6_dpdk_128[3], v6_dpdk_128[4],np.nan,v6_dpdk_256[0], v6_dpdk_256[1], v6_dpdk_256[2], v6_dpdk_256[3], v6_dpdk_256[4]]
-
-
-pps_total_smmap = [pps_smmap_64[0], pps_smmap_64[1], pps_smmap_64[2],pps_smmap_64[3], pps_smmap_64[4],np.nan,pps_smmap_128[0], pps_smmap_128[1], pps_smmap_128[2], pps_smmap_128[3], pps_smmap_128[4],np.nan,pps_smmap_256[0], pps_smmap_256[1], pps_smmap_256[2], pps_smmap_256[3], pps_smmap_256[4],np.nan,v6_pps_smmap_64[0], v6_pps_smmap_64[1], v6_pps_smmap_64[2], v6_pps_smmap_64[3], v6_pps_smmap_64[4],np.nan,v6_pps_smmap_128[0], v6_pps_smmap_128[1], v6_pps_smmap_128[2], v6_pps_smmap_128[3], v6_pps_smmap_128[4],np.nan,v6_pps_smmap_256[0], v6_pps_smmap_256[1], v6_pps_smmap_256[2], v6_pps_smmap_256[3], v6_pps_smmap_256[4]] 
+total_dpdk = [dpdk_64[0], dpdk_64[1], dpdk_64[2],dpdk_64[3], dpdk_64[4],np.nan,dpdk_128[0], dpdk_128[1], dpdk_128[2], dpdk_128[3], dpdk_128[4],np.nan,dpdk_256[0], dpdk_256[1], dpdk_256[2], dpdk_256[3], dpdk_256[4],np.nan,np.nan, v6_dpdk_64[0], v6_dpdk_64[1], v6_dpdk_64[2], v6_dpdk_64[3], v6_dpdk_64[4],np.nan,v6_dpdk_128[0], v6_dpdk_128[1], v6_dpdk_128[2], v6_dpdk_128[3], v6_dpdk_128[4],np.nan,v6_dpdk_256[0], v6_dpdk_256[1], v6_dpdk_256[2], v6_dpdk_256[3], v6_dpdk_256[4]]
 
 
-pps_total_netmap = [pps_netmap_64[0], pps_netmap_64[1], pps_netmap_64[2],pps_netmap_64[3], pps_netmap_64[4],np.nan,pps_netmap_128[0], pps_netmap_128[1], pps_netmap_128[2], pps_netmap_128[3], pps_netmap_128[4],np.nan,pps_netmap_256[0], pps_netmap_256[1], pps_netmap_256[2], pps_netmap_256[3], pps_netmap_256[4],np.nan,v6_pps_netmap_64[0], v6_pps_netmap_64[1], v6_pps_netmap_64[2], v6_pps_netmap_64[3], v6_pps_netmap_64[4],np.nan,v6_pps_netmap_128[0], v6_pps_netmap_128[1], v6_pps_netmap_128[2], v6_pps_netmap_128[3], v6_pps_netmap_128[4],np.nan,v6_pps_netmap_256[0], v6_pps_netmap_256[1], v6_pps_netmap_256[2], v6_pps_netmap_256[3], v6_pps_netmap_256[4]] 
+pps_total_smmap = [pps_smmap_64[0], pps_smmap_64[1], pps_smmap_64[2],pps_smmap_64[3], pps_smmap_64[4],np.nan,pps_smmap_128[0], pps_smmap_128[1], pps_smmap_128[2], pps_smmap_128[3], pps_smmap_128[4],np.nan,pps_smmap_256[0], pps_smmap_256[1], pps_smmap_256[2], pps_smmap_256[3], pps_smmap_256[4],np.nan,np.nan, v6_pps_smmap_64[0], v6_pps_smmap_64[1], v6_pps_smmap_64[2], v6_pps_smmap_64[3], v6_pps_smmap_64[4],np.nan,v6_pps_smmap_128[0], v6_pps_smmap_128[1], v6_pps_smmap_128[2], v6_pps_smmap_128[3], v6_pps_smmap_128[4],np.nan,v6_pps_smmap_256[0], v6_pps_smmap_256[1], v6_pps_smmap_256[2], v6_pps_smmap_256[3], v6_pps_smmap_256[4]] 
 
 
-pps_total_dpdk = [pps_dpdk_64[0], pps_dpdk_64[1], pps_dpdk_64[2],pps_dpdk_64[3], pps_dpdk_64[4],np.nan,pps_dpdk_128[0], pps_dpdk_128[1], pps_dpdk_128[2], pps_dpdk_128[3], pps_dpdk_128[4],np.nan,pps_dpdk_256[0], pps_dpdk_256[1], pps_dpdk_256[2], pps_dpdk_256[3], pps_dpdk_256[4],np.nan,v6_pps_dpdk_64[0], v6_pps_dpdk_64[1], v6_pps_dpdk_64[2], v6_pps_dpdk_64[3], v6_pps_dpdk_64[4],np.nan,v6_pps_dpdk_128[0], v6_pps_dpdk_128[1], v6_pps_dpdk_128[2], v6_pps_dpdk_128[3], v6_pps_dpdk_128[4],np.nan,v6_pps_dpdk_256[0], v6_pps_dpdk_256[1], v6_pps_dpdk_256[2], v6_pps_dpdk_256[3], v6_pps_dpdk_256[4]] 
+pps_total_netmap = [pps_netmap_64[0], pps_netmap_64[1], pps_netmap_64[2],pps_netmap_64[3], pps_netmap_64[4],np.nan,pps_netmap_128[0], pps_netmap_128[1], pps_netmap_128[2], pps_netmap_128[3], pps_netmap_128[4],np.nan,pps_netmap_256[0], pps_netmap_256[1], pps_netmap_256[2], pps_netmap_256[3], pps_netmap_256[4],np.nan,np.nan,v6_pps_netmap_64[0], v6_pps_netmap_64[1], v6_pps_netmap_64[2], v6_pps_netmap_64[3], v6_pps_netmap_64[4],np.nan,v6_pps_netmap_128[0], v6_pps_netmap_128[1], v6_pps_netmap_128[2], v6_pps_netmap_128[3], v6_pps_netmap_128[4],np.nan,v6_pps_netmap_256[0], v6_pps_netmap_256[1], v6_pps_netmap_256[2], v6_pps_netmap_256[3], v6_pps_netmap_256[4]] 
+
+
+pps_total_dpdk = [pps_dpdk_64[0], pps_dpdk_64[1], pps_dpdk_64[2],pps_dpdk_64[3], pps_dpdk_64[4],np.nan,pps_dpdk_128[0], pps_dpdk_128[1], pps_dpdk_128[2], pps_dpdk_128[3], pps_dpdk_128[4],np.nan,pps_dpdk_256[0], pps_dpdk_256[1], pps_dpdk_256[2], pps_dpdk_256[3], pps_dpdk_256[4],np.nan,np.nan, v6_pps_dpdk_64[0], v6_pps_dpdk_64[1], v6_pps_dpdk_64[2], v6_pps_dpdk_64[3], v6_pps_dpdk_64[4],np.nan,v6_pps_dpdk_128[0], v6_pps_dpdk_128[1], v6_pps_dpdk_128[2], v6_pps_dpdk_128[3], v6_pps_dpdk_128[4],np.nan,v6_pps_dpdk_256[0], v6_pps_dpdk_256[1], v6_pps_dpdk_256[2], v6_pps_dpdk_256[3], v6_pps_dpdk_256[4]] 
 
  
 
-entries = ["100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M"]
+entries = ["100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100","1k","10k","100k","1M"]
 
-xtick = np.arange(len(entries) )
-
+fig2 = plt.figure(figsize=(20,4.5))
 fig = plt.figure()
+xtick = np.arange(len(entries) )
+#print  len(entries)
+print("car")
+print( "smmap"+ str(len(pps_total_smmap)))
+print( "netmap" +str(len(pps_total_netmap)))
+print( "dpdk"+ str(len(pps_total_dpdk)))
+
+fig = plt.figure(figsize=(20,3.5))
 ax = fig.add_subplot(111)
 y1_lim = 16 
 
@@ -122,7 +122,7 @@ y1_lim = 16
 #ax.bar([p +2+ width for p in xtick+0.5],      pps_total_netmap , width,       color="white", edgecolor="black", **next(styles))
 #ax.bar([p +2+ width for p in xtick], pps_total_dpdk   , width,     color="#606060",edgecolor="black", **next(styles))
 
-width = 0.34
+width = 0.3
 ax.bar(xtick-width , pps_total_smmap  ,width,   color="#E0E0E0", edgecolor="black")
 ax.bar(xtick,      pps_total_netmap , width,       color="white", edgecolor="black", **next(styles))
 ax.bar(xtick+width, pps_total_dpdk   , width,     color="#606060",edgecolor="black", **next(styles))
@@ -132,6 +132,13 @@ ax.set_ylim([0, y1_lim])
 ax.set_xticks(xtick)
 #ax.set_xticks(xtick+2*(width/2)+2)
 #xticks = ax.xaxis.get_major_ticks()
+xticks = ax.xaxis.get_major_ticks()
+
+xticks[5].set_visible(False)
+xticks[11].set_visible(False)
+xticks[17].set_visible(False)
+xticks[23].set_visible(False)
+xticks[29].set_visible(False)
 
 ax.set_xticklabels(entries)
 #ax.yaxis.tick_left() # doesnt work :(
@@ -148,26 +155,26 @@ line.plot(xtick+0.35, total_dpdk   ,   color="black", marker=markers[0],  marker
 line.set_ylabel('Gbps')
 
 sep= 5.4
-ax.text(2, -1.8, u'64B',fontsize=11)
-ax.text(2+sep, -1.8, u'128B',fontsize=11)
-ax.text((2+1)+(sep)*2, -1.8, u'256B',fontsize=11)
-ax.text((2+1.5)+(sep)*3, -1.8, u'64B',fontsize=11)
-ax.text((2+2)+(sep)*4, -1.8, u'128B',fontsize=11)
-ax.text((2+2.5)+(sep)*5, -1.8, u'256B',fontsize=11)
+ypos = -2.3
+ax.text(2, ypos, u'64B',fontsize=11)
+ax.text(2+sep, ypos, u'128B',fontsize=11)
+ax.text((2+1)+(sep)*2, ypos, u'256B',fontsize=11)
+ax.text((2+1.5)+(sep)*3, ypos, u'64B',fontsize=11)
+ax.text((2+2)+(sep)*4, ypos, u'128B',fontsize=11)
+ax.text((2+2.5)+(sep)*5, ypos, u'256B',fontsize=11)
 #ax.text(4.65, -1, u'',fontsize=10)
 #ax.text(6.75, -1, u'(I)',fontsize=10)
 
-ax.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.10,1.05) )
-line.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.9,1.1) )
+ax.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.095,1.03) )
+line.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.99,1.03), markerfirst=False )
 
-##ax.spines['top'].set_visible(False)
+ax.spines['top'].set_visible(True)
 line.spines['right'].set_visible(True)
 ax.spines['left'].set_visible(True)
 #ax.spines['bottom'].set_visible(True)
 #ax.spines['left'].set_visible(True)
 
 #plt.show()
-plt.savefig('sine.eps', format='eps', dpi=600)
+plt.savefig('ipv6ipv6.eps', format='eps', dpi=600)
 #plt.savefig('sine.png', format='png', dpi=600)
 
-#plt.savefig('figure.png', format='png', dpi=800)
