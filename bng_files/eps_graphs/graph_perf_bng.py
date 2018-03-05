@@ -73,7 +73,7 @@ ax2.axes.get_yaxis().set_visible(False)
 
 ticklabelpad = mpl.rcParams['xtick.major.pad']
 xposi=240
-yposi= 4 
+yposi= 0 
 ax.annotate ("82       128       256      512     1024     1280", xy=(1,0), xytext=(-xposi, -ticklabelpad-yposi), ha='left', va='top',   fontsize=11, xycoords='axes fraction', textcoords='offset points')
 ax.annotate("Packet size (For UL, between CPE and BNG)" , xy=(1,0), xytext=(-xposi+5, -ticklabelpad-yposi-13), ha='left', va='top',   fontsize=10, xycoords='axes fraction', textcoords='offset points')
 ax2.annotate("82       128       256      512     1024     1280", xy=(1,0), xytext=(-xposi, -ticklabelpad-yposi), ha='left', va='top',   fontsize=11, xycoords='axes fraction', textcoords='offset points')
@@ -87,7 +87,7 @@ ax.set_xlabel('Packet size (between CPE and BNG)')
 
 #plt.title("Performance comparison for diferents NIC drivers")
 #ax.legend(["Socket-netmap", "Netmap", "DPDK"] )
-ax.legend(["DPDK", "Netmap", "Socket-mmap"], edgecolor = "white" )
+ax.legend(["Netmap", "Socket-mmap", "DPDK"], edgecolor = "white" )
 
 ax.set_prop_cycle(monochrome)
 ax.spines['top'].set_visible(False)
@@ -99,5 +99,5 @@ ax2.spines['bottom'].set_visible(True)
 
 #plt.grid()
 #plt.show()
-#plt.savefig('bng_perform.eps', format='eps', dpi=400)
-plt.savefig('bng_perform.png', format='png', dpi=400)
+plt.savefig('bng_perform.eps', format='eps', dpi=200)
+#plt.savefig('bng_perform.png', format='png', dpi=400)
