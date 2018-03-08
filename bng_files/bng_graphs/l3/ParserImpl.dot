@@ -1,0 +1,12 @@
+digraph ParserImpl{
+parse_ethernet [shape=rectangle,label="parse_ethernet
+(hdr.ethernet.etherType)"]
+parse_ipv4 [shape=rectangle,label="parse_ipv4"]
+start [shape=rectangle,label="start"]
+accept [shape=rectangle,label="accept"]
+reject [shape=rectangle,label="reject"]
+parse_ethernet -> parse_ipv4 [label="16w0x800"]
+parse_ethernet -> accept [label="default"]
+parse_ipv4 -> accept [label="always"]
+start -> parse_ethernet [label="always"]
+}
