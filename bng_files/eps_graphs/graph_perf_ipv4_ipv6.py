@@ -12,6 +12,16 @@ import matplotlib as mpl
 
 from cycler import cycler
 
+import IPython
+import matplotlib
+import copy
+import random
+
+
+
+
+
+
 markers = ["*","^","."]
 linestyles = ['-', '--', '-.', ':']
 
@@ -21,7 +31,7 @@ plt.rcParams['axes.spines.top'] = False
 plt.rcParams['axes.spines.right'] = True 
 plt.rcParams['axes.spines.bottom'] = True
 plt.rcParams['axes.spines.left'] = True 
-#plt.rcParams['figure.figsize'] = 19, 4
+plt.rcParams['figure.figsize'] = 20, 4
 
 plt.rcParams['axes.axisbelow'] = True
 
@@ -105,14 +115,16 @@ entries = ["100","1k","10k","100k","1M","","100","1k","10k","100k","1M","","100"
 
 fig2 = plt.figure(figsize=(20,4.5))
 fig = plt.figure()
+#fig.suptitle('bold figure suptitle', fontsize=11,  fontweight='bold')
+#fig.subplots_adjust(bottom=0.1)
+
 xtick = np.arange(len(entries) )
 #print  len(entries)
-print("car")
 print( "smmap"+ str(len(pps_total_smmap)))
 print( "netmap" +str(len(pps_total_netmap)))
 print( "dpdk"+ str(len(pps_total_dpdk)))
 
-fig = plt.figure(figsize=(20,3.5))
+fig = plt.figure(figsize=(20,4))
 ax = fig.add_subplot(111)
 y1_lim = 16 
 
@@ -123,11 +135,15 @@ y1_lim = 16
 #ax.bar([p +2+ width for p in xtick], pps_total_dpdk   , width,     color="#606060",edgecolor="black", **next(styles))
 
 width = 0.3
-ax.bar(xtick-width , pps_total_smmap  ,width,   color="#E0E0E0", edgecolor="black")
-ax.bar(xtick,      pps_total_netmap , width,       color="white", edgecolor="black", **next(styles))
-ax.bar(xtick+width, pps_total_dpdk   , width,     color="#606060",edgecolor="black", **next(styles))
+#ax.bar(xtick-width , pps_total_smmap  ,width,   color="#E0E0E0", edgecolor="black")
+#ax.bar(xtick,      pps_total_netmap , width,       color="white", edgecolor="black", **next(styles))
+#ax.bar(xtick+width, pps_total_dpdk   , width,     color="#606060",edgecolor="black", **next(styles))
 
-ax.set_ylabel('Mpps')
+ax.bar(xtick-width , pps_total_smmap  ,width, color="#FCD0A1",edgecolor="black",hatch="..", lw=1., zorder = 0)  
+ax.bar(xtick,      pps_total_netmap , width,  color="#B1B695", edgecolor="black", lw=1., zorder = 0 )  
+ax.bar(xtick+width, pps_total_dpdk   , width, color="#AFD2E9", edgecolor="black",hatch="OO", lw=1., zorder = 0)  
+
+ax.set_ylabel('Throughtput (Mpps)')
 ax.set_ylim([0, y1_lim])
 ax.set_xticks(xtick)
 #ax.set_xticks(xtick+2*(width/2)+2)
@@ -137,8 +153,9 @@ xticks = ax.xaxis.get_major_ticks()
 xticks[5].set_visible(False)
 xticks[11].set_visible(False)
 xticks[17].set_visible(False)
-xticks[23].set_visible(False)
-xticks[29].set_visible(False)
+xticks[18].set_visible(False)
+xticks[24].set_visible(False)
+xticks[30].set_visible(False)
 
 ax.set_xticklabels(entries)
 #ax.yaxis.tick_left() # doesnt work :(
@@ -150,31 +167,47 @@ line = ax.twinx()
 ax.yaxis.grid(color='gray', linestyle='dashed')
 line.set_ylim([0, 16])
 line.plot(xtick-0.35, total_smmap  ,  color="black", marker=markers[2])
+#line.plot(xtick-0.35, total_smmap  , color="#FCD0A1",edgecolor="black",hatch="..", lw=1., zorder = 0)
 line.plot(xtick    ,  total_netmap ,  color="black", marker=markers[1] , markersize=8, linestyle=linestyles[0])
+#line.plot(xtick    ,  total_netmap , color="#B1B695", edgecolor="black", lw=1., zorder = 0 )
 line.plot(xtick+0.35, total_dpdk   ,   color="black", marker=markers[0],  markersize=8, linestyle=linestyles[3])
-line.set_ylabel('Gbps')
-
+#line.plot(xtick+0.35, total_dpdk   , color="#AFD2E9", edgecolor="black",hatch="OO", lw=1., zorder = 0) 
+line.set_ylabel('Throughput (Gbps)')
 sep= 5.4
 ypos = -2.3
-ax.text(2, ypos, u'64B',fontsize=11)
-ax.text(2+sep, ypos, u'128B',fontsize=11)
+ax.text(1.9, ypos, u'64B',fontsize=11)
+ax.text(2.2+sep, ypos, u'128B',fontsize=11)
 ax.text((2+1)+(sep)*2, ypos, u'256B',fontsize=11)
-ax.text((2+1.5)+(sep)*3, ypos, u'64B',fontsize=11)
-ax.text((2+2)+(sep)*4, ypos, u'128B',fontsize=11)
-ax.text((2+2.5)+(sep)*5, ypos, u'256B',fontsize=11)
+ax.text((3+1.5)+(sep)*3, ypos, u'64B',fontsize=11)
+ax.text((3+2)+(sep)*4, ypos, u'128B',fontsize=11)
+ax.text((3+2.5)+(sep)*5, ypos, u'256B',fontsize=11)
+
+
+ax.text(1.9+sep, ypos-1.5, u'L3-IPv4',fontsize=14)
+ax.text((2.7+2)+(sep)*4, ypos-1.5, u'L3-IPv6',fontsize=14)
+
+ypos = -2.3
+ax.text(16, ypos-1.5, u'Number of entries',fontsize=14)
+ax.text(16, ypos-2.5, u'Packet size (bytes)',fontsize=14)
 #ax.text(4.65, -1, u'',fontsize=10)
 #ax.text(6.75, -1, u'(I)',fontsize=10)
 
-ax.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.095,1.03) )
-line.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.99,1.03), markerfirst=False )
+leg = ax.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=1, fontsize=10, bbox_to_anchor=(0.088,1.03), fancybox=True )
+leg.get_frame().set_alpha(0)
 
-ax.spines['top'].set_visible(True)
+leg2=line.legend(["Socket-mmap", "Netmap","DPDK" ], edgecolor = "white", loc=2, fontsize=10, bbox_to_anchor=(0.91,1.03), markerfirst=False )
+leg2.get_frame().set_alpha(0)
+
+#ax.spines['top'].set_visible(True)
 line.spines['right'].set_visible(True)
 ax.spines['left'].set_visible(True)
 #ax.spines['bottom'].set_visible(True)
 #ax.spines['left'].set_visible(True)
+plt.tight_layout(pad=4, w_pad=0.5, h_pad=2.5)
 
 #plt.show()
-plt.savefig('ipv6ipv6.eps', format='eps', dpi=600)
+#plt.savefig('/home/lion/ipv4_ipv6.svg', format='svg', dpi=40)
+plt.savefig('/home/lion/ipv4_ipv6.eps', format='eps', dpi=40)
+#plt.savefig('/home/lion/ipv6ipv6.png', format='pgn', dpi=600)
 #plt.savefig('sine.png', format='png', dpi=600)
 
