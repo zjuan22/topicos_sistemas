@@ -140,7 +140,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
     @name(".nat_dw") table nat_dw {
         actions = { drop; nat_hit_ext_to_int;  }
-	key = { hdr.ipv4.dstAddr: exact;}
+	key = { hdr.tcp.dstPort: exact;}
+	/*key = { hdr.ipv4.dstAddr: exact;}*/
 	/*key = {meta.routing_metadata.is_int_if: exact; } */
         size = 1024;
         default_action = drop();
