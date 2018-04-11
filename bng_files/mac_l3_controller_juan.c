@@ -12,6 +12,8 @@ uint8_t macs[MAX_MACS][6];
 uint8_t portmap[MAX_MACS];
 uint8_t ips[MAX_MACS][4];
 uint8_t ipd[MAX_MACS][4];
+uint8_t stcp_txt[MAX_MACS];
+
 int mac_count = -1;
 
 int read_macs_and_ports_from_file(char *filename) {
@@ -20,6 +22,8 @@ int read_macs_and_ports_from_file(char *filename) {
 	int values[6];
 	int values_ip[4];
 	int values_ip2[4];
+        int port;
+        int values_stcp;
 	int i;
 
 	f = fopen(filename, "r");
@@ -28,11 +32,12 @@ int read_macs_and_ports_from_file(char *filename) {
 	while (fgets(line, sizeof(line), f)) {
 		line[strlen(line)-1] = '\0';
 		//TODO why %c?
-		if (14 == sscanf(line, "%x:%x:%x:%x:%x:%x %d.%d.%d.%d %d.%d.%d.%d",
+		if (16 == sscanf(line, "%x:%x:%x:%x:%x:%x %d.%d.%d.%d %d.%d.%d.%d %d %d", 
 					&values[0], &values[1], &values[2],
 					&values[3], &values[4], &values[5],
 					&values_ip[0], &values_ip[1], &values_ip[2], &values_ip[3],
-					&values_ip2[0], &values_ip2[1], &values_ip2[2], &values_ip2[3]
+					&values_stcp,
+					&port
                 ) )
 		{
 			if (mac_count==MAX_MACS-1)
@@ -48,6 +53,9 @@ int read_macs_and_ports_from_file(char *filename) {
 				ips[mac_count][i] = (uint8_t) values_ip[i];
 			for( i = 0; i < 4; ++i )
 				ipd[mac_count][i] = (uint8_t) values_ip2[i];
+                        stcp_txt[mac_count] = (uint8_t) values_stcp;
+                        portmap[mac_count] = (uint8_t) port;
+ 
 
 		} else {
 			printf("Wrong format error in line %d : %s\n", mac_count+2, line);
@@ -817,12 +825,12 @@ void init() {
         for (i=0;i<=mac_count;++i)
         {
 
-                printf("Filling tables smac/decap/nat_up/lpm_up MAC: %02x:%02x:%02x:%02x:%02x:%02x src_IP: %d.%d.%d.%d dst_IP: %d.%d.%d.%   d\n ", macs[i][0],macs[i][1],macs[i][2],macs[i][3],macs[i][4],macs[i][5], ips[i][0],ips[i][1],ips[i][2],ips[i][3] , ipd[i][0],ipd[i][1],ipd[i][2],ipd[i][3]);
+                printf("Filling tables smac/decap/nat_up/lpm_up MAC: %02x:%02x:%02x:%02x:%02x:%02x src_IP: %d.%d.%d.%d dst_IP: %d.%d.%d.%   d\n srcTcpPort %d port %d", macs[i][0],macs[i][1],macs[i][2],macs[i][3],macs[i][4],macs[i][5], ips[i][0],ips[i][1],ips[i][2],ips[i][3] , ipd[i][0],ipd[i][1],ipd[i][2],ipd[i][3], stcp_txt[i], portmap[i] );
 
 
                fill_smac(macs[i]);  // esta smac del paquete
                fill_decap(macs[i], tn_id0);
-               fill_nat_up(ips[i],ip2,stcp); //
+               fill_nat_up(ips[i],ip2,stcp_txt[i]); // 
                fill_ipv4_lpm_up(ipd[i],port1 , ipd[i]);
 
                if(0 == (i%100)){ printf("inside sleep \n");sleep(1);;}
