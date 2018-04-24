@@ -178,8 +178,11 @@ parser ParserImpl(packet_in packet, out headers hdr, inout metadata meta, inout 
 control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_t standard_metadata) {
     
     /***************************** Drop  **************************/
+     @name(".nop")action nop() {
+        meta.routing_metadata.mac_da = hdr.ethernet.dstAddr;
+    }
      @name(".drop")action drop() {
-        /*mark_to_drop();*/
+        mark_to_drop();
 
     }
     /***************************** set IF info and others  **************************/
@@ -280,7 +283,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         default_action = drop();
     } 
     /***************************** firewall UL control *****************************/
-    @name(".fw_drop_up") table fw_drop_up {
+    @name(".firewall_ul") table firewall_ul {
         actions = { drop; }
         key = {
             hdr.ipv4.dstAddr   : exact;
@@ -313,7 +316,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     }
     @name(".nat_dw") table nat_dw {
         actions = { drop; nat_hit_ext_to_int;  }
-        key = {meta.routing_metadata.is_ext_if: exact; }
+        key = { hdr.tcp.dstPort: exact;}
+        /*key = {meta.routing_metadata.is_ext_if: exact; }*/
         size = 1024;
         default_action = drop();
     }
@@ -368,15 +372,16 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         size = 128;
     }
     /***************************** firewall DW control *****************************/
-    @name(".fw_drop_dw") table fw_drop_dw {
+    @name(".firewall_dl") table firewall_dl {
         actions = {
-            drop;
+             drop; nop;
         }
         key = {
-            hdr.inner_ipv4.dstAddr   : exact;
-            hdr.inner_tcp.dstPort    : exact;
+            hdr.ipv4.dstAddr   : exact;
+            /*hdr.inner_tcp.dstPort    : exact;*/
         }
         size = 128;
+        default_action = nop();
     }
     
     /************** forwarding ipv4 ******************/
@@ -426,16 +431,16 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         if(hdr.ipv4.protocol== 8w47){
            decap_process_outer.apply();
            nat_up.apply();
-           /*fw_drop_up.apply();*/
+           firewall_ul.apply();
         }
 
 
         if(meta.routing_metadata.is_ext_if == 1){
            nat_dw.apply();  
+           firewall_dl.apply();
            tunnel_encap_process_outer.apply(); 
            /*ipv4_dw.apply(); */
 
-           /*fw_drop_dw.apply();*/
         }
         
            ipv4_up.apply(); 
