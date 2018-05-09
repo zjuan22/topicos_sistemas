@@ -1,0 +1,2 @@
+Size, Theor_max(p), min(sent_Kpps), avg(sent_Kpps), max(sent_Kpps), min(recv_Kpps), avg(recv_Kpps), max(recv_Kpps), min(miss_Kpps), avg(miss_Kpps), max(miss_Kpps), min(sent_Gbps), avg(sent_Gbps), max(sent_Gbps), min(recv_Gbps), avg(recv_Gbps), max(recv_Gbps), min(diff_Gbps), avg(diff_Gbps), max(diff_Gbps) 
+128, 8445.945, 8441.13, 8441.3271, 8441.86, 0.0, 0.0, 0.0, 8441.13, 8441.3271, 8441.86, 9.9943, 9.9945, 9.9952, 0.0, 0.0, 0.0, 9.9943, 9.9945, 9.9952 
