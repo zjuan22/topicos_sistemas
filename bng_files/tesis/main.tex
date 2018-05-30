@@ -1,0 +1,360 @@
+%% abtex2-modelo-trabalho-academico.tex, v-1.7.1 laurocesar
+%% Copyright 2012-2013 by abnTeX2 group at http://abntex2.googlecode.com/
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%%aa
+%% This work has the LPPL maintenance status `maintained'.
+%%
+%% The Current Maintainer of this work is the abnTeX2 team, led
+%% by Lauro C\'{e}sar Araujo. Further information are available on
+%% http://abntex2.googlecode.com/
+%%
+%% This work consists of the files abntex2-modelo-trabalho-academico.tex,
+%% abntex2-modelo-include-comandos and abntex2-modelo-references.bib
+%%
+
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+% abnTeX2: Modelo de Trabalho Academico (tese de doutorado, dissertacao de
+% mestrado e trabalhos monograficos em geral) em conformidade com
+% ABNT NBR 14724:2011: Informacao e documentacao - Trabalhos academicos -
+% Apresentacao
+% ------------------------------------------------------------------------
+% ------------------------------------------------------------------------
+
+\input{preambulo}
+
+% ---- compila o \'{\i}ndice  ----
+\makeindex
+\makenomenclature
+% ---
+
+% ---- In\'{\i}cio do documento ----
+\begin{document}
+\include{chapters/acronyms}
+% Retira espa\c{c}o extra obsoleto entre as frases.
+\frenchspacing
+
+% ---- ELEMENTOS PR\'{E}-TEXTUAIS ----
+\pretextual
+
+\pagenumbering{roman}
+
+% --- Capa ---
+\imprimircapa
+% ---
+
+% --- Folha de rosto (o * indica que haver\'{a} a ficha catalogr\'{a}fica) ---
+\setcounter{page}{3}
+\imprimirfolhaderosto*
+% ---
+
+% --- Inserir a ficha catalogr\'{a}fica ---
+
+% Isto \'{e} um exemplo de Ficha Catalogr\'{a}fica, ou ``Dados internacionais de
+% cataloga\c{c}\~{a}o-na-publica\c{c}\~{a}o''. Voc\^{e} pode utilizar este modelo como refer\^{e}ncia.
+% Por\'{e}m, provavelmente a biblioteca da sua universidade lhe fornecer\'{a} um PDF
+% com a ficha catalogr\'{a}fica definitiva ap\'{o}s a defesa do trabalho. Quando estiver
+% com o documento, salve-o como PDF no diret\'{o}rio do seu projeto e substitua todo
+% o conte\'{u}do de implementa\c{c}\~{a}o deste arquivo pelo comando abaixo:
+
+% --- Para a vers\~{a}o final, delete as linhas abaixo e insira a linha do \includepdf
+ \begin{fichacatalografica}
+    \vspace*{\fill}
+    \begin{center}
+        \textsc{Inclua aqui o pdf com a ficha catalogr\'{a}fica fornecida pela BAE.}
+    \end{center}
+    \vspace*{\fill}
+% --- --- ---
+    %\includepdf{ficha-catalografica.pdf}
+ \end{fichacatalografica}
+% ---
+
+
+% --- Inserir folha de aprova\c{c}\~{a}o ---
+
+% Isto \'{e} um exemplo de Folha de aprova\c{c}\~{a}o, elemento obrigat\'{o}rio da NBR
+% 14724/2011 (se\c{c}\~{a}o 4.2.1.3). Voc\^{e} pode utilizar este modelo at\'{e} a aprova\c{c}\~{a}o
+% do trabalho. Ap\'{o}s isso, substitua todo o conte\'{u}do deste arquivo por uma
+% imagem da p\'{a}gina assinada pela banca com o comando abaixo:
+
+% --- Na vers\~{a}o final, exclua essas linhas e insira o \includepdf
+\newpage
+\vspace*{\fill}
+\begin{center}
+    \textsc{Inclua aqui a folha de assinaturas.}
+\end{center}
+\vspace*{\fill}
+\newpage
+% --- --- ---
+%\includepdf[pagecommand={\thispagestyle{plain}}]{folha-assinaturas.pdf}	
+\cleardoublepage
+
+
+% ---
+
+\begin{resumo}
+    \vspace{\onelineskip}
+\acrfullpl{BNG} play a crucial role in today’s networks, it hands all access network traffic (e.g., DSL traffic), provisioning of such policies like rate limiter, tunneling, and complex network management mechanisms that a \acrfullpl{ISP} needs to implement his services. These network devices are expensive, proprietary, limited and slow device upgrading, become a point of failure to deploy new features, add functionalities and correct issues on the network without disrupting the normal service operation.\\
+In this work, we propose a software-based virtualized BNG device running on inexpensive commodity hardware using high-level language for programming protocol-independent packet processors over a  Multi-Architecture Compiler System to remove some of these barriers to innovation.\\
+
+
+    \noindent\textbf{Keywords}: Computer Networks; Software Defined Networking; OpenFlow; Future Internet.
+
+    % \vspace{\onepageskip}
+    % \vspace{\onelineskip}
+    \pagebreak
+
+    \begin{otherlanguage*}{portuguese}
+    \begin{center}{\ABNTEXchapterfont\huge Resumo}\end{center}
+    
+Adicionar resumo em portugues...
+%         \textit{OpenFlow} é a mais proeminente tecnologia para a implementaç\~{a}o de Redes Definidas por Software (RDS). Projetada como uma interface de controle entre switches e controladores, o protocolo pode ser visto como um conjunto de instruç\~{o}es para programar a l\'{o}gica de encaminhamento em comutadores da rede. A primeira vers\~{a}o do \textit{OpenFlow} atraiu a atenção de pesquisadores da ind\'{u}stria e universidades interessados nos potenciais benef\'{i}cios prometidos por RDS. R\'{a}pidamente surgiram ferramentas para experimentação em \textit{OpenFlow} 1.0, incluindo comutadores, controladores e software para testes e emulaç\~{a}o. Ap\'{o}s o in\'{i}cio da padronizaç\~{a}o do protocolo pela \textit{OpenNetworkFoundation}, o protocolo OpenFlow evoluiu rapidamente dando origem \`{a} novas especificaç\~{o}es. As novas funcionalidades aumentaram as possibilidades de experimentos, gerando entusiasmo. Porém, o desenvolvimento das ferramentas de experimentaç\~{a}o n\~{a}o acompanharam o mesmo r\'{i}tmo do protocolo. Para preencher essa lacuna, esse projeto desenvolveu um comutador em \textit{software} com suporte a \textit{OpenFlow} 1.3. Guiado pelo objetivo de ser simples e básicos requerimentos de performance, a proposta da ferramenta \'{e} ser uma opç\~{a}o, f\'{a}cil e funcional para desenvolvedores de aplicaç\~{o}es RDS  buscando utilizar as novas funcionalidades do \textit{OpenFlow} 1.3. Em suma, o \textit{software} desenvolvido nesse projeto foi o primeiro comutador \textit{OpenFlow} 1.3 do mundo. Lançado como projeto de c\'{o}digo aberto, possibilitou a pesquisadores de todo o mundo a prototipagem e demonstraç\~{a}o de soluç\~{o}es n\~{a}o poss\'{i}veis anteriormente.
+
+    \vspace{\onelineskip}
+
+    \noindent\textbf{Palavras-chaves}: Redes de Computadores, Software Defined Networking, OpenFlow, Internet do Futuro. 
+
+    \end{otherlanguage*}
+\end{resumo}
+
+% --- RESUMOS (em ingl\^{e}s ---
+% \begin{resumo}
+
+%     \begin{otherlanguage*}{english}   
+%     \lipsum[2]
+
+%     \vspace{\onelineskip}
+
+%     \noindent\textbf{Keywords}: Computer Networks; Software Defined Network; OpenFlow; Internet of Future.
+
+%     \end{otherlanguage*}
+% \end{resumo}
+% ---
+
+% --- inserir o sumario ---
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+% ---
+
+% --- Dedicat\'{o}ria ---
+\begin{dedicatoria}
+    \vspace*{\fill}
+    \centering
+    \noindent
+    \textit{The road for a dream is not a solitary path. During this arduous and long walk, some faces keep up by your side until the end, while others come and go in the middle of the way. Regardless the time spent with you, everyone leaves marks and contribute, for the good and for the bad, with your personal growth. For this reason, I would like to dedicate this work to everyone that at some point in my life, helped me to go through this process and reach my aspirations.} 
+    
+    \vspace*{\fill}
+\end{dedicatoria}
+% ---
+
+% --- Agradecimentos ---
+\begin{agradecimentos}
+   
+My thanks to my parents, whoever has motivated me to go further and give me the best example of dedication. \\
+I am grateful for my family, for his support in the distance and send me his best wishes and prays.
+
+Christian Esteve Rothenberg, my supervisor, and friend.
+Many thanks to INTRIG group for bringing me support many times and even for its friendship outside of the university.
+
+Ericsson Innovation Center Brazil, for sponsoring this work, and Ericsson Traffic Lab in Hungary, for technical support.
+
+% for all the support, affection and belief. Also for raising me with enough freedom to chose my own path. 
+%     My friends, C\'{a}ssio, Daniel and M\^{o}nica, for the company, laughs and nonsense conversations that made things lighter. 
+    
+
+
+% Finally, my sincerely acknowledgments to people who collaborated with code, bug reports or suggestions.
+    
+    
+\end{agradecimentos}
+% ---
+
+% --- Ep\'{\i}grafe  ---
+\begin{epigrafe}
+    \vspace*{\fill}
+	\begin{flushright}
+		\textit{``The path to OpenFlow is not a four lane highway of joy and freedom with a six pack and a girl in the seat next to you, it’s a bit more complex and a little hard to say how it will work out, but I’d be backing OpenFlow in my view''\\
+		Greg Ferro}
+	\end{flushright}
+\end{epigrafe}
+% ---
+
+
+% --- inserir lista de ilustra\c{c}\~{o}es ---
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+% ---
+
+% --- inserir lista de tabelas ---
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+% ---
+
+% --- inserir lista de Acronimos e Abrevia\c{c}\~{o}es ---
+\renewcommand{\nomname}{Acronyms and Abbreviations List}
+\pdfbookmark[0]{\nomname}{las}
+\nomenclature{ARP}{Address Resolution Protocol}
+\nomenclature{API}{Application Programming Interface}
+\nomenclature{ASIC}{Application Specific Integrated Circuit}
+\nomenclature{BOS}{Bottom of the stack}
+\nomenclature{CAM}{Content Addressable Memory}
+\nomenclature{CRC}{Cyclic Redundancy Check}
+\nomenclature{DSCP}{Differentiated Services Code Point}
+\nomenclature{EH}{Extension Header}
+\nomenclature{Kbps}{Kilobits per second}
+\nomenclature{Kpps}{Kilo packets per second}
+\nomenclature{ICMP}{Internet Control Message Protocol }
+\nomenclature{IP}{Internet Protocol}
+\nomenclature{IPv6}{Internet Protocol Version 6}
+\nomenclature{JSON}{JavaScript Object Notation}
+\nomenclature{LXC}{Linux Containers}
+\nomenclature{MAC}{Media Access Control}
+\nomenclature{Mbps}{Megabits per second}
+\nomenclature{MIPS}{Microprocessor without Interlocked Pipeline Stages)}
+\nomenclature{MPLS}{Multiprotocol Label Switching}
+\nomenclature{NetPDL}{Network Protocol Description Language}
+\nomenclature{ONF}{Open Network Foundation}
+\nomenclature{ONOS}{Open Network Operating System}
+\nomenclature{OVS}{Open vSwitch}
+\nomenclature{OXM}{OpenFlow Extended Match}
+\nomenclature{PBB}{Provider Backbone Bridge Protocol}
+\nomenclature{QoS}{Quality of Service}
+\nomenclature{RAM}{Random Access Memory}
+\nomenclature{RTT}{Round Trip Time}
+\nomenclature{SDN}{Software Defined Networking} 
+\nomenclature{SCTP}{Streaming Control Transfer Protocol}
+\nomenclature{TCP}{Transmission Control Protocol}
+\nomenclature{TDD}{Test Driven Development}
+\nomenclature{TLS}{Transport Layer Security}
+\nomenclature{TLV}{Type-Lenght-Value}
+\nomenclature{TTL}{Time to live}
+\nomenclature{XML}{Extensible Markup Language}
+\printnomenclature
+\cleardoublepage
+% ---
+
+\pagenumbering{arabic}
+
+% ---- ELEMENTOS TEXTUAIS ----
+\textual
+
+% ---- Introdu\c{c}\~{a}o ----
+
+
+% ---- Cap\'{\i}tulos ----
+\include{chapters/intro}
+\include{chapters/cap2}
+\include{chapters/cap3}
+\include{chapters/cap4}
+\include{chapters/cap5}
+\include{chapters/conclusao}
+% --- Finaliza a parte no bookmark do PDF, para que se inicie o bookmark na raiz ---
+\bookmarksetup{startatroot}%
+% ---
+
+
+% ---- ELEMENTOS P\'{O}S-TEXTUAIS ----
+\postextual
+
+% ---- Refer\^{e}ncias bibliogr\'{a}ficas ----
+\bibliography{tese}
+
+% ---- Ap\^{e}ndices ----
+
+% ---
+% Inicia os ap\^{e}ndices
+% ---
+%\begin{apendicesenv}
+%
+%% Imprime uma p\'{a}gina indicando o in\'{\i}cio dos ap\^{e}ndices
+%\partapendices
+%
+%% ----------------------------------------------------------
+%\chapter{Quisque libero justo}
+%% ----------------------------------------------------------
+%
+%\lipsum[50]
+%
+%% ----------------------------------------------------------
+%\chapter{Nullam elementum urna vel imperdiet sodales elit ipsum pharetra ligula
+%ac pretium ante justo a nulla curabitur tristique arcu eu metus}
+%% ----------------------------------------------------------
+%\lipsum[55-57]
+%
+%\end{apendicesenv}
+% ---
+
+% ---- Anexos ----
+
+% ---
+% Inicia os anexos - opcional
+% ---
+\begin{anexosenv}
+
+% Imprime uma p\'{a}gina indicando o in\'{\i}cio dos anexos
+\partanexos
+
+\chapter{NetPDL packet description example}
+\label{annex:NetPDLdesc}
+
+\begin{lstlisting}[frame=single,language=XML,breaklines=true, tabsize=2,showspaces=false,showstringspaces=false]  % Start your code-block
+
+<protocol name="udp" longname="UDP (User Datagram protocol)"         showsumtemplate="udp">
+	<format>
+		<fields>
+			<field type="fixed" name="sport" longname="{0x8000 15}" size="2" showtemplate="FieldDec"/>
+			<field type="fixed" name="dport" longname="{0x8000 16}" size="2" showtemplate="FieldDec"/>
+			<field type="fixed" name="len" longname="Payload length" size="2" showtemplate="FieldDec"/>
+			<field type="fixed" name="crc" longname="Checksum" size="2" showtemplate="FieldHex"/>
+		</fields>
+	</format>
+	<visualization>
+		<showsumtemplate name="udp">
+			<section name="next"/>
+			<text value="UDP: port "/>
+			<protofield name="sport" showdata="showvalue"/>
+			<text value=" => "/>
+			<protofield name="dport" showdata="showvalue"/>
+		</showsumtemplate>
+	</visualization>
+</protocol>     
+
+\end{lstlisting}
+
+% ---
+\chapter{Publications}
+% ---
+\label{AnnexB}
+Three papers were published during this work and are listed below. 
+
+\begin{itemize}
+
+    \item Eder Leão Fernandes, Christian Esteve Rothenberg. "OpenFlow 1.3 Software Switch". In Salão de Ferramentas XXXII Simpósio Brasileiro de Redes de Computadores - SBRC'2014, Florianópolis, 5 a 9 de Maio de 2014.
+
+    \item  E. L. Fernandes, C. Esteve Rothenberg and M. R. Salvador. "Software Defined Home Networking: Research Challenges and Innovation Opportunities."(invited paper), In International Workshop on Telecommunications (IWT'13), Santa Rita do Sapucaí, Brazil, 6-9 May 2013
+    
+    \item Rodrigo R. Denicol, Eder L. Fernandes, Christian E. Rothenberg, Zoltán Lajos Kis, "On IPv6 support in OpenFlow via Flexible Match Structures". OFELIA/CHANGE Summer School SummerSchool, Poster session, Berlin, Germany, November 7-11 November 2011.
+    
+
+\end{itemize}
+
+
+\label{annex:NetPDLdesc}
+
+\end{anexosenv}
+
+% ---- INDICE REMISSIVO ----
+
+\printindex
+
+\end{document} 

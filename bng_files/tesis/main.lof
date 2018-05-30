@@ -1,0 +1,15 @@
+\select@language {english}
+\contentsline {figure}{\numberline {1}{\ignorespaces Access Network Provider Model.\relax }}{5}{figure.caption.7}
+\contentsline {figure}{\numberline {2}{\ignorespaces P4 Abstract Forwarding Model. Source: Adapted from \cite {P4}.\relax }}{6}{figure.caption.8}
+\contentsline {figure}{\numberline {3}{\ignorespaces Macsad architecture. Source:\cite {Patra}\relax }}{7}{figure.caption.9}
+\contentsline {figure}{\numberline {4}{\ignorespaces ODP system architecture. Source:....\relax }}{9}{figure.caption.10}
+\contentsline {figure}{\numberline {5}{\ignorespaces BNG software architecture.\relax }}{11}{figure.caption.11}
+\contentsline {figure}{\numberline {6}{\ignorespaces BNG data plane.\relax }}{12}{figure.caption.12}
+\contentsline {figure}{\numberline {7}{\ignorespaces Evolution of the language between versions P4$_{14}$ (v 1.0 and 1.1) and P4$_{16}$. \relax }}{14}{figure.caption.13}
+\contentsline {figure}{\numberline {8}{\ignorespaces PktIO SCHED Mode Receive Processing. Source\relax }}{16}{figure.caption.14}
+\contentsline {figure}{\numberline {9}{\ignorespaces OXM field example\relax }}{20}{figure.caption.15}
+\contentsline {figure}{\numberline {10}{\ignorespaces Packet Parser components\relax }}{21}{figure.caption.16}
+\contentsline {figure}{\numberline {11}{\ignorespaces Token Bucket Algorithm illustration inside the meter band\relax }}{27}{figure.caption.17}
+\contentsline {figure}{\numberline {12}{\ignorespaces User space software switches throughput comparison\relax }}{39}{figure.caption.21}
+\contentsline {figure}{\numberline {13}{\ignorespaces Influence of the number of installed flows on the throughput.\relax }}{41}{figure.caption.22}
+\contentsline {figure}{\numberline {14}{\ignorespaces GitHub statistics.\relax }}{46}{figure.caption.24}

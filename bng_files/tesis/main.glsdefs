@@ -1,0 +1,810 @@
+\ifglsentryexists{API}{}%
+{%
+\gls@defglossaryentry{API}%
+{%
+name={API},%
+sort={API},%
+type={acronym},%
+first={Application Programming Interface\glsspace (API)},%
+firstplural={Application Programming Interfaces\glsspace (APIs)},%
+text={API},%
+plural={APIs},%
+description={Application Programming Interface},%
+descriptionplural={Application Programming Interface\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Application Programming Interface},%
+longplural={Application Programming Interfaces},%
+short={API},%
+shortplural={APIs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{AaaS}{}%
+{%
+\gls@defglossaryentry{AaaS}%
+{%
+name={AaaS},%
+sort={AaaS},%
+type={acronym},%
+first={ALTO as a Service\glsspace (AaaS)},%
+firstplural={ALTO as a Services\glsspace (AaaSs)},%
+text={AaaS},%
+plural={AaaSs},%
+description={ALTO as a Service},%
+descriptionplural={ALTO as a Service\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={ALTO as a Service},%
+longplural={ALTO as a Services},%
+short={AaaS},%
+shortplural={AaaSs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{AS}{}%
+{%
+\gls@defglossaryentry{AS}%
+{%
+name={AS},%
+sort={AS},%
+type={acronym},%
+first={Autonomous System\glsspace (AS)},%
+firstplural={Autonomous Systems\glsspace (ASes)},%
+text={AS},%
+plural={ASes},%
+description={Autonomous System},%
+descriptionplural={Autonomous System\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Autonomous System},%
+longplural={Autonomous Systems},%
+short={AS},%
+shortplural={ASes},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{ASN}{}%
+{%
+\gls@defglossaryentry{ASN}%
+{%
+name={ASN},%
+sort={ASN},%
+type={acronym},%
+first={Autonomous System Number\glsspace (ASN)},%
+firstplural={Autonomous System Numbers\glsspace (ASNs)},%
+text={ASN},%
+plural={ASNs},%
+description={Autonomous System Number},%
+descriptionplural={Autonomous System Number\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Autonomous System Number},%
+longplural={Autonomous System Numbers},%
+short={ASN},%
+shortplural={ASNs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{BGP}{}%
+{%
+\gls@defglossaryentry{BGP}%
+{%
+name={BGP},%
+sort={BGP},%
+type={acronym},%
+first={Border Gateway Protocol\glsspace (BGP)},%
+firstplural={Border Gateway Protocols\glsspace (BGPs)},%
+text={BGP},%
+plural={BGPs},%
+description={Border Gateway Protocol},%
+descriptionplural={Border Gateway Protocol\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Border Gateway Protocol},%
+longplural={Border Gateway Protocols},%
+short={BGP},%
+shortplural={BGPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{BNG}{}%
+{%
+\gls@defglossaryentry{BNG}%
+{%
+name={BNG},%
+sort={BNG},%
+type={acronym},%
+first={Broadband Network Gateway\glsspace (BNG)},%
+firstplural={Broadband Network Gateways\glsspace (BNGs)},%
+text={BNG},%
+plural={BNGs},%
+description={Broadband Network Gateway},%
+descriptionplural={Broadband Network Gateway\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Broadband Network Gateway},%
+longplural={Broadband Network Gateways},%
+short={BNG},%
+shortplural={BNGs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{CDN}{}%
+{%
+\gls@defglossaryentry{CDN}%
+{%
+name={CDN},%
+sort={CDN},%
+type={acronym},%
+first={Content Delivery Network\glsspace (CDN)},%
+firstplural={Content Delivery Networks\glsspace (CDNs)},%
+text={CDN},%
+plural={CDNs},%
+description={Content Delivery Network},%
+descriptionplural={Content Delivery Network\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Content Delivery Network},%
+longplural={Content Delivery Networks},%
+short={CDN},%
+shortplural={CDNs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{DSL}{}%
+{%
+\gls@defglossaryentry{DSL}%
+{%
+name={DSL},%
+sort={DSL},%
+type={acronym},%
+first={Domain-specific language\glsspace (DSL)},%
+firstplural={Domain-specific languages\glsspace (DSLs)},%
+text={DSL},%
+plural={DSLs},%
+description={Domain-specific language},%
+descriptionplural={Domain-specific language\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Domain-specific language},%
+longplural={Domain-specific languages},%
+short={DSL},%
+shortplural={DSLs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{IETF}{}%
+{%
+\gls@defglossaryentry{IETF}%
+{%
+name={IETF},%
+sort={IETF},%
+type={acronym},%
+first={Internet Engineering Task Force\glsspace (IETF)},%
+firstplural={Internet Engineering Task Forces\glsspace (IETFs)},%
+text={IETF},%
+plural={IETFs},%
+description={Internet Engineering Task Force},%
+descriptionplural={Internet Engineering Task Force\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Internet Engineering Task Force},%
+longplural={Internet Engineering Task Forces},%
+short={IETF},%
+shortplural={IETFs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{IXP}{}%
+{%
+\gls@defglossaryentry{IXP}%
+{%
+name={IXP},%
+sort={IXP},%
+type={acronym},%
+first={Internet eXchange Point\glsspace (IXP)},%
+firstplural={Internet eXchange Points\glsspace (IXPs)},%
+text={IXP},%
+plural={IXPs},%
+description={Internet eXchange Point},%
+descriptionplural={Internet eXchange Point\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Internet eXchange Point},%
+longplural={Internet eXchange Points},%
+short={IXP},%
+shortplural={IXPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{ISP}{}%
+{%
+\gls@defglossaryentry{ISP}%
+{%
+name={ISP},%
+sort={ISP},%
+type={acronym},%
+first={Internet Service Provider\glsspace (ISP)},%
+firstplural={Internet Service Providers\glsspace (ISPs)},%
+text={ISP},%
+plural={ISPs},%
+description={Internet Service Provider},%
+descriptionplural={Internet Service Provider\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Internet Service Provider},%
+longplural={Internet Service Providers},%
+short={ISP},%
+shortplural={ISPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{KP}{}%
+{%
+\gls@defglossaryentry{KP}%
+{%
+name={KP},%
+sort={KP},%
+type={acronym},%
+first={Knowledge Plane\glsspace (KP)},%
+firstplural={Knowledge Planes\glsspace (KPs)},%
+text={KP},%
+plural={KPs},%
+description={Knowledge Plane},%
+descriptionplural={Knowledge Plane\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Knowledge Plane},%
+longplural={Knowledge Planes},%
+short={KP},%
+shortplural={KPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{LG}{}%
+{%
+\gls@defglossaryentry{LG}%
+{%
+name={LG},%
+sort={LG},%
+type={acronym},%
+first={Looking Glass\glsspace (LG)},%
+firstplural={Looking Glasss\glsspace (LGs)},%
+text={LG},%
+plural={LGs},%
+description={Looking Glass},%
+descriptionplural={Looking Glass\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Looking Glass},%
+longplural={Looking Glasss},%
+short={LG},%
+shortplural={LGs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{MACSAD}{}%
+{%
+\gls@defglossaryentry{MACSAD}%
+{%
+name={MACSAD},%
+sort={MACSAD},%
+type={acronym},%
+first={Multi-Architecture Compiler System for Abstract Dataplanes\glsspace (MACSAD)},%
+firstplural={Multi-Architecture Compiler System for Abstract Dataplaness\glsspace (MACSADs)},%
+text={MACSAD},%
+plural={MACSADs},%
+description={Multi-Architecture Compiler System for Abstract Dataplanes},%
+descriptionplural={Multi-Architecture Compiler System for Abstract Dataplanes\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Multi-Architecture Compiler System for Abstract Dataplanes},%
+longplural={Multi-Architecture Compiler System for Abstract Dataplaness},%
+short={MACSAD},%
+shortplural={MACSADs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{NFPA}{}%
+{%
+\gls@defglossaryentry{NFPA}%
+{%
+name={NFPA},%
+sort={NFPA},%
+type={acronym},%
+first={Network Function Performance Analyzer\glsspace (NFPA)},%
+firstplural={Network Function Performance Analyzers\glsspace (NFPAs)},%
+text={NFPA},%
+plural={NFPAs},%
+description={Network Function Performance Analyzer},%
+descriptionplural={Network Function Performance Analyzer\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Network Function Performance Analyzer},%
+longplural={Network Function Performance Analyzers},%
+short={NFPA},%
+shortplural={NFPAs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{NFV}{}%
+{%
+\gls@defglossaryentry{NFV}%
+{%
+name={NFV},%
+sort={NFV},%
+type={acronym},%
+first={Network functions virtualization\glsspace (NFV)},%
+firstplural={Network functions virtualizations\glsspace (NFVs)},%
+text={NFV},%
+plural={NFVs},%
+description={Network functions virtualization},%
+descriptionplural={Network functions virtualization\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Network functions virtualization},%
+longplural={Network functions virtualizations},%
+short={NFV},%
+shortplural={NFVs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{nat}{}%
+{%
+\gls@defglossaryentry{nat}%
+{%
+name={NAT},%
+sort={NAT},%
+type={acronym},%
+first={Network Address Translation\glsspace (NAT)},%
+firstplural={Network Address Translations\glsspace (NATs)},%
+text={NAT},%
+plural={NATs},%
+description={Network Address Translation},%
+descriptionplural={Network Address Translation\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Network Address Translation},%
+longplural={Network Address Translations},%
+short={NAT},%
+shortplural={NATs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{OS}{}%
+{%
+\gls@defglossaryentry{OS}%
+{%
+name={OS},%
+sort={OS},%
+type={acronym},%
+first={Operating System\glsspace (OS)},%
+firstplural={Operating Systems\glsspace (OSs)},%
+text={OS},%
+plural={OSs},%
+description={Operating System},%
+descriptionplural={Operating System\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Operating System},%
+longplural={Operating Systems},%
+short={OS},%
+shortplural={OSs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{onf}{}%
+{%
+\gls@defglossaryentry{onf}%
+{%
+name={ONF},%
+sort={ONF},%
+type={acronym},%
+first={Open Networking Foundation\glsspace (ONF)},%
+firstplural={Open Networking Foundations\glsspace (ONFs)},%
+text={ONF},%
+plural={ONFs},%
+description={Open Networking Foundation},%
+descriptionplural={Open Networking Foundation\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Open Networking Foundation},%
+longplural={Open Networking Foundations},%
+short={ONF},%
+shortplural={ONFs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{odp}{}%
+{%
+\gls@defglossaryentry{odp}%
+{%
+name={ODP},%
+sort={ODP},%
+type={acronym},%
+first={OpenDataPlane\glsspace (ODP)},%
+firstplural={OpenDataPlanes\glsspace (ODPs)},%
+text={ODP},%
+plural={ODPs},%
+description={OpenDataPlane},%
+descriptionplural={OpenDataPlane\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={OpenDataPlane},%
+longplural={OpenDataPlanes},%
+short={ODP},%
+shortplural={ODPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{P4}{}%
+{%
+\gls@defglossaryentry{P4}%
+{%
+name={P4},%
+sort={P4},%
+type={acronym},%
+first={programming protocol-independent packet processors\glsspace (P4)},%
+firstplural={programming protocol-independent packet processorss\glsspace (P4s)},%
+text={P4},%
+plural={P4s},%
+description={programming protocol-independent packet processors},%
+descriptionplural={programming protocol-independent packet processors\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={programming protocol-independent packet processors},%
+longplural={programming protocol-independent packet processorss},%
+short={P4},%
+shortplural={P4s},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{QoS}{}%
+{%
+\gls@defglossaryentry{QoS}%
+{%
+name={QoS},%
+sort={QoS},%
+type={acronym},%
+first={Quality of service\glsspace (QoS)},%
+firstplural={Quality of services\glsspace (QoSs)},%
+text={QoS},%
+plural={QoSs},%
+description={Quality of service},%
+descriptionplural={Quality of service\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Quality of service},%
+longplural={Quality of services},%
+short={QoS},%
+shortplural={QoSs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{SDN}{}%
+{%
+\gls@defglossaryentry{SDN}%
+{%
+name={SDN},%
+sort={SDN},%
+type={acronym},%
+first={Software-Defined Networking\glsspace (SDN)},%
+firstplural={Software-Defined Networkings\glsspace (SDNs)},%
+text={SDN},%
+plural={SDNs},%
+description={Software-Defined Networking},%
+descriptionplural={Software-Defined Networking\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Software-Defined Networking},%
+longplural={Software-Defined Networkings},%
+short={SDN},%
+shortplural={SDNs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{SP}{}%
+{%
+\gls@defglossaryentry{SP}%
+{%
+name={SP},%
+sort={SP},%
+type={acronym},%
+first={Service Provider\glsspace (SP)},%
+firstplural={Service Providers\glsspace (SPs)},%
+text={SP},%
+plural={SPs},%
+description={Service Provider},%
+descriptionplural={Service Provider\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Service Provider},%
+longplural={Service Providers},%
+short={SP},%
+shortplural={SPs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{WAN}{}%
+{%
+\gls@defglossaryentry{WAN}%
+{%
+name={WAN},%
+sort={WAN},%
+type={acronym},%
+first={Wide Area Network\glsspace (WAN)},%
+firstplural={Wide Area Networks\glsspace (WANs)},%
+text={WAN},%
+plural={WANs},%
+description={Wide Area Network},%
+descriptionplural={Wide Area Network\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Wide Area Network},%
+longplural={Wide Area Networks},%
+short={WAN},%
+shortplural={WANs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{VM}{}%
+{%
+\gls@defglossaryentry{VM}%
+{%
+name={VM},%
+sort={VM},%
+type={acronym},%
+first={Virtual Machine\glsspace (VM)},%
+firstplural={Virtual Machines\glsspace (VMs)},%
+text={VM},%
+plural={VMs},%
+description={Virtual Machine},%
+descriptionplural={Virtual Machine\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Virtual Machine},%
+longplural={Virtual Machines},%
+short={VM},%
+shortplural={VMs},%
+counter={page},%
+parent={},%
+%
+}%
+}%
+\ifglsentryexists{VoD}{}%
+{%
+\gls@defglossaryentry{VoD}%
+{%
+name={Vod},%
+sort={Vod},%
+type={acronym},%
+first={Video-on-Demand \glsspace (Vod)},%
+firstplural={Video-on-Demand s\glsspace (Vods)},%
+text={Vod},%
+plural={Vods},%
+description={Video-on-Demand},%
+descriptionplural={Video-on-Demand \acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Video-on-Demand},%
+longplural={Video-on-Demand s},%
+short={Vod},%
+shortplural={Vods},%
+counter={page},%
+parent={},%
+%
+}%
+}%
