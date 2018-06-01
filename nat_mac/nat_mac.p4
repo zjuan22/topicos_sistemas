@@ -134,9 +134,10 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         default_action = natTcp_learn();     
     }
 
-    @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {
+    /*@name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {*/
+    @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr) {
         hdr.ipv4.dstAddr = dstAddr;
-        hdr.tcp.dstPort = dstPort;
+        /*hdr.tcp.dstPort = dstPort;*/
     }
     @name(".nat_dw") table nat_dw {
         actions = { drop; nat_hit_ext_to_int;  }
