@@ -284,12 +284,13 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     } 
     /***************************** firewall UL control *****************************/
     @name(".firewall_ul") table firewall_ul {
-        actions = { drop; }
+        actions = { drop; nop; }
         key = {
             hdr.ipv4.dstAddr   : exact;
-            hdr.tcp.dstPort    : exact;
+            /*hdr.tcp.dstPort    : exact;*/
         }
         size = 128;
+        default_action = nop();
     }
     
     /***************************** Nat control *****************************************/
@@ -308,11 +309,12 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         default_action = drop();     
     }
 
-    @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {
+    /*@name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {*/
+    @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr) {
         meta.routing_metadata.rewrite_outer = 1w0;
         meta.routing_metadata.dst_ipv4 = dstAddr; /* to lpm */
         hdr.ipv4.dstAddr = dstAddr;
-        hdr.tcp.dstPort = dstPort;
+        /*hdr.tcp.dstPort = dstPort;*/
     }
     @name(".nat_dw") table nat_dw {
         actions = { drop; nat_hit_ext_to_int;  }
@@ -325,7 +327,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     /***************************** tunnel control encap *****************************/
     
     /*@name(".ipv4_gre_rewrite") action ipv4_gre_rewrite(bit<32> gre_srcAddr, bit<32> gre_dstAddr) { */
-    @name(".ipv4_gre_rewrite") action ipv4_gre_rewrite(bit<32> gre_srcAddr) {
+    @name(".ipv4_gre_rewrite") action ipv4_gre_rewrite(bit<32> gre_dstAddr) {
       hdr.ethernet.setInvalid();     
       hdr.gre.setValid();
       hdr.gre.proto = 16w0x800;
@@ -345,8 +347,8 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
 
       hdr.outer_ipv4.setValid();  
       hdr.outer_ipv4.srcAddr  = 0x04000001;  
-      hdr.outer_ipv4.dstAddr  = gre_srcAddr;  
-      hdr.outer_ipv4.protocol = 47; 
+      hdr.outer_ipv4.dstAddr  = gre_dstAddr;  
+      hdr.outer_ipv4.protocol = 47;
       hdr.outer_ipv4.version        =  meta.meta_ipv4.version        ;          
       hdr.outer_ipv4.ihl            =  meta.meta_ipv4.ihl            ;
       hdr.outer_ipv4.diffserv       =  meta.meta_ipv4.diffserv       ;
@@ -422,6 +424,31 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
         key = {  standard_metadata.egress_port: exact; }
         size = 512;
     }    
+
+
+    /*@name(".my_meter") meter(32w16384, MeterType.packets) my_meter_dl;*/
+    
+   /* @name(".m_action_dl") action m_action(bit<32> meter_idx) {                             */
+   /*     my_meter_dl.execute_meter((bit<32>)meter_idx, meta.routing_metadata.meter_tag);    */
+   /*     standard_metadata.egress_spec = 9w2;                                           */
+   /* }                                                                                      */
+   /* @name(".m_filter_dl") table m_filter_dl {                                              */
+   /*     actions = {drop; nop; }                                                            */
+   /*     key = { meta.routing_metadata.meter_tag: exact;}                                   */
+   /*     size = 16;                                                                         */
+   /* }                                                                                      */
+   /* @name(".m_table_dl") table m_table_dl {                                                */
+   /*     actions = {m_action; nop; }                                                        */
+   /*     key = { hdr.ethernet.srcAddr: exact;}                                              */
+   /*     size = 16384;                                                                      */
+   /* }                                                                                      */
+
+
+
+
+
+
+
  
     /************** APPLY ******************/
     apply {
@@ -439,8 +466,9 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
            nat_dw.apply();  
            firewall_dl.apply();
            tunnel_encap_process_outer.apply(); 
-           /*ipv4_dw.apply(); */
-
+           /*m_table_dl.apply();
+           m_filter_dl.apply();*/
+           
         }
         
            ipv4_up.apply(); 
