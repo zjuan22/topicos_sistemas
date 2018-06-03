@@ -127,39 +127,41 @@ for m in range(entries):
 # print ipsrc
 #########
 i = 0
+print "entries : "+ str(entries)
 for i in range(0, 7):
-	p = 0
-	for p in range(0, entries):
-          index = randint(1,entries)
-          index2 = randint(1,entries)
-#pkts.append(Ether(dst=macdst[p],src=macsrc[p])/IP(dst=ipdst[p],src=ipsrc[p])/UDP(dport=10,sport=str(r[p]))/Raw(RandString(size=pktsize[i])))
-#pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src='00:44:00:00:00:00')/IP(dst='4.0.0.11',src='4.0.0.10')/GRE()/IP(dst='192.168.0.10',src='10.0.0.    10')/TCP(sport=20, dport=80)/Raw(RandString(size=pktsize[i])))
-#pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src=macsrc[p])/IP(dst='4.0.0.1',src='4.0.0.10')/GRE()/IP(dst=ipdst[p],src=ipsrc[p])/TCP(sport=20, dport=80)/Raw(RandString(size=pktsize[i])))
-          pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src=macsrc[p])/IP(dst='192.168.0.1',src=ipsrc[p])/TCP(sport=20, dport=r[p])/Raw(RandString(size=pktsize[i])))
+    p = 0
+    ip_count = 0
+    for p in range(0, entries):
+        index2 = randint(1,entries)
+        ip_block = range(1,50)
+        
+        #pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src='00:44:00:00:00:00')/IP(dst='4.0.0.11',src='4.0.0.10')/GRE()/IP(dst='192.168.0.10',src='10.0.0.    10')/TCP(sport=20, dport=80)/Raw(RandString(size=pktsize[i])))
+        #pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src=macsrc[p])/IP(dst='4.0.0.1',src='4.0.0.10')/GRE()/IP(dst=ipdst[p],src=ipsrc[p])/TCP(sport=20, dport=80)/Raw(RandString(size=pktsize[i])))
+        #pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src=macsrc[p])/IP(dst='192.168.0.1',src='192.168.0.'+str(p+1))/TCP(sport=20, dport=str(p+100) )/Raw(RandString(size=pktsize[i])))
+        pkts.append(Ether(dst='aa:1b:eb:df:44:3d',src=macsrc[p])/IP(dst='192.168.0.1',src='192.168.0.'+str(p+1))/TCP(sport=20, dport=(p+100) )/Raw(RandString(size=pktsize[i])))
 
+        if f == 0:
+           if ip_count < 50: ip_count += 1  	
+           else: ip_count = 0 		     
+           #FILE = "echo " + str(ipdst[p]) + " " + macdst_h[p] + " 1 >> PCAP/trace_trPR_ipv4_" + str(entries) + "_random.txt"  
+           #FILE = "echo "+str(macsrc[p])+" 10.0.0."+str(p+1) +" 4.0.0."+str(p+102)+" "+str(p+100)+ " 10.0.0."+str(ip_block[ip_count]) + " 1 >> PCAP/trace_trPR_nat_dl_" + str(entries) + "_random2.txt"  
+           FILE = "echo "+str(macsrc[p])+" 10.0.0."+str(p+1) +" 4.0.0."+str(p+102)+ " " +str(p+100)+ " 1 >> PCAP/trace_trPR_bng_dl_" + str(entries) + "_random2.txt"  
+           os.system(FILE)
 
-   # pkt = Ether(dst='00:aa:bb:00:00:a5',src='00:55:00:00:00:00')/IP(dst='192.168.0.1',src='192.168.0.10')/TCP(sport=81, dport=1025)/"from scapy packet"
-
-
-	  #Create trace file
-	  if f == 0:
-			#FILE = "echo " + str(ipdst[p]) + " " + macdst_h[p] + " 1 >> PCAP/trace_trPR_ipv4_" + str(entries) + "_random.txt"
-			FILE = "echo " + macsrc_h[p] + " " +  str(ipsrc[p]) + " " +str(r[p])+ " " + str(ju[p]) + " 1 >> PCAP/trace_trPR_nat_dl_" + str(entries) + "_random2.txt"
-			os.system(FILE)
-			FILE2 = "echo " + macsrc[p] + " 0 >> PCAP/trace_trPR_l2_" + str(entries) + "_random.txt"
-			#os.system(FILE2)
-			FILE2 = "echo " + macdst[p] + " 1 >> PCAP/trace_trPR_l2_" + str(entries) + "_random.txt"
-			#os.system(FILE2)
+		  #FILE2 = "echo " + macsrc[p] + " 0 >> PCAP/trace_trPR_l2_" + str(entries) + "_random.txt"
+		  #os.system(FILE2)
+		  #FILE2 = "echo " + macdst[p] + " 1 >> PCAP/trace_trPR_l2_" + str(entries) + "_random.txt"
+		  #os.system(FILE2)
 	#pname = "./PCAP/nfpa.trPR_ipv4_%d_random.%dbytes.pcap" % (entries, pktsize[i]+42+4) #Update the name depending of the Use-Case, use the same format
-	pname = "./PCAP/nfpa.trPR_nat_dl_%d_random.%dbytes.pcap" % (entries, pktsize[i]+54+4) #Update the name depending of the Use-Case, use the same format
-	#pnamec = "PCAP/nfpa.trPR_gre_%d_random.%dbytes.pcap" % (entries, pktsize[i]+42+4)
-	#pnamec = "PCAP/nfpa.trPR_tcp_%d_random.%dbytes.pcap" % (entries, pktsize[i]+78+4)  #14 (eth) + 20 (ip4) + 20 (tcp) = 54
-	#copy = "scp " + pnamec + " macsad@10.1.1.29:/home/macsad/nfpa/PCAP"
-	wrpcap(pname,pkts)
-	#os.system(copy)
-	del pkts[:] #Don't delete this line
-	f = 1
-copy = "scp PCAP/trace_trPR_l2_" + str(entries) + "_random.txt" + " root@10.1.1.27:/root/Fabricio/mac_ipv6_gyn/traces/"
+	pname = "./PCAP/nfpa.trPR_bng_dl_%d_random.%dbytes.pcap" % (entries, pktsize[i]+54+4) #Update the name depending of the Use-Case, use the same format
+    #pnamec = "PCAP/nfpa.trPR_gre_%d_random.%dbytes.pcap" % (entries, pktsize[i]+42+4)
+    #pnamec = "PCAP/nfpa.trPR_tcp_%d_random.%dbytes.pcap" % (entries, pktsize[i]+78+4)  #14 (eth) + 20 (ip4) + 20 (tcp) = 54
+    #copy = "scp " + pnamec + " macsad@10.1.1.29:/home/macsad/nfpa/PCAP"
+    wrpcap(pname,pkts)
+    #os.system(copy)
+    del pkts[:] #Don't delete this line
+    f = 1
+#copy = "scp PCAP/trace_trPR_l2_" + str(entries) + "_random.txt" + " root@10.1.1.27:/root/Fabricio/mac_ipv6_gyn/traces/"
 #os.system(copy)
-copy = "scp PCAP/trace_trPR_ipv4_" + str(entries) + "_random.txt" + " root@10.1.1.27:/root/Fabricio/mac_ipv6_gyn/traces/"
+#copy = "scp PCAP/trace_trPR_ipv4_" + str(entries) + "_random.txt" + " root@10.1.1.27:/root/Fabricio/mac_ipv6_gyn/traces/"
 #os.system(copy)
