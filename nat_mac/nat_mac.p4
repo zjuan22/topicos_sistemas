@@ -140,11 +140,7 @@ control ingress(inout headers hdr, inout metadata meta, inout standard_metadata_
     /*@name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr, bit<16> dstPort) {*/
     @name(".nat_hit_ext_to_int") action nat_hit_ext_to_int(bit<32> dstAddr) {
         hdr.ipv4.dstAddr = dstAddr;
-<<<<<<< HEAD
-        /*hdr.tcp.dstPort = dstPort;*/
-=======
         /*hdr.tcp.dstPort = dstPort; */
->>>>>>> c53954957960073ab613bfc33e80a8988e5e1ff0
     }
     @name(".nat_dw") table nat_dw {
         actions = { drop; nat_hit_ext_to_int;  }
