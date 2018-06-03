@@ -1,0 +1,11 @@
+\select@language {english}
+\contentsline {figure}{\numberline {1}{\ignorespaces Access Network Provider Model.\relax }}{5}{figure.caption.7}
+\contentsline {figure}{\numberline {2}{\ignorespaces P4 Abstract Forwarding Model. Source: Adapted from \cite {P4}.\relax }}{6}{figure.caption.8}
+\contentsline {figure}{\numberline {3}{\ignorespaces Macsad architecture. Source:\cite {Patra}\relax }}{7}{figure.caption.9}
+\contentsline {figure}{\numberline {4}{\ignorespaces ODP system architecture. Source:....\relax }}{9}{figure.caption.10}
+\contentsline {figure}{\numberline {5}{\ignorespaces BNG software architecture.\relax }}{11}{figure.caption.11}
+\contentsline {figure}{\numberline {6}{\ignorespaces BNG data plane.\relax }}{12}{figure.caption.12}
+\contentsline {figure}{\numberline {7}{\ignorespaces Evolution of the language between versions P4$_{14}$ (v 1.0 and 1.1) and P4$_{16}$. \relax }}{14}{figure.caption.13}
+\contentsline {figure}{\numberline {8}{\ignorespaces PktIO SCHED Mode Receive Processing. Source\relax }}{16}{figure.caption.14}
+\contentsline {figure}{\numberline {9}{\ignorespaces BNG performance evaluation scenario.\relax }}{20}{figure.caption.15}
+\contentsline {figure}{\numberline {10}{\ignorespaces Best-case Tables information.\relax }}{21}{figure.caption.16}

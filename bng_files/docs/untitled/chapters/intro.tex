@@ -1,0 +1,59 @@
+\chapter{Introduction}
+\label{cap:intro}
+The advent of new services like \acrfull{VoD}, video conference, Virtual Private Network (VPN) and cloud-based new services, has increased the demand for access to broadband services \cite{improv}.  In addition, many further access technologies such as xDSL, optical access and wireless technologies such as WiMAX and LTE require rapid deployment of services and devices guaranteeing performance in Internet Services provider (ISP) networks.\\
+In an Internet service provider (ISP) network the Broadband Network Gateway (BNG) has the function of managing all access network traffic (e.g., DSL traffic) and other critical functions like to allow access and authentication for thousands of subscribers, monitoring, establishing sessions, tunnels and controls the user line rate.  The fact that all sessions tunnels (e.g.., PPPoE, GRE) are terminated at the BNG means that is aggregated in a single point causing poor performance and quality of service.
+Therefore is no surprise that this device becomes expensive and hardware proprietary boxes, often the operator pay for some functionality that won’t be used and the hardware boxes upgrade require a long wait until the next version available.\\
+In recent years, in order to resolve this problem to turn this rigid hardware device into a software-based network and reduce time to market of new services and those functionalities have been decomposed and dynamically instantiated at different points of the network. This concept is following the trend of \acrfull{SDN}  and \acrfull{NFV} that turn some network functionalities into virtualized software processing running on a server (e.g., off-the-rack x86 servers), switches or even cloud computing infrastructure \cite{nfv}.\\
+Our approach to create an fully open and programmable BNG data plane is using a high-level language for \acrfull{P4}, this is a \acrfull{DSL} with a number of functions optimized around network data forwarding.\\
+Such a DSL can support customizing the forwarding behavior of the switch and may also be ported to other hardware or software switches that support the same language.
+In this work, we present an approach to implementing a BNG software switch implementation, and it is built on top of the MACSAD Switch target and P4 language that can provide dynamic and flexibility to the service provider to optimize the traffic on the network.\\
+We discuss the architecture and protocols to deploy and concepts around the BNG software switch.\\
+The rest of this document is structured as follows: Section II provides the background and related work.  Section III The problem statement and objectives, Section IV and Introduces the proposed design and some results, Section V Working plan and Execution schedule.
+
+\section{Objectives}
+\label{sec:sec02}
+To address the identified issues, the main objective of this work is to design, implement and evaluate the \acrshort{BNG} software switch in a Multi-Architecture Compiler System for Abstract Dataplanes (MACSAD). To this end, the following specific objectives are proposed: 
+
+For each of the issues mentioned in section ~\ref{sec:ProblemStatement}, we have some specific objectives in order to take action to those problems:
+
+\begin{itemize}
+
+\item Designing the architecture and functional implementation of a BNG software switch.  Adding the data plane functionalities with the latest version of P4 lang and compiling our BNG p4 program in an emulation environment in order to test our P4 implementation.
+
+\item Defining and implementing P4$_{16}$ support for MACSAD.  The MACSAD core works with C code in order to compile and run the software switch at execution time over a commodity server. According to the above, we need to implement the HLIR16 project and his dependencies such as P4C compiler to create an intermediate representation that brings data structure used internally in the MACSAD core to translate P4 into C.
+
+\item Integrating the BNG implementation generated with MACSAD to support the Traffic Manager ODP API.  It adds QoS support to the BNG software switch.  On the other hand,  the controller has to interact either with MACSAD to manage table actions management as with the Traffic Manager block hence; this interface will be added as well. 
+
+\item Performance evaluation with NFPA tool. Configuring a real network testing environment, software and hardware such as the described in section 5 in order to evaluate the packet processing performance with some specific use cases recommended in \cite{Nemeth}:
+\begin{itemize}
+ \item Port Forwarding/L2 forwarding
+ \item L2 forwarding
+ \item GRE Encap/Decap
+\end{itemize}
+Evaluating with unidirectional traffic and Small (64B) to large (1518B) packet sizes and with fixed destination and source MAC addresses, IP addresses and ports.
+
+
+\end{itemize}
+
+
+
+
+\section{Text Structure}
+\label{sec:sec03}
+
+In this Introduction we explained the motivational aspects that justify this work. Also, we give a clear explanation for the objectives of this project. 
+
+In Chapter~\ref{cap:cap02} we present a Literature Review. Related  to\gls{P4} language, \gls{odp} SDK and MACSAD framework architecture are described in the context of our implementation requisites.
+
+% are discussed from the point of view of our implementation requisites. 
+
+In Chapter~\ref{cap:cap03} we take a look at the architecture of the BNG software switch which we explain all the modules an his relationship between. Furthermore, we describe the tables associated to BNG dataplane.
+
+In Chapter~\ref{cap:cap04} we explain the BNG functionalities and features in detail.
+
+In Chapter~\ref{cap:cap05} we show the performance results and compare with related work.
+
+Finally, in Chapter~\ref{cap:conclusion} we highlight the results, issues in the implementation process and future work.
+
+% we give our conclusion remarks. This chapter highlights results, presents known use cases and discusses possible improvements in future works. 
+

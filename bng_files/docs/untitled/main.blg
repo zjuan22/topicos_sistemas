@@ -1,0 +1,83 @@
+This is BibTeX, Version 0.99d (TeX Live 2015/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: main.aux
+A level-1 auxiliary file: chapters/acronyms.aux
+A level-1 auxiliary file: chapters/intro.aux
+A level-1 auxiliary file: chapters/cap2.aux
+A level-1 auxiliary file: chapters/cap3.aux
+A level-1 auxiliary file: chapters/cap4.aux
+A level-1 auxiliary file: chapters/cap5.aux
+A level-1 auxiliary file: chapters/conclusao.aux
+A level-1 auxiliary file: RyuCertification-ofsoftswitch13.aux
+The style file: abntex2-alf.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Database file #1: abntex2-options.bib
+Database file #2: tese.bib
+I was expecting a `,' or a `}'---line 703 of file tese.bib
+ :     
+ :     year       = {2013},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--entry type for "packeth" isn't style-file defined
+--line 1348 of file tese.bib
+Warning--entry type for "OpenWrt" isn't style-file defined
+--line 1366 of file tese.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
++---------------------------------------------------------+
+| Estilo bibliográfico abntex2-alf.bst versão v-1.9.6           |
+| Em caso de dúvidas ou problemas com este estilo procure |
+| http://www.abntex.net.br/                               |
++---------------------------------------------------------+
+You've used 33 entries,
+            6714 wiz_defined-function locations,
+            1431 strings with 15468 characters,
+and the built_in function-call counts, 38534 in all, are:
+= -- 3923
+> -- 1004
+< -- 674
++ -- 1097
+- -- 294
+* -- 2581
+:= -- 4823
+add.period$ -- 136
+call.type$ -- 35
+change.case$ -- 367
+chr.to.int$ -- 69
+cite$ -- 29
+duplicate$ -- 3074
+empty$ -- 1961
+format.name$ -- 1514
+if$ -- 8274
+int.to.chr$ -- 3
+int.to.str$ -- 3
+missing$ -- 596
+newline$ -- 173
+num.names$ -- 140
+pop$ -- 726
+preamble$ -- 1
+purify$ -- 131
+quote$ -- 0
+skip$ -- 3453
+stack$ -- 1
+substring$ -- 1459
+swap$ -- 1241
+text.length$ -- 41
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 12
+warning$ -- 0
+while$ -- 211
+width$ -- 0
+write$ -- 488
+(There was 1 error message)
