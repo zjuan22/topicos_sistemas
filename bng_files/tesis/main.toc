@@ -1,0 +1,67 @@
+\changetocdepth {4}
+\select@language {english}
+\contentsline {chapter}{\chapternumberline {1}Introduction}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Objectives}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Text Structure}{3}{section.1.2}
+\contentsline {chapter}{\chapternumberline {2}Literature Review}{5}{chapter.2}
+\contentsline {subsection}{\numberline {2.0.1}Broadband Access Networks}{5}{subsection.2.0.1}
+\contentsline {subsection}{\numberline {2.0.2}Programming Protocol-Independent Packet Processors (P4)}{6}{subsection.2.0.2}
+\contentsline {subsection}{\numberline {2.0.3}Multi-Architecture Compiler System for Abstract Dataplanes (MACSAD)}{7}{subsection.2.0.3}
+\contentsline {subsection}{\numberline {2.0.4}Open Data Plane (ODP)}{8}{subsection.2.0.4}
+\contentsline {chapter}{\chapternumberline {3}Architecture}{11}{chapter.3}
+\contentsline {subsection}{\numberline {3.0.1}Creation of BNG data plane }{11}{subsection.3.0.1}
+\contentsline {subsubsection}{\numberline {3.0.1.1}L2 mac table}{12}{subsubsection.3.0.1.1}
+\contentsline {subsubsection}{\numberline {3.0.1.2}Nat table}{12}{subsubsection.3.0.1.2}
+\contentsline {subsubsection}{\numberline {3.0.1.3}GRE tables}{13}{subsubsection.3.0.1.3}
+\contentsline {subsubsection}{\numberline {3.0.1.4}IPV4 table}{13}{subsubsection.3.0.1.4}
+\contentsline {subsubsection}{\numberline {3.0.1.5}Parser/Deparser}{13}{subsubsection.3.0.1.5}
+\contentsline {subsubsection}{\numberline {3.0.1.6}Rate limiter}{13}{subsubsection.3.0.1.6}
+\contentsline {subsection}{\numberline {3.0.2}Macsad P4$_{16}$ support}{14}{subsection.3.0.2}
+\contentsline {subsection}{\numberline {3.0.3}Integration with OPD API's}{15}{subsection.3.0.3}
+\contentsline {subsubsection}{\numberline {3.0.3.1}Weighted fair queuing (WFQ)}{15}{subsubsection.3.0.3.1}
+\contentsline {subsubsection}{\numberline {3.0.3.2}Scheduled RX Processing}{15}{subsubsection.3.0.3.2}
+\contentsline {subsubsection}{\numberline {3.0.3.3}Scheduled TX Processing}{16}{subsubsection.3.0.3.3}
+\contentsline {chapter}{\chapternumberline {4}Development}{17}{chapter.4}
+\contentsline {section}{\numberline {4.1}Software switch implementation}{17}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Oflib}{18}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}OpenFlow Extended Match}{19}{subsection.4.1.2}
+\contentsline {subsubsection}{\numberline {4.1.2.1}Packet Parser}{20}{subsubsection.4.1.2.1}
+\contentsline {subsubsection}{\numberline {4.1.2.2}Flow Match Prerequisites}{22}{subsubsection.4.1.2.2}
+\contentsline {subsubsection}{\numberline {4.1.2.3}Flow Matching}{23}{subsubsection.4.1.2.3}
+\contentsline {subsubsection}{\numberline {4.1.2.4}Extensible context expression in \IeC {\textquoteright }packet-in\IeC {\textquoteright }}{24}{subsubsection.4.1.2.4}
+\contentsline {subsection}{\numberline {4.1.3}Set Field action}{24}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}Per-flow Metering}{25}{subsection.4.1.4}
+\contentsline {subsection}{\numberline {4.1.5}Connection Features}{26}{subsection.4.1.5}
+\contentsline {subsubsection}{\numberline {4.1.5.1}Auxiliary Connections}{27}{subsubsection.4.1.5.1}
+\contentsline {subsubsection}{\numberline {4.1.5.2}Controller Role}{28}{subsubsection.4.1.5.2}
+\contentsline {subsubsection}{\numberline {4.1.5.3}Event Filtering}{29}{subsubsection.4.1.5.3}
+\contentsline {subsection}{\numberline {4.1.6}Other Changes}{30}{subsection.4.1.6}
+\contentsline {subsection}{\numberline {4.1.7}Dpctl}{31}{subsection.4.1.7}
+\contentsline {section}{\numberline {4.2}Open source development}{31}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Development workflow}{32}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Code maintenance}{32}{subsection.4.2.2}
+\contentsline {chapter}{\chapternumberline {5}Evaluation}{35}{chapter.5}
+\contentsline {section}{\numberline {5.1}Feature Completeness}{35}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}OFTest results}{36}{subsection.5.1.1}
+\contentsline {subsection}{\numberline {5.1.2}Ryu Certification results}{36}{subsection.5.1.2}
+\contentsline {section}{\numberline {5.2}Performance Benchmarks}{38}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Maximum Throughput}{38}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Throughput in function of flows and tables}{40}{subsection.5.2.2}
+\contentsline {subsection}{\numberline {5.2.3}Ping Round Trip Time}{40}{subsection.5.2.3}
+\contentsline {section}{\numberline {5.3}Portability}{42}{section.5.3}
+\contentsline {chapter}{\chapternumberline {6}Conclusion}{45}{chapter.6}
+\contentsline {section}{\numberline {6.1}Results}{45}{section.6.1}
+\contentsline {section}{\numberline {6.2}Use Cases}{47}{section.6.2}
+\contentsline {section}{\numberline {6.3}Future Work}{47}{section.6.3}
+\vspace {\cftbeforepartskip }
+\contentsline {chapter}{Bibliography}{49}{section*.27}
+\cftinsert {AAA}
+\renewcommand *{\cftappendixname }{ANNEX \space }
+\contentsline {part}{Annex}{53}{section*.28}
+\contentsline {appendix}{\chapternumberline {A}NetPDL packet description example}{55}{appendix.anexochapback.1}
+\contentsline {appendix}{\chapternumberline {B}Publications}{57}{appendix.anexochapback.2}
+\contentsline {appendix}{\chapternumberline {C}Full Ryu Certification test results }{59}{appendix.anexochapback.3}
+\contentsline {section}{\numberline {C.1}Action Tests}{60}{section.anexochapback.3.1}
+\contentsline {section}{\numberline {C.2}Match Tests}{62}{section.anexochapback.3.2}
+\contentsline {section}{\numberline {C.3}Group Tests}{63}{section.anexochapback.3.3}
+\contentsline {section}{\numberline {C.4}Meter Tests}{64}{section.anexochapback.3.4}

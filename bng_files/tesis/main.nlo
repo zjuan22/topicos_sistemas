@@ -1,0 +1,36 @@
+\nomenclatureentry{aARP@[{ARP}]\begingroup Address Resolution Protocol\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aAPI@[{API}]\begingroup Application Programming Interface\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aASIC@[{ASIC}]\begingroup Application Specific Integrated Circuit\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aBOS@[{BOS}]\begingroup Bottom of the stack\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aCAM@[{CAM}]\begingroup Content Addressable Memory\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aCRC@[{CRC}]\begingroup Cyclic Redundancy Check\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aDSCP@[{DSCP}]\begingroup Differentiated Services Code Point\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aEH@[{EH}]\begingroup Extension Header\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aKbps@[{Kbps}]\begingroup Kilobits per second\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aKpps@[{Kpps}]\begingroup Kilo packets per second\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aICMP@[{ICMP}]\begingroup Internet Control Message Protocol \nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aIP@[{IP}]\begingroup Internet Protocol\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aIPv6@[{IPv6}]\begingroup Internet Protocol Version 6\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aJSON@[{JSON}]\begingroup JavaScript Object Notation\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aLXC@[{LXC}]\begingroup Linux Containers\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aMAC@[{MAC}]\begingroup Media Access Control\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aMbps@[{Mbps}]\begingroup Megabits per second\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aMIPS@[{MIPS}]\begingroup Microprocessor without Interlocked Pipeline Stages)\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aMPLS@[{MPLS}]\begingroup Multiprotocol Label Switching\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aNetPDL@[{NetPDL}]\begingroup Network Protocol Description Language\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aONF@[{ONF}]\begingroup Open Network Foundation\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aONOS@[{ONOS}]\begingroup Open Network Operating System\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aOVS@[{OVS}]\begingroup Open vSwitch\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aOXM@[{OXM}]\begingroup OpenFlow Extended Match\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aPBB@[{PBB}]\begingroup Provider Backbone Bridge Protocol\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aQoS@[{QoS}]\begingroup Quality of Service\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aRAM@[{RAM}]\begingroup Random Access Memory\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aRTT@[{RTT}]\begingroup Round Trip Time\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aSDN@[{SDN}]\begingroup Software Defined Networking\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aSCTP@[{SCTP}]\begingroup Streaming Control Transfer Protocol\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aTCP@[{TCP}]\begingroup Transmission Control Protocol\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aTDD@[{TDD}]\begingroup Test Driven Development\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aTLS@[{TLS}]\begingroup Transport Layer Security\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aTLV@[{TLV}]\begingroup Type-Lenght-Value\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aTTL@[{TTL}]\begingroup Time to live\nomeqref {0}|nompageref}{1}
+\nomenclatureentry{aXML@[{XML}]\begingroup Extensible Markup Language\nomeqref {0}|nompageref}{1}
