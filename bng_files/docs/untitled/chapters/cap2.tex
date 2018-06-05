@@ -4,9 +4,11 @@
 
 \subsection{Broadband Network Gateway}
 
- The first generation network based on centralizes BRAS routers was driven for the customer demand for High-speed Internet (HSI) the second generation Ethernet-based Broadband Network Gateway (BNG) routers was driven by subscriber demand for a linear TV service (content broadcast at specific times, e.g., Netflix) delivered in conjunction with voice and HSI services \cite{Alcatel}.\\
- The Customer Premise Equipment (CPE) represents the triple play communications devices: Telephone (Voice), PC (Internet), Set-top box (TV) however all these devices are connected to a Home Gateway (HG) that brings the interface with the network through any access technology like Digital Subscriber Line (DSL).\\
- One or more HG can be connected to a single DSLAM that sends the traffic to the BNG device and it route in a core IP network and the edge routers to provide connectivity to the Internet (See Figure \ref{fig:arch}).\\
+ The first generation network based Broadband Remote Access Server (BRAS) routers was driven for the customer demand by providing High-speed Internet (HSI) to its subscribers, the second generation Ethernet-based Broadband Network Gateway (BNG) routers was driven by subscriber demand of telco services like TV(content broadcast at specific times, e.g., Netflix) delivered in conjunction with voice and HSI services \cite{Alcatel}.\\
+ 
+ The today's telco services are provided to its subscribers through an access technology like Digital Subscriber Line (DSL) or Gigabit-capable Passive Optical Network (GPON).   The Home Gateway (HG) is the device that brings the interface between the Customer Premise Equipment (CPE)  (represents the triple play communications devices like Telephone (Voice), PC (Internet), the Set-top box (TV)) with the BNG and network's core.  Such HG functionalities include NAT, local DHCP, GRE sessions, routing, IGMP proxy-routing, etc. This routing device is base equipment for Telco services, enabling Internet access in the home.\\
+ 
+ One or more HG can be connected to a single DSLAM that sends the traffic to the BNG device that handles the HG traffic to the core IP network, edge routers, and the Internet (See Figure \ref{fig:arch}).\\
  \begin{figure}[!h]
  	\centering
  	\includegraphics[width=0.8\linewidth]{figures/bng_architect.png}
@@ -19,8 +21,13 @@ The network operator provides connectivity, authentication, applications and ser
 \item The IP over Ethernet (IPoE): Use IP protocol that runs between CPE and BNG.
 \item Generic Routing Encapsulation (GRE V2), encapsulation protocol brings virtual  Point-to-Point connections through IP network.
 \end{itemize}
-In our implementation, the packet sent or received by the HW are encapsulated with GRE headers, creating a point-to-point link with the BNG, but is just one of the options for packets encapsulation. \\
-Since the BNG centralizes all the functions simplify the management functions like:
+In our implementation, the packet sent or received by the HG are encapsulated with GRE headers, creating a point-to-point link with the BNG, but is just one of the options for packets encapsulation. \\
+
+
+decir aqui las funciones de enrutamiento del BNG...
+
+The BNG centralizes all the routing and traffic functions like:
+
 \begin{itemize}
 \item Session management and header cap/decapsulation.
 \item Interface to Authorization, Authentication and accounting services.

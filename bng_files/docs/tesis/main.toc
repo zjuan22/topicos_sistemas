@@ -60,8 +60,3 @@
 \contentsline {part}{Annex}{53}{section*.28}
 \contentsline {appendix}{\chapternumberline {A}NetPDL packet description example}{55}{appendix.anexochapback.1}
 \contentsline {appendix}{\chapternumberline {B}Publications}{57}{appendix.anexochapback.2}
-\contentsline {appendix}{\chapternumberline {C}Full Ryu Certification test results }{59}{appendix.anexochapback.3}
-\contentsline {section}{\numberline {C.1}Action Tests}{60}{section.anexochapback.3.1}
-\contentsline {section}{\numberline {C.2}Match Tests}{62}{section.anexochapback.3.2}
-\contentsline {section}{\numberline {C.3}Group Tests}{63}{section.anexochapback.3.3}
-\contentsline {section}{\numberline {C.4}Meter Tests}{64}{section.anexochapback.3.4}
