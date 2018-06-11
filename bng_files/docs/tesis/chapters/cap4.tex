@@ -256,75 +256,7 @@ OFP_ASSERT(sizeof(struct ofp_async_config) == 32);
 
 \end{lstlisting}
 
-\subsection{Other Changes}
-\label{sec:sec46}
 
-There is a complete list of other changes we have made to upgrade the base software switch from OpenFlow 1.1 to OpenFlow 1.3. Whereas these other changes are important, their implementation demanded less effort than the implementation of changes described in previous subsections. For this reason, we will list and comment on them briefly:
-
-\begin{itemize}
-\item \textbf{Table Miss.} Previous behavior of OpenFlow switches on non matching packets were defined by configuration flags. OpenFlow 1.3 removes these flags and defines table-miss flow entry. This entry is an all field matching with the lowest possible priority. Table miss support implementation required the removal of code to handle the old behavior. In addition, in the case of a table-miss entry with an action to output the packet for the controller, the switch sends the \textit{packet-in} message with a reason of type \textit{OFPR_NO_MATCH}.      
-
-\item \textbf{Rework Tag Order.} The order of the supported protocols' tags, pushed by an OpenFlow action, was dictated by the specification. In OpenFlow 1.3, tags do not have a right order and should be pushed in the outermost possible position. In the code, these features were reflected by deletion of old restrictions and right adjustment of the tag order. 
-
-\item \textbf{Addition of MPLS BOS and PBB fields.} The MPLS Bottom of the Stack (BOS) field and support for the Provider Backbone Bridge Protocol (PBB) was quite easy to implement thanks to the Packet Parser design, described in the subsection \ref{pktparser}. PBB support also included actions to push and to pop tags in a packet. These actions are similiar to MPLS and VLAN push and pop, thus implementation for PBB followed a workflow similar to the mentioned protocols.  
-
-\item \textbf{Duration for stats.} Old versions included the time of existence  only for flow entries statistics. OpenFlow 1.3 introduces a duration field for meter, port, queue and group statistics and they are supported by the software switch.  
-
-\end{itemize}
-
-\subsection{Dpctl}
-\label{sec:sec47}
-
-Dpctl is an useful tool for management and debugging of the tables of a single OpenFlow switch. By using Dpctl, it is possible to avoid adding debugging code in a controller application; for example, it is possible to query the current Flow Table state. Dpctl has been available since the OpenFlow 1.0 reference implementation, and we considered its upgrade quite necessary as an aid during our switch development. 
-
-To connect with Dpctl, the software switch keeps a passive listening port. Unlike the switch active sockets, which looks for a controller to connect, the passive port waits for a connection. Thereby, Dpctl must initiate an active connection in order to establish contact with the switch. The switch port number for incoming connections is 6634.
-
-Several changes were required in order to upgrade Dpctl for OpenFlow 1.3. New commands had to be implemented for meter, table stats and features, along with new arguments for existing commands, like flow mod, such as instructions and recently modified or added match fields. As each command sends a different message for the switch, the independence of Oflib comes in handy for these tasks.  
-
-Dpctl uses OFlib to create and receive switch messages and also to print their contents. After command parsing, the arguments are stored in the respective OFlib structures, for example, a \textit{meter-mod} command creates the \textit{struct ofl_msg_meter_mod}. The struct is packed using the Oflib function and then sent for the switch. Commands like \textit{stats-flow} always generate an answer, which on receipt are unpacked by Oflib and the results are displayed on screen. It checks message delivery through the use of OpenFlow barrier messages. After every message a \textit{barrier request }is sent for the switch, which should answer with a \textit{barrier reply} to confirm the receipt.
-
-
-\section{Open source development}
-\label{OpenSourceDev}
-
-An important aspect about the software switch development is the project's open source nature. The code is distributed under the BSD 3-clause license, a permissive license with few restrictions about software redistribution. This type of license fits with our main motivation, because it gives freedom to use and encourages collaboration. 
-
-The code is available on GitHub \footnote{Project Page: https://github.com/CPqD/ofsoftswitch13}, a well known web site for projects that adopt git \cite{GIT} as the source control management tool. Git is ideal for distributed development, as developers keep a local copy of the current code state and usually make changes to local branches. These changes are tested, reviewed and then merged into main, typically named master branch.    
-
-In this section we will show how this model works in our development process and show how it helps us in the process of code maintenance and support.    
-
-\subsection{Development workflow}
-
-GitHub is a very social platform and leverages code collaboration for open source projects. For this reason, code development follows a very simple and common workflow for public git projects hosted at GitHub:
-
-\begin{itemize}
-
-\item Developers fork the code and create local branches of new features or fixes. 
-
-\item Changes are made in the branch and committed.
-
-\item A Pull Request is sent to the main repository.  
-
-\item Code is reviewed and tested. 
-
-\item Changes are merged into master.
-
-\end{itemize}
-
-This steps enabled collaboration of developers from all around the world. Also, this work model adds transparency to the development, allowing anyone from the community to track changes, enhancements and bugs. The last benefit is fairness, as every git commit is signed with the author name, credits are guaranteed to be given and shown for all contributors.          
-
-\subsection{Code maintenance}
-\label{CodeMaintenance}
-
-In traditional Waterfall model, software life cycle maintenance is an independent phase and comes after implementation and testing steps \cite{Ruparelia:2010:SDL:1764810.1764814}. While this development model is well suited for large and well defined projects, it lacks flexibility and the dynamism required for an open source project that demands fast reactions to bugs and inquires for enhancements. Therefore, maintenance and support are processes that walk side by side with implementation and test. 
-
-The most common of the maintenance tasks are usually triggered by users' requests on GitHub issue tracker. Users are free to open tickets asking for enhancements or to report bugs. The issue tracker is also a common place for questions about the software switch code or execution. Thus, maintenance and support are very close in the switch development.          
-
-Another important aspect of code maintenance are regression tests. After every new feature implemented or issue fixed, we run test frameworks presented in section \ref{sec:testemulation}, ensuring that no change caused a break in functional code. Furthermore, Ryu tests run automatically after new commits, since their developers keep an infrastructure to detect changes, execute the tests and publish results on a public web page \footnote{Ryu Certification - http://osrg.github.io/ryu/certification.html}. 
-
-The idea of feature testing gives light for possible evolutions in our development model. A Test Driven Development (TDD) \cite{Nagappan:2008:RQI:1380662.1380664}, a development approach where tests are written first, before the software functionalities. A TDD based methodology would force continuous maintenance in the code, because developers, when designing tests, are already thinking about the system behavior, and how it is going to be used. Moreover, they might preview further changes. Thus leading to implementation of more maintainable code. 
-
-One possible parallel with TDD is the ONF Extension Working Group. This group is responsible for suggestion and validation of new OpenFlow features. Functionality approval process goes through proposal and test implementation in some of the available OpenFlow software switches. This can be seen as the test design phase of TDD. After validation, i.e running the test and confirming it is working, the feature is ready to be written in the specification, just like any code ready for production.                 
 
 
 

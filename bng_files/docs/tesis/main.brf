@@ -19,15 +19,4 @@
 \backcite {rfc1071}{{25}{4.1.3}{subsection.4.1.3}}
 \backcite {rfc3309}{{25}{4.1.3}{subsection.4.1.3}}
 \backcite {Tanenbaum:2002:CN:572404}{{26}{4.1.4}{subsection.4.1.4}}
-\backcite {GIT}{{31}{4.2}{section.4.2}}
-\backcite {Ruparelia:2010:SDL:1764810.1764814}{{32}{4.2.2}{subsection.4.2.2}}
-\backcite {Nagappan:2008:RQI:1380662.1380664}{{33}{4.2.2}{subsection.4.2.2}}
-\backcite {packeth}{{38}{5.2.1}{subsection.5.2.1}}
-\backcite {OpenWrt}{{43}{5.3}{section.5.3}}
-\backcite {yiakoumis2011}{{43}{5.3}{section.5.3}}
-\backcite {ONFproto}{{47}{6.2}{section.6.2}}
-\backcite {Reitblatt:2013:FDF:2491185.2491187}{{47}{6.2}{section.6.2}}
-\backcite {Bianchi:2014:OPP:2602204.2602211}{{47}{6.2}{section.6.2}}
-\backcite {Paris}{{47}{6.2}{section.6.2}}
-\backcite {ShahmirShourmasti656472}{{47}{6.2}{section.6.2}}
-\backcite {ONOS}{{47}{6.2}{section.6.2}}
+\backcite {packeth}{{34}{5.2.1}{subsection.5.2.1}}
