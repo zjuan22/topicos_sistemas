@@ -10,10 +10,6 @@
 {ALCATEL-LUCENT. {Evolution of the Broadband Network Gateway}.
 2010.}
 
-\bibitem[Arora 2013]{Paris}
-\abntrefinfo{Arora}{ARORA}{2013}
-{ARORA, D. \emph{Proactive Routing in Scalable Data Centers with PARIS}. 2013.}
-
 \bibitem[Ballani \emph{et al.} 2011]{Ballani}
 \abntrefinfo{Ballani \emph{et al.}}{BALLANI \emph{et al.}}{2011}
 {BALLANI, H.; COSTA, P.; KARAGIANNIS, T.; ROWSTRON, A. Towards predictable
@@ -23,35 +19,11 @@
 ISSN 0146-4833.
 Dispon{\'\i}vel em: \url{http://doi.acm.org/10.1145/2043164.2018465}.}
 
-\bibitem[Bianchi \emph{et al.} 2014]{Bianchi:2014:OPP:2602204.2602211}
-\abntrefinfo{Bianchi \emph{et al.}}{BIANCHI \emph{et al.}}{2014}
-{BIANCHI, G.; BONOLA, M.; CAPONE, A.; CASCONE, C. Openstate: Programming
-  platform-independent stateful openflow applications inside the switch.
-\emph{SIGCOMM Comput. Commun. Rev.}, ACM, New York, NY, USA, v.~44, n.~2, p.
-  44--51, abr. 2014.
-ISSN 0146-4833.
-Dispon{\'\i}vel em: \url{http://doi.acm.org/10.1145/2602204.2602211}.}
-
-\bibitem[Braden \emph{et al.} 1988]{rfc1071}
-\abntrefinfo{Braden \emph{et al.}}{BRADEN \emph{et al.}}{1988}
-{BRADEN, R.; BORMAN, D.; PARTRIDGE, C. \emph{{Computing the Internet
-  checksum}}. IETF, 1988. RFC 1071.
- (Request for Comments, 1071). Updated by RFC 1141.
-Dispon{\'\i}vel em: \url{http://www.ietf.org/rfc/rfc1071.txt}.}
-
-\bibitem[Deering e Hinden 1998]{rfc2460}
-\abntrefinfo{Deering e Hinden}{DEERING; HINDEN}{1998}
-{DEERING, S.; HINDEN, R. \emph{{Internet Protocol, Version 6 (IPv6)
-  Specification}}. IETF, 1998. RFC 2460 (Draft Standard).
- (Request for Comments, 2460). Updated by RFCs 5095, 5722, 5871, 6437, 6564,
-  6935, 6946, 7045, 7112.
-Dispon{\'\i}vel em: \url{http://www.ietf.org/rfc/rfc2460.txt}.}
-
-\bibitem[git 2005]{GIT}
-\abntrefinfo{git}{GIT}{2005}
-{GIT. \emph{git --distributed-even-if-your-workflow-isnt}. 2005.
-  \url{http://git-scm.com/}.
-[accessed: 23-Fev-2015].}
+\bibitem[Csikor \emph{et al.} 2015]{nfpa}
+\abntrefinfo{Csikor \emph{et al.}}{CSIKOR \emph{et al.}}{2015}
+{CSIKOR, L.; SZALAY, M.; SONKOLY, B.; TOKA, L. Nfpa: Network function
+  performance analyzer.
+2015.}
 
 \bibitem[Han \emph{et al.} 2015]{nfv}
 \abntrefinfo{Han \emph{et al.}}{HAN \emph{et al.}}{2015}
@@ -59,45 +31,6 @@ Dispon{\'\i}vel em: \url{http://www.ietf.org/rfc/rfc2460.txt}.}
   Challenges and opportunities for innovations.
 \emph{IEEE Communications Magazine}, v.~53, n.~2, p. 90--97, Feb 2015.
 ISSN 0163-6804.}
-
-\bibitem[Iskratel 2003]{packeth}
-\abntrefinfo{Iskratel}{ISKRATEL}{2003}
-{ISKRATEL, M.~J. \emph{packeth - Ethernet packet generator}. 2003.
-[accessed: 01-Mar-2015].
-Dispon{\'\i}vel em: \url{http://packeth.sourceforge.net/packeth/Home.html}.}
-
-\bibitem[Nagappan \emph{et al.} 2008]{Nagappan:2008:RQI:1380662.1380664}
-\abntrefinfo{Nagappan \emph{et al.}}{NAGAPPAN \emph{et al.}}{2008}
-{NAGAPPAN, N.; MAXIMILIEN, E.~M.; BHAT, T.; WILLIAMS, L. Realizing quality
-  improvement through test driven development: Results and experiences of four
-  industrial teams.
-\emph{Empirical Softw. Engg.}, Kluwer Academic Publishers, Hingham, MA, USA,
-  v.~13, n.~3, p. 289--302, jun. 2008.
-ISSN 1382-3256.
-Dispon{\'\i}vel em: \url{http://dx.doi.org/10.1007/s10664-008-9062-z}.}
-
-\bibitem[Nbee 2012]{nbee}
-\abntrefinfo{Nbee}{NBEE}{2012}
-{NBEE. \emph{NetBee Library}. 2012. \url{http://www.nbee.org/}.
-[accessed: 11-Nov-2014].}
-
-\bibitem[Nemeth \emph{et al.} 2015]{Nemeth}
-\abntrefinfo{Nemeth \emph{et al.}}{NEMETH \emph{et al.}}{2015}
-{NEMETH, B.; SIMONART, X.; OLIVER, N.; LAMOTTE, W. The limits of architectural
-  abstraction in network function virtualization.
-p. 633--639, May 2015.
-ISSN 1573-0077.}
-
-\bibitem[ONOS 2014]{ONOS}
-\abntrefinfo{ONOS}{ONOS}{2014}
-{ONOS. \emph{ONOS Segment Routing}. 2014.
-  \url{https://wiki.onosproject.org/display/ONOS/Installation+Guide}.
-[accessed: 03-Mar-2015].}
-
-\bibitem[{OpenWRT} 2004]{OpenWrt}
-\abntrefinfo{{OpenWRT}}{{OpenWRT}}{2004}
-{{OpenWRT}. 2004.
-Dispon{\'\i}vel em: \url{http://www.openwrt.org}.}
 
 \bibitem[P \emph{et al.} 2013]{P4}
 \abntrefinfo{P \emph{et al.}}{P \emph{et al.}}{2013}
@@ -130,24 +63,6 @@ v.~43, p. 351--362, 08 2013.}
 USENIX Association, Berkeley, CA, USA, p. 475--488, 2014.
 Dispon{\'\i}vel em: \url{http://dl.acm.org/citation.cfm?id=2616448.2616492}.}
 
-\bibitem[Reitblatt \emph{et al.} 2013]{Reitblatt:2013:FDF:2491185.2491187}
-\abntrefinfo{Reitblatt \emph{et al.}}{REITBLATT \emph{et al.}}{2013}
-{REITBLATT, M.; CANINI, M.; GUHA, A.; FOSTER, N. Fattire: Declarative fault
-  tolerance for software-defined networks. In:  \emph{Proceedings of the Second
-  ACM SIGCOMM Workshop on Hot Topics in Software Defined Networking}. New York,
-  NY, USA: ACM, 2013.  (HotSDN '13), p. 109--114.
-ISBN 978-1-4503-2178-5. Dispon{\'\i}vel em:
-  \url{http://doi.acm.org/10.1145/2491185.2491187}.}
-
-\bibitem[Risso e Baldi 2006]{Risso:2006:NEX:1141112.1141119}
-\abntrefinfo{Risso e Baldi}{RISSO; BALDI}{2006}
-{RISSO, F.; BALDI, M. Netpdl: An extensible xml-based language for packet
-  header description.
-\emph{Comput. Netw.}, Elsevier North-Holland, Inc., New York, NY, USA, v.~50,
-  n.~5, p. 688--706, abr. 2006.
-ISSN 1389-1286.
-Dispon{\'\i}vel em: \url{http://dx.doi.org/10.1016/j.comnet.2005.05.029}.}
-
 \bibitem[Roberto \emph{et al.} 2013]{Rethinking}
 \abntrefinfo{Roberto \emph{et al.}}{ROBERTO \emph{et al.}}{2013}
 {ROBERTO, B.; THOMAS, D.; H, F.; A, M.; M, J.; N, S.; K, H.-J. {Rethinking
@@ -161,33 +76,6 @@ Dispon{\'\i}vel em: \url{http://dx.doi.org/10.1016/j.comnet.2005.05.029}.}
 USENIX Association, Berkeley, CA, USA, p.~6--6, 2011.
 Dispon{\'\i}vel em: \url{http://dl.acm.org/citation.cfm?id=2001555.2001561}.}
 
-\bibitem[Ruparelia 2010]{Ruparelia:2010:SDL:1764810.1764814}
-\abntrefinfo{Ruparelia}{RUPARELIA}{2010}
-{RUPARELIA, N.~B. Software development lifecycle models.
-\emph{SIGSOFT Softw. Eng. Notes}, ACM, New York, NY, USA, v.~35, n.~3, p.
-  8--13, maio 2010.
-ISSN 0163-5948.
-Dispon{\'\i}vel em: \url{http://doi.acm.org/10.1145/1764810.1764814}.}
-
-\bibitem[Shourmasti 2013]{ShahmirShourmasti656472}
-\abntrefinfo{Shourmasti}{SHOURMASTI}{2013}
-{SHOURMASTI, K. S. \emph{Stochastic Switching Using OpenFlow}. [S.l.]:
-  Institutt for telematikk, 2013. 70~p.}
-
-\bibitem[Stone \emph{et al.} 2002]{rfc3309}
-\abntrefinfo{Stone \emph{et al.}}{STONE \emph{et al.}}{2002}
-{STONE, J.; STEWART, R.; OTIS, D. \emph{{Stream Control Transmission Protocol
-  (SCTP) Checksum Change}}. IETF, 2002. RFC 3309 (Proposed Standard).
- (Request for Comments, 3309). Obsoleted by RFC 4960.
-Dispon{\'\i}vel em: \url{http://www.ietf.org/rfc/rfc3309.txt}.}
-
-\bibitem[Tanenbaum 2002]{Tanenbaum:2002:CN:572404}
-\abntrefinfo{Tanenbaum}{TANENBAUM}{2002}
-{TANENBAUM, A. Computer networks.
-In:  \underline{\ \ \ \ \ \ \ \ }. 4th. ed. [S.l.]: Prentice Hall Professional
-  Technical Reference, 2002. p.~401.
-ISBN 0130661023.}
-
 \bibitem[{The Organization for Economic Co-operation and Development (OECD)}
   2016]{improv}
 \abntrefinfo{{The Organization for Economic Co-operation and Development
@@ -196,18 +84,5 @@ ISBN 0130661023.}
 {{The Organization for Economic Co-operation and Development (OECD)}.
   {Improving Networks and Services Through Convergence discussion paper}.
 \emph{2016 Ministerial Meetign}, 2016.}
-
-\bibitem[Tourrilhes 2013]{ONFproto}
-\abntrefinfo{Tourrilhes}{TOURRILHES}{2013}
-{TOURRILHES, J. \emph{OpenFlow prototyping}. 2013.
-  \url{https://github.com/jean2/ofsoftswitch13}.
-[accessed: 11-Nov-2014].}
-
-\bibitem[Yiakoumis \emph{et al.} 2011]{yiakoumis2011}
-\abntrefinfo{Yiakoumis \emph{et al.}}{YIAKOUMIS \emph{et al.}}{2011}
-{YIAKOUMIS, Y.; SCHULZ-ZANDER, J.; ZHU, J. \emph{Pantou : {OpenFlow} 1.0 for
-  {OpenWRT}}. 2011.
-Dispon{\'\i}vel em:
-  \url{http://www.openflow.org/wk/index.php/OpenFlow\_1.0\_for\_OpenWRT}.}
 
 \end{thebibliography}

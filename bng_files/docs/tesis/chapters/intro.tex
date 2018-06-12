@@ -18,13 +18,13 @@ For each of the issues mentioned in section ~\ref{sec:ProblemStatement}, we have
 
 \begin{itemize}
 
-\item Designing the architecture and functional implementation of a BNG software switch.  Adding the data plane functionalities with the latest version of P4 lang and compiling our BNG p4 program in an emulation environment in order to test our P4 implementation.
+\item Designing the architecture and functional implementation of a BNG software switch.  Coding the BNG functionalities with the latest version of P4 lang and compiling our BNG p4 program in an emulation environment in order to test our P4 implementation.
 
-\item Defining and implementing P4$_{16}$ support for MACSAD.  The MACSAD core works with C code in order to compile and run the software switch at execution time over a commodity server. According to the above, we need to implement the HLIR16 project and his dependencies such as P4C compiler to create an intermediate representation that brings data structure used internally in the MACSAD core to translate P4 into C.
+\item Defining and implementing P4$_{16}$ support for MACSAD.  The MACSAD core works with C code in order to compile and run the software switch at execution time in a commodity server. According to the above, we need to implement the HLIR16 project and his dependencies such as P4C compiler to create an intermediate representation that brings the data structure used as code base in the MACSAD core to translate the P4 code to C code.
 
-\item Integrating the BNG implementation generated with MACSAD to support the Traffic Manager ODP API.  It adds QoS support to the BNG software switch.  On the other hand,  the controller has to interact either with MACSAD to manage table actions management as with the Traffic Manager block hence; this interface will be added as well. 
+\item Integrating the BNG implementation generated with MACSAD to support the Traffic Manager ODP API.  It adds QoS support to the BNG software switch.  On the other hand,  the controller has to interact either with MACSAD to manage table actions management as with the Traffic Manager block hence; this interface will be added as well.
 
-\item Performance evaluation with NFPA tool. Configuring a real network testing environment, software and hardware such as the described in section 5 in order to evaluate the packet processing performance with some specific use cases recommended in \cite{Nemeth}:
+\item Performance evaluation with NFPA tool. Configuring a real network environment using the test bed as such as described in section 5 in order to evaluate the packet processing performance with some specific use cases recommended in \cite{nfpa}:
 \begin{itemize}
  \item Port Forwarding/L2 forwarding
  \item L2 forwarding

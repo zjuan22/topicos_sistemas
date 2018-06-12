@@ -7,8 +7,5 @@
 \contentsline {figure}{\numberline {6}{\ignorespaces BNG data plane.\relax }}{12}{figure.caption.12}
 \contentsline {figure}{\numberline {7}{\ignorespaces Evolution of the language between versions P4$_{14}$ (v 1.0 and 1.1) and P4$_{16}$. \relax }}{14}{figure.caption.13}
 \contentsline {figure}{\numberline {8}{\ignorespaces PktIO SCHED Mode Receive Processing. Source\relax }}{16}{figure.caption.14}
-\contentsline {figure}{\numberline {9}{\ignorespaces OXM field example\relax }}{20}{figure.caption.15}
-\contentsline {figure}{\numberline {10}{\ignorespaces Packet Parser components\relax }}{21}{figure.caption.16}
-\contentsline {figure}{\numberline {11}{\ignorespaces Token Bucket Algorithm illustration inside the meter band\relax }}{27}{figure.caption.17}
-\contentsline {figure}{\numberline {12}{\ignorespaces User space software switches throughput comparison\relax }}{35}{figure.caption.21}
-\contentsline {figure}{\numberline {13}{\ignorespaces Influence of the number of installed flows on the throughput.\relax }}{37}{figure.caption.22}
+\contentsline {figure}{\numberline {9}{\ignorespaces BNG performance evaluation scenario.\relax }}{20}{figure.caption.15}
+\contentsline {figure}{\numberline {10}{\ignorespaces Best-case Tables information.\relax }}{20}{figure.caption.16}
