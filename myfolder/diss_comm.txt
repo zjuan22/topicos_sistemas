@@ -1,0 +1,24 @@
+table_set_default if_info drop
+table_add if_info set_if_info 1 => 10.0.0.1 00:aa:bb:00:00:04 0
+table_add if_info set_if_info 2 => 172.168.0.1 00:aa:bb:00:00:05 1
+table_add if_info set_if_info 2 => 4.0.0.10 f0:76:1c:19:0b:9e 1
+
+table_set_default ipv4_lpm drop
+
+table_add nat nat_hit_ext_to_int 1 1 1 192.169.0.10&&&0.0.0.0 192.169.0.1&&&255.255.255.255 80&&&0 10&&&0xffff => 10.0.0.10 20 1
+table_add nat nat_hit_int_to_ext 0 1 1 10.0.0.10&&&255.255.255.255 0.0.0.0&&&0.0.0.0 20&&&0xffff 0&&&0 => 192.168.0.1 1025 1
+
+table_add ipv4_forward set_dmac 10.0.0.10  => f0:76:1c:a2:ca:05 
+table_add ipv4_forward set_dmac 192.168.0.10 => 00:05:00:00:00:10
+table_add ipv4_lpm set_nhop 10.0.0.10/32 => 10.0.0.10 1
+table_add ipv4_lpm set_nhop 192.168.0.10/32 => 192.168.0.10 2
+
+table_add send_frame do_rewrites 1 => aa:bb:cc:aa:dd:ee 
+table_add send_frame do_rewrites 2 => 00:aa:bb:00:00:05
+
+table_add smac generate_learn_notify 00:44:00:00:00:00 1
+table_add fw_drop_up _drop 192.168.0.10 81  => 
+table_add fw_drop_dw _drop 10.0.0.10 21  =>
+
+ 
+table_add tunnel_encap_process_outer ipv4_gre_rewrite 10.0.0.10 => 4.0.0.1 4.0.0.10
