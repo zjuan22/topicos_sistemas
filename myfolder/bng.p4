@@ -15,7 +15,7 @@ typedef bit<32>  ipv4_addr_t;
 typedef bit<9>   port_id_t; 
 
 const bit<16> ARP_HTYPE_ETHERNET = 0x0001;
-const bit<16> ARP_PTYPE_IPV4     = 0x0800;
+const bit<16> ARP_PTYPE_IPV4     = 16w0x800;
 const bit<8>  ARP_HLEN_ETHERNET  = 6;
 const bit<8>  ARP_PLEN_IPV4      = 4;
 const bit<16> ARP_OPER_REQUEST   = 1;
@@ -99,7 +99,7 @@ parser MyParser(
         meta.if_index = hdr.cpu_header.if_index;
         transition parse_ethernet;
     }
-    state parse_ethernet {
+    @name(".parse_ethernet") state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
             ETHERTYPE_IPV4 : parse_ipv4;
@@ -107,7 +107,7 @@ parser MyParser(
             default        : accept;
         }
     }
-    state parse_arp {
+    @name(".parse_arp") state parse_arp {
         packet.extract(hdr.arp);
         transition select(hdr.arp.htype, hdr.arp.ptype,
                           hdr.arp.hlen,  hdr.arp.plen) {
@@ -116,12 +116,12 @@ parser MyParser(
             default : accept;
         }
     }
-   @name("parse_arp_ipv4") state parse_arp_ipv4 {
+   @name(".parse_arp_ipv4") state parse_arp_ipv4 {
         packet.extract(hdr.arp_ipv4);
         meta.dst_ipv4 = hdr.arp_ipv4.tpa;
         transition accept;
     }            
-    @name("parse_ipv4") state parse_ipv4 {
+    @name(".parse_ipv4") state parse_ipv4 {
         packet.extract(hdr.ipv4);
         meta.dst_ipv4 = hdr.ipv4.dstAddr;
         transition select(hdr.ipv4.protocol) {
@@ -131,17 +131,17 @@ parser MyParser(
             default      : accept;
         }
     }
-    @name("parse_icmp") state parse_icmp {
+    @name(".parse_icmp") state parse_icmp {
         packet.extract(hdr.icmp);
         transition accept;
     }    
-    @name("parse_tcp") state parse_tcp {
+    @name(".parse_tcp") state parse_tcp {
         packet.extract<tcp_t>(hdr.tcp);
         meta.tcp_sp = hdr.tcp.srcPort;
         meta.tcp_dp = hdr.tcp.dstPort;
         transition accept;
     }
-    @name("parse_gre") state parse_gre {
+    @name(".parse_gre") state parse_gre {
         packet.extract<gre_t>(hdr.gre);
         transition select(hdr.gre.C, hdr.gre.R, hdr.gre.K, hdr.gre.S, hdr.gre.s, hdr.gre.recurse, hdr.gre.flags, hdr.gre.ver, hdr.gre.proto) {
             (1w0x0, 1w0x0, 1w0x1, 1w0x0, 1w0x0, 3w0x0, 5w0x0, 3w0x0, 16w0x6558): parse_nvgre;
@@ -238,7 +238,7 @@ control process_meter(inout my_headers_t hdr,
 control proc_meter_dl(inout my_headers_t hdr,
                       inout my_metadata_t meta, 
                       inout standard_metadata_t standard_metadata) {
-    @name(".my_meter") meter(32w16384, MeterType.packets) my_meter_dl;
+    @name(".my_meter_dl") meter(32w16384, MeterType.packets) my_meter_dl;
     @name("._drop") action _drop() {
         mark_to_drop();
     }
